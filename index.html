@@ -26,6 +26,7 @@
             
             --success: #27ae60; --danger: #e74c3c; --ai: #8e44ad; --warning: #f39c12; --debug: #576574;
             --text: #4A4A4A; --bg: #fdf8f8;
+            --lv0: #95a5a6; /* Level 0 - Grey */
             --lv1: #e74c3c; --lv2: #e67e22; --lv3: #f1c40f; --lv4: #2ecc71;
             --lv5: #3498db; --lv6: #9b59b6; --lv7: #1abc9c; --lv8: #2c3e50;
         }
@@ -504,7 +505,7 @@
             <h3 style="margin:0; font-size:1.1rem; color:var(--color1); font-weight:700;">DỮ LIỆU TỪ VỰNG <span id="list-toggle-icon" style="font-size:0.8rem; margin-left:5px;">▼</span></h3>
             <div style="display:flex; gap:10px; align-items:center;">
                 <!-- Select All Button (Injected via JS) -->
-                <div id="select-all-container"></div>
+                <div id="select-all-container" style="display:flex; gap:5px;"></div>
                 <button onclick="clearAllData(); event.stopPropagation();" style="border:none; color:#ff7675; background:#fff0f0; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Xóa hết</button>
             </div>
         </div>
@@ -518,7 +519,8 @@
     <div id="view-card" class="hidden">
         <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
             <button onclick="changeIdx(-1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❮</button>
-            <span id="card-index" style="font-weight: 700; color: var(--color1);">0 / 0</span>
+            <!-- Changed default from 0/0 to -/- -->
+            <span id="card-index" style="font-weight: 700; color: var(--color1);">- / -</span>
             <button onclick="changeIdx(1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❯</button>
         </div>
         
@@ -656,58 +658,89 @@
     }
 
     // Daily List Modal Logic
+    let dailyFilter = 'all';
+
     function openDailyListModal() {
-        const listDiv = document.getElementById('daily-list-content');
-        listDiv.innerHTML = '';
-
-        if (!dailyTargetIds || dailyTargetIds.length === 0) {
-            listDiv.innerHTML = '<div style="color:#999; text-align:center;">Chưa có dữ liệu cho hôm nay.</div>';
-        } else {
-            let doneCount = 0;
-            dailyTargetIds.forEach(id => {
-                const item = vocabulary.find(v => v.id === id);
-                if (!item) return;
-
-                // Check status: If it's still in dailyQueue, it's pending. If not, it's done.
-                // Note: dailyQueue elements are objects, so we compare ids.
-                const isPending = dailyQueue.some(q => q.id === id);
-                const statusHtml = isPending 
-                    ? `<span class="status-badge status-pending">⚪ Chưa học</span>`
-                    : `<span class="status-badge status-done">✅ Đã xong</span>`;
-                
-                if(!isPending) doneCount++;
-
-                const div = document.createElement('div');
-                div.className = 'daily-status-item';
-                div.innerHTML = `
-                    <div style="flex: 1; min-width: 0;">
-                        <strong style="font-size:1.1rem">${item.word}</strong>
-                        <div style="font-size:0.9rem; color:var(--color1); font-weight:600;">${item.reading}</div>
-                        <div style="font-size:0.8rem; color:#666;">${item.meaning}</div>
-                    </div>
-                    ${statusHtml}
-                `;
-                listDiv.appendChild(div);
-            });
-            
-            // Append Summary
-            const summary = document.createElement('div');
-            summary.style.padding = '10px';
-            summary.style.marginTop = '10px';
-            summary.style.background = '#f9f9f9';
-            summary.style.borderRadius = '10px';
-            summary.style.textAlign = 'center';
-            summary.style.fontWeight = 'bold';
-            summary.style.color = 'var(--color1)';
-            summary.innerText = `Tiến độ: ${doneCount} / ${dailyTargetIds.length}`;
-            listDiv.prepend(summary);
-        }
-        
+        // Reset filter when opening
+        dailyFilter = 'all';
+        renderDailyListUI();
         document.getElementById('dailyListModal').style.display = "block";
     }
 
     function closeDailyListModal() {
         document.getElementById('dailyListModal').style.display = "none";
+    }
+    
+    function setDailyFilter(filter) {
+        dailyFilter = filter;
+        renderDailyListUI();
+    }
+
+    function renderDailyListUI() {
+        const listDiv = document.getElementById('daily-list-content');
+        
+        // Header & Filter Buttons (Sticky)
+        let html = `
+            <div style="position: sticky; top: 0; background: white; padding-bottom: 10px; border-bottom: 1px solid #eee; margin-bottom: 10px; z-index: 10;">
+                <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 5px;">
+                    <button onclick="setDailyFilter('all')" style="flex:1; padding: 6px; border-radius: 8px; border: 1px solid var(--color2); background: ${dailyFilter==='all'?'var(--color1)':'white'}; color: ${dailyFilter==='all'?'white':'var(--text)'}; font-weight: 700; cursor: pointer; font-size: 0.8rem;">Tất cả</button>
+                    <button onclick="setDailyFilter('pending')" style="flex:1; padding: 6px; border-radius: 8px; border: 1px solid var(--color2); background: ${dailyFilter==='pending'?'var(--color1)':'white'}; color: ${dailyFilter==='pending'?'white':'var(--text)'}; font-weight: 700; cursor: pointer; font-size: 0.8rem;">Chưa học</button>
+                    <button onclick="setDailyFilter('done')" style="flex:1; padding: 6px; border-radius: 8px; border: 1px solid var(--color2); background: ${dailyFilter==='done'?'var(--color1)':'white'}; color: ${dailyFilter==='done'?'white':'var(--text)'}; font-weight: 700; cursor: pointer; font-size: 0.8rem;">Đã xong</button>
+                </div>
+            </div>
+            <div style="padding-bottom: 20px;">
+        `;
+
+        if (!dailyTargetIds || dailyTargetIds.length === 0) {
+            html += '<div style="color:#999; text-align:center; padding: 20px;">Chưa có dữ liệu cho hôm nay.</div>';
+        } else {
+            let visibleCount = 0;
+            let doneCount = 0;
+            
+            // Calculate stats first
+             dailyTargetIds.forEach(id => {
+                const isPending = dailyQueue.some(q => q.id === id);
+                if (!isPending) doneCount++;
+             });
+
+            // Progress Summary
+            html += `<div style="text-align:center; font-weight:bold; color:var(--color1); margin-bottom:10px; font-size:0.9rem;">Tiến độ: ${doneCount} / ${dailyTargetIds.length}</div>`;
+
+            dailyTargetIds.forEach(id => {
+                const item = vocabulary.find(v => v.id === id);
+                if (!item) return;
+
+                const isPending = dailyQueue.some(q => q.id === id);
+                
+                // Filter Logic
+                if (dailyFilter === 'pending' && !isPending) return;
+                if (dailyFilter === 'done' && isPending) return;
+
+                visibleCount++;
+
+                const statusHtml = isPending 
+                    ? `<span class="status-badge status-pending">⚪ Chưa học</span>`
+                    : `<span class="status-badge status-done">✅ Đã xong</span>`;
+                
+                html += `
+                    <div class="daily-status-item">
+                        <div style="flex: 1; min-width: 0;">
+                            <strong style="font-size:1.1rem">${item.word}</strong>
+                            <div style="font-size:0.9rem; color:var(--color1); font-weight:600;">${item.reading}</div>
+                            <div style="font-size:0.8rem; color:#666;">${item.meaning}</div>
+                        </div>
+                        ${statusHtml}
+                    </div>
+                `;
+            });
+            
+            if (visibleCount === 0) {
+                 html += `<div style="text-align:center; padding:20px; color:#999;">Không có từ nào theo bộ lọc này.</div>`;
+            }
+        }
+        
+        html += `</div>`; // Close list wrapper
+        listDiv.innerHTML = html;
     }
 
     window.onclick = function(event) {
@@ -833,9 +866,9 @@
         if (activeMode === 'srs') {
             noteEl.classList.remove('hidden');
             if (isTestMode) {
-                noteEl.innerHTML = "<strong>⚡ LOGIC TEST (Giây):</strong> Sai=Lv1 | Lv1→0s | Lv2→10s | Lv3→60s | Lv4→300s...";
+                noteEl.innerHTML = "<strong>⚡ LOGIC TEST (Giây):</strong> Sai=Lv1 | Lv1→5s | Lv2→30s | Lv3→3p...";
             } else {
-                noteEl.innerHTML = "<strong>🕒 LOGIC CHUẨN (Phút):</strong> Sai=Lv1 | Lv1→0p | Lv2→10p | Lv3→1h | Lv4→1ngày...";
+                noteEl.innerHTML = "<strong>🕒 LOGIC CHUẨN (Phút):</strong> Sai=Lv1 | Lv1→5p | Lv2→30p | Lv3→3h | Lv4→12h | Lv5→1ngày...";
             }
         } else {
             noteEl.classList.add('hidden');
@@ -857,7 +890,8 @@
             return;
         }
 
-        vocabulary.push({ id: Date.now() + Math.random(), word: w, reading: r, meaning: m || "Chưa dịch", level: 1, nextReview: 0, learned: false, extra: null });
+        // New words start at level 0 (Unlearned)
+        vocabulary.push({ id: Date.now() + Math.random(), word: w, reading: r, meaning: m || "Chưa dịch", level: 0, nextReview: 0, learned: false, extra: null });
         saveData(); renderList(); startMode('list');
         ['manual-word', 'manual-reading', 'manual-meaning'].forEach(id => document.getElementById(id).value = '');
     }
@@ -884,7 +918,7 @@
                             word: w, 
                             reading: String(r[1] || '').trim(), 
                             meaning: String(r[2] || '').trim(), 
-                            level: 1, 
+                            level: 0, // Init at Level 0
                             nextReview: 0,
                             learned: false,
                             extra: null
@@ -1069,6 +1103,25 @@
         renderBatchBar();
     }
     window.toggleSelectAll = toggleSelectAll;
+    
+    // Feature: Select Next 50 Words
+    function selectNext50() {
+        const items = getFilteredItems();
+        // Filter items that are NOT currently selected
+        const unselectedItems = items.filter(v => !selectedIds.has(v.id));
+        
+        // Take the first 50
+        const toSelect = unselectedItems.slice(0, 50);
+        
+        if (toSelect.length === 0) {
+            alert("Đã chọn hết các từ trong danh sách lọc hiện tại!");
+            return;
+        }
+        
+        toSelect.forEach(v => selectedIds.add(v.id));
+        renderList();
+        renderBatchBar();
+    }
 
     function getFilteredItems() {
         const query = document.getElementById('search-input').value.toLowerCase();
@@ -1335,8 +1388,9 @@
                 if (b.innerText.includes(correctValue)) b.classList.add('correct');
             });
             if (mainIdx !== -1) {
+                // Wrong answer -> Drop to level 1 (with 5 min delay)
                 vocabulary[mainIdx].level = 1; 
-                vocabulary[mainIdx].nextReview = Date.now(); 
+                setNextReview(vocabulary[mainIdx]); // Use the function to set time based on Lv1 interval
             }
         }
         
@@ -1366,7 +1420,7 @@
         if (activeMode === 'srs') {
             if (mainIdx !== -1) {
                 vocabulary[mainIdx].level = 1;
-                vocabulary[mainIdx].nextReview = Date.now();
+                setNextReview(vocabulary[mainIdx]);
                 saveData();
             }
         }
@@ -1379,9 +1433,15 @@
         document.getElementById('quiz-next-container').classList.remove('hidden');
     }
 
+    // UPDATED INTERVALS: Lv1 starts at 5 minutes
     function setNextReview(item) {
-        const intervals = [0, 10, 60, 300, 1440, 4320, 10080, 43200, 129600]; 
-        const intervalValue = intervals[item.level - 1]; 
+        // Lv1: 5m, Lv2: 30m, Lv3: 3h, Lv4: 12h, Lv5: 24h (1d), Lv6: 3d, Lv7: 7d, Lv8: 14d, Lv9: 30d
+        const intervals = [5, 30, 180, 720, 1440, 4320, 10080, 20160, 43200]; 
+        
+        // Safety check for level
+        const levelIdx = Math.max(0, Math.min(item.level - 1, intervals.length - 1));
+        const intervalValue = intervals[levelIdx]; 
+        
         const multiplier = isTestMode ? 1000 : 60000;
         item.nextReview = Date.now() + (intervalValue * multiplier);
         item.learned = true;
@@ -1499,7 +1559,7 @@
         const mainIdx = vocabulary.findIndex(v => v.id === item.id);
         if (mainIdx !== -1) {
             vocabulary[mainIdx].learned = true;
-            vocabulary[mainIdx].level = 2; // Level 2 means 10 mins delay
+            vocabulary[mainIdx].level = 1; // Mark as learned starts at Level 1
             setNextReview(vocabulary[mainIdx]);
             saveData();
             quizQueue.splice(curQuizIdx, 1);
@@ -1520,19 +1580,31 @@
         const container = document.getElementById('level-filter-btns');
         const levels = [1, 2, 3, 4, 5, 6, 7, 8];
         let html = `<span class="lvl-tag ${currentFilter === 'all' ? 'active' : ''}" style="background:#f0f0f0; color:#444;" onclick="setFilter('all')">Tất cả (${vocabulary.length})</span>`;
+        
+        // Explicitly check for Level 0 (Unlearned)
+        const lv0Count = vocabulary.filter(v => !v.learned || v.level === 0).length;
+        html += `<span class="lvl-tag ${currentFilter == 0 ? 'active' : ''}" style="background:var(--lv0); color:#fff;" onclick="setFilter(0)">Mới (${lv0Count})</span>`;
+
         levels.forEach(lvl => {
-            const count = vocabulary.filter(v => v.level === lvl).length;
+            const count = vocabulary.filter(v => v.level === lvl && v.learned).length;
             const color = getComputedStyle(document.documentElement).getPropertyValue(`--lv${lvl}`).trim();
-            html += `<span class="lvl-tag ${currentFilter == lvl ? 'active' : ''}" style="background:${color}; color:#fff;" onclick="setFilter(${lvl})">Level ${lvl} (${count})</span>`;
+            html += `<span class="lvl-tag ${currentFilter == lvl ? 'active' : ''}" style="background:${color}; color:#fff;" onclick="setFilter(${lvl})">Lv ${lvl} (${count})</span>`;
         });
         container.innerHTML = html;
         
-        // Render/Clear "Select All" button in header based on filter
+        // Render Select All / Select 50 buttons
         const saContainer = document.getElementById('select-all-container');
         if (currentFilter !== 'all') {
             const items = getFilteredItems();
             const allSelected = items.length > 0 && items.every(v => selectedIds.has(v.id));
-            saContainer.innerHTML = `<button onclick="toggleSelectAll()" style="border:1px solid #ddd; background:${allSelected ? 'var(--color1)' : 'white'}; color:${allSelected ? 'white' : '#666'}; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${allSelected ? 'Bỏ chọn' : 'Chọn tất cả'}</button>`;
+            
+            // Button Select All
+            let btnHtml = `<button onclick="toggleSelectAll()" style="border:1px solid #ddd; background:${allSelected ? 'var(--color1)' : 'white'}; color:${allSelected ? 'white' : '#666'}; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${allSelected ? 'Bỏ chọn' : 'Chọn tất cả'}</button>`;
+            
+            // Button Select 50
+            btnHtml += `<button onclick="selectNext50()" style="border:1px solid var(--color1); background:white; color:var(--color1); padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Chọn 50</button>`;
+            
+            saContainer.innerHTML = btnHtml;
         } else {
             saContainer.innerHTML = '';
         }
@@ -1551,30 +1623,34 @@
         const listDiv = document.getElementById('list-items');
         listDiv.innerHTML = items.length === 0 ? '<div style="text-align:center; padding:20px; color:#999;">Không có dữ liệu.</div>' : '';
         
-        items.forEach(v => {
+        items.forEach((v, index) => { // Added index
             const div = document.createElement('div');
             div.className = 'list-item';
-            const lvColor = getComputedStyle(document.documentElement).getPropertyValue(`--lv${v.level}`).trim();
+            
+            // Logic Display Level Badge
+            let displayLevel = v.learned ? v.level : 0;
+            let lvColor = displayLevel === 0 ? 'var(--lv0)' : getComputedStyle(document.documentElement).getPropertyValue(`--lv${displayLevel}`).trim();
             
             // Timer HTML
             let timerHtml = '';
-            if (v.level >= 2) {
+            if (v.learned && v.level >= 1) {
                 timerHtml = `<div class="review-timer" data-next="${v.nextReview}" style="font-size:0.75rem; color:#888; margin-top:4px; font-weight:600; text-align:right;">⏳ ...</div>`;
             }
 
             const isSelected = selectedIds.has(v.id);
 
+            // Added index+1 to show visual count
             div.innerHTML = `
                 <div style="display:flex; align-items:center;">
                     <input type="checkbox" class="item-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect(${v.id})">
                     <div>
-                        <strong>${v.word}</strong> <small style="color:var(--color1)">【${v.reading}】</small>
+                        <strong><span style="color:#999; font-weight:500; font-size:0.9em; margin-right:5px;">${index + 1}.</span>${v.word}</strong> <small style="color:var(--color1)">【${v.reading}】</small>
                         <div style="font-size:0.85rem; color:#666;">${v.meaning}</div>
                     </div>
                 </div>
                 <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <button class="lvl-badge" style="background:${lvColor};" onclick="openLevelPicker(${v.id})">Lv ${v.level}</button>
+                        <button class="lvl-badge" style="background:${lvColor};" onclick="openLevelPicker(${v.id})">Lv ${displayLevel}</button>
                         <button onclick="deleteWord(${v.id})" style="border:none; background:#fff0f0; color:#ff7675; width:30px; height:30px; border-radius:10px; cursor:pointer;">🗑️</button>
                     </div>
                     ${timerHtml}
