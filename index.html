@@ -1613,9 +1613,13 @@
 
         if (activeMode === 'srs' || activeMode === 'level_review') {
             const remaining = quizQueue.length - curQuizIdx;
-            if (remaining >= 4 && Math.random() > 0.5) {
+            const possibleSizes = [10, 7, 5];
+            const validSizes = possibleSizes.filter(s => remaining >= s);
+            
+            if (validSizes.length > 0 && Math.random() > 0.4) {
+                const randomSize = validSizes[Math.floor(Math.random() * validSizes.length)];
                 currentQuizFormat = 'match';
-                renderMatchFormat();
+                renderMatchFormat(randomSize);
                 return;
             }
         }
@@ -1667,13 +1671,13 @@
         }
     }
 
-    function renderMatchFormat() {
+    function renderMatchFormat(matchSize = 5) {
         document.getElementById('match-grid').classList.remove('hidden');
         document.getElementById('quiz-q').innerText = "NỐI TỪ VỰNG";
         document.getElementById('quiz-hint').innerText = "Chọn cặp tương ứng";
-        document.getElementById('quiz-meta').innerText = `CÂU HỎI ${curQuizIdx + 1}-${Math.min(curQuizIdx + 4, quizQueue.length)}/${quizQueue.length}`;
+        document.getElementById('quiz-meta').innerText = `CÂU HỎI ${curQuizIdx + 1}-${Math.min(curQuizIdx + matchSize, quizQueue.length)}/${quizQueue.length}`;
         
-        matchBatch = quizQueue.slice(curQuizIdx, curQuizIdx + 4);
+        matchBatch = quizQueue.slice(curQuizIdx, curQuizIdx + matchSize);
         matchResults = {}; 
         matchBatch.forEach(item => matchResults[item.id] = 'pending');
         
@@ -1891,8 +1895,8 @@
         // Đảm bảo level luôn là số nguyên, tránh lỗi cộng chuỗi (VD: "3" + "1" = "31")
         const currentLevel = parseInt(item.level) || 1;
         
-        // Khoảng thời gian (phút): [Lv1: 5p, Lv2: 30p, Lv3: 4h, Lv4: 12h, Lv5: 1d, Lv6: 2d, Lv7: 4d, Lv8: 8d]
-        const intervals = [5, 30, 240, 720, 1440, 2880, 5760, 11520]; 
+        // Khoảng thời gian (phút): [Lv1: 5p, Lv2: 30p, Lv3: 4h, Lv4: 12h, Lv5: 1d, Lv6: 3d, Lv7: 6d, Lv8: 10d]
+        const intervals = [5, 30, 240, 720, 1440, 4320, 8640, 14400]; 
         
         const levelIdx = Math.max(0, Math.min(currentLevel - 1, intervals.length - 1));
         const intervalValue = intervals[levelIdx]; 
