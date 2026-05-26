@@ -1874,7 +1874,7 @@
              if (mainIdx === -1) return;
 
              if (res === 'correct') {
-                  vocabulary[mainIdx].level = Math.min(8, vocabulary[mainIdx].level + 1);
+                  vocabulary[mainIdx].level = Math.min(8, parseInt(vocabulary[mainIdx].level) + 1);
                   setNextReview(vocabulary[mainIdx]);
              } else if (res === 'wrong' || (res === 'pending' && isSkip)) {
                   vocabulary[mainIdx].level = 1;
@@ -1888,9 +1888,15 @@
     }
 
     function setNextReview(item) {
-        const intervals = [5, 30, 180, 720, 1440, 4320, 10080, 20160, 43200]; 
-        const levelIdx = Math.max(0, Math.min(item.level - 1, intervals.length - 1));
+        // Đảm bảo level luôn là số nguyên, tránh lỗi cộng chuỗi (VD: "3" + "1" = "31")
+        const currentLevel = parseInt(item.level) || 1;
+        
+        // Khoảng thời gian (phút): [Lv1: 5p, Lv2: 30p, Lv3: 4h, Lv4: 12h, Lv5: 1d, Lv6: 2d, Lv7: 4d, Lv8: 8d]
+        const intervals = [5, 30, 240, 720, 1440, 2880, 5760, 11520]; 
+        
+        const levelIdx = Math.max(0, Math.min(currentLevel - 1, intervals.length - 1));
         const intervalValue = intervals[levelIdx]; 
+        
         const multiplier = isTestMode ? 1000 : 60000;
         item.nextReview = Date.now() + (intervalValue * multiplier);
         item.learned = true;
