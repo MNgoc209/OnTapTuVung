@@ -1132,7 +1132,7 @@
             return;
         }
 
-        vocabulary.push({ id: Date.now() + Math.random(), word: w, reading: r, meaning: m || "Chưa dịch", level: 0, nextReview: 0, learned: false, extra: null });
+        vocabulary.push({ id: String(Date.now()) + Math.floor(Math.random() * 10000), word: w, reading: r, meaning: m || "Chưa dịch", level: 0, nextReview: 0, learned: false, extra: null });
         saveData(); renderList(); startMode('list');
         ['manual-word', 'manual-reading', 'manual-meaning'].forEach(id => document.getElementById(id).value = '');
     }
@@ -1148,8 +1148,10 @@
             const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
             
             let addedCount = 0;
-            let duplicateCount = 0;
-            let duplicateWords = []; // Mảng lưu các từ bị trùng
+            let updatedCount = 0;
+            let skippedCount = 0;
+            let updatedWords = []; 
+            let skippedWords = []; 
 
             rows.forEach((r) => {
                 let w = String(r[0] || '').trim();
@@ -1161,9 +1163,13 @@
                 if (w && !reading) reading = w;
 
                 if (w) {
-                    if (!isDuplicate(w)) {
+                    // Tìm xem từ này đã có trong danh sách chưa (không phân biệt hoa thường)
+                    const existingIdx = vocabulary.findIndex(v => v.word.toLowerCase() === w.toLowerCase());
+                    
+                    if (existingIdx === -1) {
+                        // TỪ MỚI -> Thêm vào danh sách
                         vocabulary.push({ 
-                            id: Date.now() + Math.random(), 
+                            id: String(Date.now()) + Math.floor(Math.random() * 10000), 
                             word: w, 
                             reading: reading, 
                             meaning: meaning, 
@@ -1174,29 +1180,47 @@
                         });
                         addedCount++;
                     } else {
-                        duplicateCount++;
-                        duplicateWords.push(w); // Lưu lại từ bị trùng
+                        // ĐÃ TỒN TẠI -> Kiểm tra xem có gì thay đổi để Cập nhật không
+                        let changed = false;
+                        if (reading && vocabulary[existingIdx].reading !== reading) {
+                            vocabulary[existingIdx].reading = reading;
+                            changed = true;
+                        }
+                        if (meaning && vocabulary[existingIdx].meaning !== meaning) {
+                            vocabulary[existingIdx].meaning = meaning;
+                            changed = true;
+                        }
+
+                        if (changed) {
+                            updatedCount++;
+                            updatedWords.push(w);
+                        } else {
+                            skippedCount++;
+                            skippedWords.push(w);
+                        }
                     }
                 }
             });
             saveData(); 
             renderList(); 
             
-            let msg = `Xử lý xong!\n- Thêm mới: ${addedCount} từ\n- Trùng lặp bỏ qua: ${duplicateCount} từ`;
+            let msg = `Xử lý xong file Excel!\n`;
+            msg += `- Thêm mới: ${addedCount} từ\n`;
+            msg += `- Cập nhật (đổi nghĩa/phiên âm): ${updatedCount} từ\n`;
+            msg += `- Bỏ qua (trùng y hệt): ${skippedCount} từ`;
             
-            // Nếu có từ trùng, thêm danh sách vào thông báo
-            if (duplicateWords.length > 0) {
-                let uniqueDupes = [...new Set(duplicateWords)]; // Lọc trùng lặp trong chính file import
-                let displayDupes = uniqueDupes.slice(0, 15).join(', '); // Hiển thị tối đa 15 từ để tránh hộp thoại quá dài
-                
-                if (uniqueDupes.length > 15) {
-                    displayDupes += `... và ${uniqueDupes.length - 15} từ khác`;
-                }
-                
-                msg += `\n\n📝 Chi tiết từ trùng:\n${displayDupes}`;
+            // Hiển thị danh sách các từ đã được cập nhật
+            if (updatedCount > 0) {
+                let uniqueUpdates = [...new Set(updatedWords)];
+                let displayUpdates = uniqueUpdates.slice(0, 10).join(', ');
+                if (uniqueUpdates.length > 10) displayUpdates += `... (+${uniqueUpdates.length - 10})`;
+                msg += `\n\n🔄 Đã tự động sửa nội dung:\n${displayUpdates}`;
             }
             
             alert(msg);
+            
+            // Reset ô input file để có thể chọn lại chính file đó lần sau
+            document.getElementById('file-in').value = '';
         };
         reader.readAsArrayBuffer(file);
     }
