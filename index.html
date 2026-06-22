@@ -1758,7 +1758,6 @@
                 return;
             }
 
-            // Prevent matching items from the same side (Left vs Left, Right vs Right)
             if (matchSelectedBtn.dataset.side === btn.dataset.side) {
                 matchSelectedBtn.classList.remove('selected');
                 matchSelectedBtn = btn;
@@ -1766,19 +1765,46 @@
                 return;
             }
 
-            // Fix ID comparison: DOM dataset is String, ensure strict or loose match works
-            if (matchSelectedBtn.dataset.id === btn.dataset.id) {
-                // Correct
+            let isCorrect = false;
+            const id1 = String(btn.dataset.id);
+            const id2 = String(matchSelectedBtn.dataset.id);
+
+            if (id1 === id2) {
+                isCorrect = true;
+            } else {
+                const item1 = vocabulary.find(v => String(v.id) === id1);
+                const item2 = vocabulary.find(v => String(v.id) === id2);
+                
+                if (item1 && item2) {
+                    const leftBtn = btn.dataset.side === 'left' ? btn : matchSelectedBtn;
+                    const rightBtn = btn.dataset.side === 'right' ? btn : matchSelectedBtn;
+                    
+                    const leftItem = String(leftBtn.dataset.id) === String(item1.id) ? item1 : item2;
+                    const rightItem = String(rightBtn.dataset.id) === String(item1.id) ? item1 : item2;
+                    
+                    const rightType = rightBtn.dataset.type; 
+                    
+                    const lRead = String(leftItem.reading || "").trim().toLowerCase();
+                    const rRead = String(rightItem.reading || "").trim().toLowerCase();
+                    const lMean = String(leftItem.meaning || "").trim().toLowerCase();
+                    const rMean = String(rightItem.meaning || "").trim().toLowerCase();
+                    const lWord = String(leftItem.word || "").trim().toLowerCase();
+                    const rWord = String(rightItem.word || "").trim().toLowerCase();
+
+                    if (rightType === 'reading' && lRead && rRead && lRead === rRead) isCorrect = true;
+                    else if (rightType === 'meaning' && lMean && rMean && lMean === rMean) isCorrect = true;
+                    else if (rightType === 'word' && lWord && rWord && lWord === rWord) isCorrect = true;
+                }
+            }
+
+            if (isCorrect) {
                 btn.classList.add('correct', 'disabled');
                 btn.classList.remove('selected');
                 matchSelectedBtn.classList.add('correct', 'disabled');
                 matchSelectedBtn.classList.remove('selected');
 
-                // IMPORTANT: Parse ID back to Number for dictionary lookup
-                const idNum = parseFloat(btn.dataset.id);
-                if (matchResults[idNum] === 'pending') {
-                    matchResults[idNum] = 'correct';
-                }
+                if (matchResults[id1] === 'pending') matchResults[id1] = 'correct';
+                if (matchResults[id2] === 'pending') matchResults[id2] = 'correct';
 
                 matchSelectedBtn = null;
                 matchedPairsCount++;
@@ -1786,17 +1812,11 @@
                 if (matchedPairsCount >= matchBatch.length) {
                     setTimeout(() => finishMatchBatch(false), 300);
                 }
-
             } else {
-                // Wrong
                 isAnimatingMatch = true;
                 btn.classList.add('wrong');
                 matchSelectedBtn.classList.add('wrong');
                 
-                // Parse IDs back to Number
-                const id1 = parseFloat(btn.dataset.id);
-                const id2 = parseFloat(matchSelectedBtn.dataset.id);
-
                 matchResults[id1] = 'wrong';
                 matchResults[id2] = 'wrong';
 
@@ -1814,12 +1834,40 @@
     }
 
     function generateDistractors(correctItem, field) {
-        let correctValue = correctItem[field];
-        let pool = vocabulary.filter(v => v.id !== correctItem.id).sort(() => Math.random() - 0.5);
+        let correctValue = String(correctItem[field] || "").trim();
+        
+        let pool = vocabulary.filter(v => {
+            if (String(v.id) === String(correctItem.id)) return false;
+            
+            const vRead = String(v.reading || "").trim().toLowerCase();
+            const cRead = String(correctItem.reading || "").trim().toLowerCase();
+            const vWord = String(v.word || "").trim().toLowerCase();
+            const cWord = String(correctItem.word || "").trim().toLowerCase();
+            const vMean = String(v.meaning || "").trim().toLowerCase();
+            const cMean = String(correctItem.meaning || "").trim().toLowerCase();
+
+            if (vRead && cRead && vRead === cRead) return false;
+            if (vWord && cWord && vWord === cWord) return false;
+            if (vMean && cMean && vMean === cMean) return false;
+            return true;
+        }).sort(() => Math.random() - 0.5);
+        
         let distractors = [correctValue];
-        for (let i = 0; i < 3; i++) {
-            distractors.push(pool[i] ? pool[i][field] : "---");
+        let usedValues = new Set([correctValue.toLowerCase()]);
+        
+        for (let i = 0; i < pool.length && distractors.length < 4; i++) {
+            let val = String(pool[i][field] || "").trim();
+            if (val && !usedValues.has(val.toLowerCase())) {
+                usedValues.add(val.toLowerCase());
+                distractors.push(val);
+            }
         }
+        
+        let fallbackCounter = 1;
+        while (distractors.length < 4) {
+            distractors.push("--- " + fallbackCounter++);
+        }
+        
         return distractors.sort(() => Math.random() - 0.5);
     }
 
@@ -1827,34 +1875,66 @@
         const btn = document.createElement('button');
         btn.className = 'option-btn';
         btn.innerHTML = `<span class="opt-prefix">${String.fromCharCode(65 + index)}</span> <span>${text}</span>`;
-        btn.onclick = () => checkAnswer(text === correctValue, btn, correctValue);
+        btn.onclick = () => checkAnswer(text, btn, correctValue);
         document.getElementById('options').appendChild(btn);
     }
 
-    function checkAnswer(isCorrect, btn, correctValue) {
+    function processWrongAnswer(mainIdx) {
+        if (mainIdx !== -1) {
+            vocabulary[mainIdx].learned = false;
+            vocabulary[mainIdx].level = 0;
+            console.log(`[SAI] Đã đánh dấu Cần ôn lại: ${vocabulary[mainIdx].word}`);
+        }
+    }
+
+    function checkAnswer(selectedText, btn, correctValue) {
         document.querySelectorAll('.option-btn').forEach(b => b.classList.add('disabled'));
         const item = quizQueue[curQuizIdx];
         const mainIdx = vocabulary.findIndex(v => v.id === item.id);
+
+        let isCorrect = false;
+        const selTrimmed = String(selectedText).trim().toLowerCase();
+        const corrTrimmed = String(correctValue).trim().toLowerCase();
+
+        if (selTrimmed === corrTrimmed) {
+            isCorrect = true;
+        } else {
+            const qText = String(document.getElementById('quiz-q').innerText).trim().toLowerCase();
+            const hint = document.getElementById('quiz-hint').innerText;
+
+            const matchingVocab = vocabulary.filter(v => 
+                String(v.word).trim().toLowerCase() === selTrimmed ||
+                String(v.reading).trim().toLowerCase() === selTrimmed ||
+                String(v.meaning).trim().toLowerCase() === selTrimmed
+            );
+
+            for (let v of matchingVocab) {
+                if (hint.includes("cách đọc") && String(v.word).trim().toLowerCase() === qText) { isCorrect = true; break; }
+                if (hint.includes("ý nghĩa") && (String(v.word).trim().toLowerCase() === qText || String(v.reading).trim().toLowerCase() === qText)) { isCorrect = true; break; }
+                if (hint.includes("từ vựng") && (String(v.reading).trim().toLowerCase() === qText || String(v.meaning).trim().toLowerCase() === qText)) { isCorrect = true; break; }
+            }
+        }
 
         if (isCorrect) {
             btn.classList.add('correct');
             currentQuizResult = 'correct';
             
             if (mainIdx !== -1) {
-                vocabulary[mainIdx].level = Math.min(8, vocabulary[mainIdx].level + 1);
+                vocabulary[mainIdx].wrongCount = 0; 
+                vocabulary[mainIdx].needsRelearn = false; 
+                vocabulary[mainIdx].level = Math.min(8, parseInt(vocabulary[mainIdx].level || 0) + 1);
                 setNextReview(vocabulary[mainIdx]);
+                console.log(`[ĐÚNG] Từ '${vocabulary[mainIdx].word}' -> Level mới: ${vocabulary[mainIdx].level}`);
             }
         } else {
             btn.classList.add('wrong');
             currentQuizResult = 'wrong';
             
             document.querySelectorAll('.option-btn').forEach(b => {
-                if (b.innerText.includes(correctValue)) b.classList.add('correct');
+                if (String(b.innerText).trim().toLowerCase().includes(corrTrimmed)) b.classList.add('correct');
             });
-            if (mainIdx !== -1) {
-                vocabulary[mainIdx].level = 1; 
-                setNextReview(vocabulary[mainIdx]); 
-            }
+            
+            processWrongAnswer(mainIdx);
         }
         
         saveData(); 
