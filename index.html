@@ -30,38 +30,8 @@
             --lv1: #e74c3c; --lv2: #e67e22; --lv3: #f1c40f; --lv4: #2ecc71;
             --lv5: #3498db; --lv6: #9b59b6; --lv7: #1abc9c; --lv8: #2c3e50;
         }
-
-        /* Blue Theme Override */
-        body.theme-blue {
-            /* Palette Ocean Blue */
-            --color1: #1C4D8D; 
-            --color2: #C4E1E6; 
-            --color3: #D6F4ED; 
-            --color4: #FFFFFF; 
-            --color5: #BDE8F5; 
-            --color6: #4988C4; 
-            
-            --text: #0F2854;   
-            --bg: #F0F8FF;     
-            --ai: #0F2854;     
-        }
-
-        /* Watermelon Theme Override */
-        body.theme-watermelon {
-            /* Palette Watermelon (Dưa Hấu) */
-            --color1: #FFAAB8; /* Pink (Flesh) */
-            --color2: #FFD8DF; /* Light Pink */
-            --color3: #F0FFDF; /* Light Green */
-            --color4: #FFFFFF;
-            --color5: #E8F5E9; 
-            --color6: #A8DF8E; /* Green (Rind) */
-            
-            --text: #2F4F2F;
-            --bg: #FAFFFA;
-            --ai: #27ae60;
-        }
         
-        body { font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text); padding: 15px; max-width: 700px; margin: 0 auto; line-height: 1.6; transition: background 0.3s, color 0.3s; padding-bottom: 80px; /* Space for batch bar */ }
+        body { font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text); padding: 15px; max-width: 900px; margin: 0 auto; line-height: 1.6; transition: background 0.3s, color 0.3s; padding-bottom: 80px; }
         .container { background: white; padding: 25px; border-radius: 30px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.05); border: 1px solid var(--color2); }
         .box { background: var(--color3); padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 1px solid var(--color2); transition: background 0.3s, border-color 0.3s; }
         
@@ -105,7 +75,7 @@
         .mode-btn.active { background: var(--color1); color: white; border-color: var(--color1); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); }
 
         .quiz-card { background: white; padding: 30px 20px; border-radius: 25px; border: 2px solid var(--color3); margin-bottom: 20px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; transition: border-color 0.3s; }
-        .quiz-q { font-size: 2.5rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+        .quiz-q { font-size: 4.5rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
         .quiz-hint { color: #888; font-size: 0.9rem; margin-bottom: 15px; }
 
         .option-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -128,11 +98,10 @@
         .expansion-content { font-size: 0.9rem; color: #555; font-weight: 500; }
 
         .btn-action { width: 100%; padding: 15px; border: none; border-radius: 18px; font-weight: 700; cursor: pointer; color: white; margin-top: 10px; font-family: 'Quicksand'; font-size: 1rem; transition: 0.3s; }
-        
+
         .study-card { text-align: center; background: white; padding: 40px 20px; border-radius: 35px; border: 2px solid var(--color3); margin-bottom: 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02); position: relative; cursor: pointer; transition: border-color 0.3s; }
-        .word-main { font-size: 3.5rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+        .word-main { font-size: 5.5rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
         .word-reading { font-size: 1.4rem; color: var(--color1); font-weight: 600; opacity: 0; transition: 0.3s; min-height: 2rem; }
-        .word-reading.visible { opacity: 1; }
         .word-meaning { font-size: 1.5rem; color: #636e72; border-top: 2px dashed var(--color2); padding-top: 20px; margin-top: 20px; font-weight: 600; }
 
         .search-container { position: relative; width: 100%; margin-bottom: 10px; display: flex; align-items: center; }
@@ -153,7 +122,7 @@
         .lvl-tag { padding: 10px 18px; border-radius: 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: 0.2s; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .lvl-tag.active { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.12); border-color: rgba(0,0,0,0.15); }
 
-        .list-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 15px 20px; border-radius: 20px; background: white; margin-bottom: 15px; border: 1px solid var(--color2); flex-wrap: wrap; gap: 10px; }
+        .list-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-radius: 20px; background: white; margin-bottom: 15px; border: 1px solid var(--color2); flex-wrap: wrap; gap: 10px; }
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: white; border-radius: 15px; margin-bottom: 10px; border: 1px solid #f0f0f0; }
 
         .hidden { display: none !important; }
@@ -244,7 +213,6 @@
             appearance: none;
             -webkit-appearance: none;
             width: 22px; height: 22px;
-            /* Fix input generic width overwrite */
             min-width: 22px; 
             flex: 0 0 22px;
             
@@ -278,15 +246,15 @@
         /* Daily Status List */
         .daily-status-item {
             display: flex; align-items: center; justify-content: space-between;
-            gap: 10px; /* Thêm khoảng cách */
+            gap: 10px;
             padding: 10px; border-bottom: 1px solid #eee;
             font-size: 0.9rem;
         }
         .daily-status-item:last-child { border-bottom: none; }
         .status-badge {
             font-size: 0.75rem; padding: 4px 8px; border-radius: 8px; font-weight: bold;
-            flex-shrink: 0; /* Ngăn không cho co lại */
-            white-space: nowrap; /* Giữ trên 1 dòng */
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         .status-pending { background: #f0f0f0; color: #666; }
         .status-done { background: #eafaf1; color: var(--success); }
@@ -303,23 +271,21 @@
         @media (max-width: 600px) {
             body { padding: 10px; }
             .container { padding: 15px; }
-            .quiz-q { font-size: 2rem; }
-            .word-main { font-size: 2.5rem; }
+            .quiz-q { font-size: 3.5rem; }
+            .word-main { font-size: 4.2rem; }
             
-            /* Fix mode selector on mobile to allow proper scrolling */
             .mode-selector {
                 justify-content: flex-start;
                 gap: 8px;
             }
             .mode-btn {
-                flex: 0 0 auto; /* Allow buttons to take their natural width */
+                flex: 0 0 auto;
                 width: auto;
-                min-width: unset; /* Remove rigid min-width */
+                min-width: unset;
                 padding: 12px 16px;
                 font-size: 0.85rem;
             }
             
-            /* Adjust header actions for small screens */
             .header-actions {
                 gap: 8px;
             }
@@ -333,8 +299,6 @@
 
 <div class="container">
     <div class="box">
-        <!-- AI API Input Removed -->
-        
         <!-- Attendance Settings -->
         <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
             <label style="font-size: 0.9rem; font-weight: 700; color: var(--color1); white-space: nowrap;">📅 Ngày bắt đầu học:</label>
@@ -349,8 +313,7 @@
         </div>
 
         <div class="header-actions">
-            <button onclick="document.getElementById('file-in').click()" class="btn-action" style="background: white; color: var(--color1); border: 2px dashed var(--color2); margin-top: 0; font-size: 0.85rem; flex: 1;">📥 Import</button>
-            <button id="btn-theme" onclick="toggleTheme()" class="btn-action" style="background: var(--color6); color: white; border: none; margin-top: 0; font-size: 0.85rem; flex: 0 0 100px;">🎨 Theme</button>
+            <button onclick="document.getElementById('file-in').click()" class="btn-action" style="background: white; color: var(--color1); border: 2px dashed var(--color2); margin-top: 0; font-size: 0.85rem; flex: 1;">📥 Import / Đồng bộ dữ liệu</button>
             <button id="btn-test-mode" onclick="toggleTestMode()" class="btn-action btn-test" style="margin-top: 0; font-size: 0.85rem; flex: 0 0 80px;">🧪 Test</button>
         </div>
         <input type="file" id="file-in" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleExcel()">
@@ -386,11 +349,27 @@
         </div>
     </div>
 
-    <!-- Review Options Modal (New) -->
+    <!-- Review Options Modal (Updated with Limiter) -->
     <div id="reviewOptionsModal" class="modal" style="z-index: 1002;">
         <div class="modal-content" style="max-width: 300px;">
             <span class="close-modal" onclick="closeReviewOptionsModal()">&times;</span>
             <h3 id="review-opt-title" style="color:var(--text); margin-top:0;">Level X</h3>
+            
+            <div style="margin-top: 15px; text-align: left;">
+                <label style="font-size: 0.85rem; font-weight: bold; color: var(--color1);">Số lượng từ muốn ôn:</label>
+                <div style="display: flex; gap: 5px; margin-top: 5px;">
+                    <select id="review-limit-select" onchange="toggleCustomReviewLimit()" style="flex: 1; padding: 8px; border-radius: 10px; border: 2px solid var(--color2); font-family: 'Quicksand'; outline: none;">
+                        <option value="5">5 từ</option>
+                        <option value="10">10 từ</option>
+                        <option value="15">15 từ</option>
+                        <option value="50" selected>50 từ</option>
+                        <option value="all">Tất cả</option>
+                        <option value="custom">Tùy chỉnh...</option>
+                    </select>
+                    <input type="number" id="review-limit-custom" placeholder="Nhập số..." style="display: none; flex: 1; padding: 8px; border-radius: 10px; border: 2px solid var(--color2); font-family: 'Quicksand'; outline: none; min-width: 50px;">
+                </div>
+            </div>
+
             <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
                 <button id="btn-review-due" class="btn-action" style="background:var(--warning); margin:0; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;">
                     <span>⏳ Ôn từ đến hạn</span>
@@ -483,7 +462,6 @@
             <div class="stat-item"><span class="stat-val" id="stat-high">0</span><span style="font-size:0.7rem">Đã thuộc</span></div>
         </div>
         
-        <!-- Attendance Stat -->
         <div class="attendance-stats">
             <div>🚀 Đã học: <span id="stat-studied-days">0</span> ngày</div>
             <div style="color: #ffcccc;">💤 Bỏ lỡ: <span id="stat-missed-days">0</span> ngày</div>
@@ -493,7 +471,7 @@
     <div class="mode-selector">
         <button class="mode-btn active" id="btn-daily" onclick="startMode('daily')">🔥 ÔN LỘ TRÌNH</button>
         <button class="mode-btn" id="btn-list" onclick="startMode('list')">📚 DANH SÁCH</button>
-        <button class="mode-btn" id="btn-srs" onclick="startMode('srs')">ÔN TẬP SRS</button>
+        <!-- Nút ÔN TẬP SRS đã được xóa -->
         <button class="mode-btn" id="btn-level-review" onclick="openReviewLevelModal()">ÔN TẬP LEVEL</button>
     </div>
 
@@ -525,7 +503,7 @@
                 <div style="background: #f8f9fa; padding: 20px; border-radius: 20px; border: 1px solid #eee; margin-top: 15px;">
                     <!-- Vùng cho Single Quiz -->
                     <div id="expl-single">
-                        <div style="font-size: 1.6rem; font-weight: 700; color: var(--color1); margin-bottom: 5px;" id="expl-word"></div>
+                        <div style="font-size: 2.8rem; font-weight: 700; color: var(--color1); margin-bottom: 5px;" id="expl-word"></div>
                         <div style="font-size: 1rem; color: #555; font-weight: 600;" id="expl-reading"></div>
                         <div style="font-size: 1.1rem; color: #333; margin-top: 8px; font-weight: 600; border-top: 1px solid #ddd; padding-top: 8px;" id="expl-meaning"></div>
                         <div id="expl-extra"></div>
@@ -536,11 +514,6 @@
                         <div id="expl-batch-list" style="display:flex; flex-direction:column; gap:10px;"></div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Note Logic SRS -->
-            <div id="srs-logic-note" class="hidden srs-note">
-                <!-- Nội dung được JS render -->
             </div>
 
             <div id="quiz-next-container" class="hidden">
@@ -564,7 +537,6 @@
                 <button onclick="openDailyListModal()" style="font-size: 0.9rem; background: #fff; border: 2px solid var(--color1); color: var(--color1); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 700;">📋 Xem lại danh sách</button>
             </div>
             
-            <button id="btn-continue-srs" class="btn-action hidden" onclick="setupSRSQuiz()" style="background: var(--success); color: white; margin-bottom: 10px;">🚀 Ôn tiếp phần còn lại</button>
             <button id="btn-force-next-day" class="btn-action btn-next-day hidden" onclick="advanceNextDay()" style="margin-bottom: 10px;">📅 Học trước ngày mai</button>
             <button class="btn-action btn-theme" onclick="startMode('list')">Quay lại danh sách</button>
         </div>
@@ -589,8 +561,11 @@
             <div id="level-filter-btns" class="filter-group"></div>
         </div>
 
-        <div class="list-header" onclick="toggleList()">
-            <h3 style="margin:0; font-size:1.1rem; color:var(--color1); font-weight:700;">DỮ LIỆU TỪ VỰNG <span id="list-toggle-icon" style="font-size:0.8rem; margin-left:5px;">▼</span></h3>
+        <div class="list-header">
+            <h3 style="margin:0; font-size:1.1rem; color:var(--color1); font-weight:700; display:flex; align-items:center;">
+                DỮ LIỆU TỪ VỰNG 
+                <span id="list-toggle-icon" onclick="toggleList()" style="font-size:0.8rem; margin-left:10px; cursor:pointer; padding: 5px 10px; background: var(--color3); border: 1px solid var(--color2); border-radius: 10px; color: var(--color1);">▼</span>
+            </h3>
             <div style="display:flex; gap:10px; align-items:center;">
                 <!-- Select All Button (Injected via JS) -->
                 <div id="select-all-container" style="display:flex; gap:5px; flex-wrap:wrap; justify-content: flex-end;"></div>
@@ -625,7 +600,6 @@
     </div>
 </div>
 
-<!-- Main Script (Standard) -->
 <script>
     // Core Variables (Will be loaded by loadData based on mode)
     var vocabulary = [];
@@ -654,14 +628,12 @@
     let matchedPairsCount = 0;
     let isAnimatingMatch = false;
 
-    // Variables for Quick Level Picker & Batch & Edit
     let editingWordId = null;
     let currentEditId = null;
     let selectedIds = new Set();
-
-    // Theme logic
-    let currentTheme = localStorage.getItem('jlpt_theme') || 'pink';
-    const THEMES = ['pink', 'blue', 'watermelon'];
+    
+    let pendingImportData = null; 
+    let isSortedAZ = false;
     
     // Level Picker Logic
     function openLevelPicker(id) {
@@ -826,6 +798,17 @@
         document.getElementById('reviewLevelModal').style.display = "none";
     }
 
+    function toggleCustomReviewLimit() {
+        const select = document.getElementById('review-limit-select');
+        const customInput = document.getElementById('review-limit-custom');
+        if (select.value === 'custom') {
+            customInput.style.display = 'block';
+            customInput.focus();
+        } else {
+            customInput.style.display = 'none';
+        }
+    }
+
     // New Function: Show options to review All or Due
     function showReviewOptions(level) {
         closeReviewLevelModal();
@@ -885,7 +868,22 @@
             return;
         }
 
+        // Apply chosen review quantity limit
+        let limit = 0;
+        const selectVal = document.getElementById('review-limit-select').value;
+        if (selectVal === 'custom') {
+            limit = parseInt(document.getElementById('review-limit-custom').value) || items.length;
+        } else if (selectVal === 'all') {
+            limit = items.length;
+        } else {
+            limit = parseInt(selectVal) || items.length;
+        }
+
         quizQueue = items.sort(() => Math.random() - 0.5);
+        
+        if (limit > 0 && limit < quizQueue.length) {
+            quizQueue = quizQueue.slice(0, limit);
+        }
         
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-level-review').classList.add('active');
@@ -894,7 +892,6 @@
         document.getElementById('view-list').classList.add('hidden');
         document.getElementById('view-card').classList.add('hidden');
         document.getElementById('view-quiz').classList.remove('hidden');
-        document.getElementById('srs-logic-note').classList.add('hidden');
         document.getElementById('btn-view-daily-list').classList.add('hidden');
         
         curQuizIdx = 0;
@@ -945,41 +942,37 @@
             let doneCount = 0;
             
              dailyTargetIds.forEach(id => {
-                const isPending = dailyQueue.some(q => q.id === id);
-                if (!isPending) doneCount++;
-             });
+            const item = vocabulary.find(v => v.id === id);
+            if (!item) return;
 
-            html += `<div style="text-align:center; font-weight:bold; color:var(--color1); margin-bottom:10px; font-size:0.9rem;">Tiến độ: ${doneCount} / ${dailyTargetIds.length}</div>`;
+            const isPending = dailyQueue.some(q => q.id === id);
+            
+            if (dailyFilter === 'pending' && !isPending) return;
+            if (dailyFilter === 'done' && isPending) return;
 
-            dailyTargetIds.forEach(id => {
-                const item = vocabulary.find(v => v.id === id);
-                if (!item) return;
+            visibleCount++;
+            if (!isPending) doneCount++;
 
-                const isPending = dailyQueue.some(q => q.id === id);
-                
-                if (dailyFilter === 'pending' && !isPending) return;
-                if (dailyFilter === 'done' && isPending) return;
-
-                visibleCount++;
-
-                const statusHtml = isPending 
-                    ? `<span class="status-badge status-pending">⚪ Chưa học</span>`
-                    : `<span class="status-badge status-done">✅ Đã xong</span>`;
-                
-                html += `
-                    <div class="daily-status-item">
-                        <div style="flex: 1; min-width: 0;">
-                            <strong style="font-size:1.1rem">${item.word}</strong>
-                            <div style="font-size:0.9rem; color:var(--color1); font-weight:600;">${item.reading}</div>
-                            <div style="font-size:0.8rem; color:#666;">${item.meaning}</div>
-                        </div>
-                        ${statusHtml}
+            const statusHtml = isPending 
+                ? `<span class="status-badge status-pending">⚪ Chưa học</span>`
+                : `<span class="status-badge status-done">✅ Đã xong</span>`;
+            
+            html += `
+                <div class="daily-status-item">
+                    <div style="flex: 1; min-width: 0;">
+                        <strong style="font-size:1.4rem">${item.word}</strong>
+                        <div style="font-size:0.95rem; color:var(--color1); font-weight:600;">${item.reading}</div>
+                        <div style="font-size:0.8rem; color:#666;">${item.meaning}</div>
                     </div>
-                `;
-            });
+                    ${statusHtml}
+                </div>
+            `;
+        });
             
             if (visibleCount === 0) {
                  html += `<div style="text-align:center; padding:20px; color:#999;">Không có từ nào theo bộ lọc này.</div>`;
+            } else {
+                 html = html.replace('<div style="padding-bottom: 20px;">', `<div style="padding-bottom: 20px;"><div style="text-align:center; font-weight:bold; color:var(--color1); margin-bottom:10px; font-size:0.9rem;">Tiến độ: ${doneCount} / ${dailyTargetIds.length}</div>`);
             }
         }
         
@@ -1044,35 +1037,6 @@
         saveData(); 
     }
 
-    function toggleTheme() {
-        let currentIndex = THEMES.indexOf(currentTheme);
-        if (currentIndex === -1) currentIndex = 0; 
-        currentIndex = (currentIndex + 1) % THEMES.length;
-        currentTheme = THEMES[currentIndex];
-        
-        applyTheme(currentTheme);
-        localStorage.setItem('jlpt_theme', currentTheme);
-    }
-
-    function applyTheme(themeName) {
-        document.body.classList.remove('theme-blue', 'theme-watermelon');
-        if (themeName === 'blue') {
-            document.body.classList.add('theme-blue');
-        } else if (themeName === 'watermelon') {
-            document.body.classList.add('theme-watermelon');
-        }
-        
-        let metaColor = "#F5AFAF"; 
-        if(themeName === 'blue') metaColor = "#1C4D8D";
-        if(themeName === 'watermelon') metaColor = "#FFAAB8";
-        document.querySelector('meta[name="theme-color"]').setAttribute("content", metaColor);
-    }
-
-    function loadTheme() {
-        if (!THEMES.includes(currentTheme)) currentTheme = 'pink';
-        applyTheme(currentTheme);
-    }
-
     function toggleTestMode() {
         isTestMode = !isTestMode;
         const btn = document.getElementById('btn-test-mode');
@@ -1091,21 +1055,6 @@
         updateDashboard();
         renderList();
         startMode('list');
-        updateSRSNote(); 
-    }
-    
-    function updateSRSNote() {
-        const noteEl = document.getElementById('srs-logic-note');
-        if (activeMode === 'srs') {
-            noteEl.classList.remove('hidden');
-            if (isTestMode) {
-                noteEl.innerHTML = "<strong>⚡ LOGIC TEST (Giây):</strong> Sai=Lv1 | Lv1→5s | Lv2→30s | Lv3→3p...";
-            } else {
-                noteEl.innerHTML = "<strong>🕒 LOGIC CHUẨN (Phút):</strong> Sai=Lv1 | Lv1→5p | Lv2→30p | Lv3→3h | Lv4→12h | Lv5→1ngày...";
-            }
-        } else {
-            noteEl.classList.add('hidden');
-        }
     }
 
     function isDuplicate(word) {
@@ -1124,8 +1073,8 @@
         }
         
         // Logic điền tự động nếu thiếu
-        if (!w && r) w = r; // Nếu thiếu Kanji, lấy Hiragana làm từ chính
-        if (w && !r) r = w; // Nếu thiếu Hiragana (vd Katakana), lấy từ chính làm cách đọc
+        if (!w && r) w = r; 
+        if (w && !r) r = w; 
         
         if(isDuplicate(w)) {
             alert("Từ này đã tồn tại trong danh sách!");
@@ -1158,16 +1107,13 @@
                 let reading = String(r[1] || '').trim();
                 let meaning = String(r[2] || '').trim();
 
-                // Logic fix cho Import: Tự điền nếu thiếu
                 if (!w && reading) w = reading;
                 if (w && !reading) reading = w;
 
                 if (w) {
-                    // Tìm xem từ này đã có trong danh sách chưa (không phân biệt hoa thường)
                     const existingIdx = vocabulary.findIndex(v => v.word.toLowerCase() === w.toLowerCase());
                     
                     if (existingIdx === -1) {
-                        // TỪ MỚI -> Thêm vào danh sách
                         vocabulary.push({ 
                             id: String(Date.now()) + Math.floor(Math.random() * 10000), 
                             word: w, 
@@ -1180,7 +1126,6 @@
                         });
                         addedCount++;
                     } else {
-                        // ĐÃ TỒN TẠI -> Kiểm tra xem có gì thay đổi để Cập nhật không
                         let changed = false;
                         if (reading && vocabulary[existingIdx].reading !== reading) {
                             vocabulary[existingIdx].reading = reading;
@@ -1209,7 +1154,6 @@
             msg += `- Cập nhật (đổi nghĩa/phiên âm): ${updatedCount} từ\n`;
             msg += `- Bỏ qua (trùng y hệt): ${skippedCount} từ`;
             
-            // Hiển thị danh sách các từ đã được cập nhật
             if (updatedCount > 0) {
                 let uniqueUpdates = [...new Set(updatedWords)];
                 let displayUpdates = uniqueUpdates.slice(0, 10).join(', ');
@@ -1218,8 +1162,6 @@
             }
             
             alert(msg);
-            
-            // Reset ô input file để có thể chọn lại chính file đó lần sau
             document.getElementById('file-in').value = '';
         };
         reader.readAsArrayBuffer(file);
@@ -1234,7 +1176,7 @@
         localStorage.setItem(getStorageKey('jlpt_start_date'), startDate);
 
         updateDashboard();
-        updateTimeFilterCounts(); // Update counts on data change
+        updateTimeFilterCounts(); 
         renderFilterTags();
     }
     window.saveData = saveData;
@@ -1371,6 +1313,13 @@
     }
     window.toggleSelectAll = toggleSelectAll;
     
+    function toggleSortAZ() {
+        isSortedAZ = !isSortedAZ;
+        renderFilterTags();
+        renderList();
+    }
+    window.toggleSortAZ = toggleSortAZ;
+
     function selectNext50() {
         const items = getFilteredItems();
         const unselectedItems = items.filter(v => !selectedIds.has(v.id));
@@ -1393,20 +1342,6 @@
         renderList();
     }
 
-    function updateTimeFilterCounts() {
-        const now = Date.now();
-        // Get items matching CURRENT LEVEL only (ignoring search text)
-        const items = vocabulary.filter(v => currentFilter === 'all' || v.level == currentFilter);
-
-        const total = items.length;
-        const due = items.filter(v => v.learned && v.nextReview <= now).length;
-        const notDue = items.filter(v => v.learned && v.nextReview > now).length;
-
-        document.getElementById('tf-all').innerText = `Tất cả (${total})`;
-        document.getElementById('tf-due').innerText = `⏰ Đến hạn (${due})`;
-        document.getElementById('tf-not_due').innerText = `zzz Chưa đến hạn (${notDue})`;
-    }
-
     function checkSearchInput() {
         const query = document.getElementById('search-input').value;
         const clearBtn = document.getElementById('clear-search-btn');
@@ -1427,7 +1362,7 @@
         const query = document.getElementById('search-input').value.toLowerCase();
         const now = Date.now();
         
-        return vocabulary.filter(v => {
+        let filtered = vocabulary.filter(v => {
             const mFilter = currentFilter === 'all' || v.level == currentFilter;
             const mSearch = v.word.toLowerCase().includes(query) || v.reading.toLowerCase().includes(query) || v.meaning.toLowerCase().includes(query);
             
@@ -1440,6 +1375,16 @@
             
             return mFilter && mSearch && mTime;
         });
+
+        if (isSortedAZ) {
+            filtered.sort((a, b) => {
+                const strA = String(a.reading || a.word || "").trim();
+                const strB = String(b.reading || b.word || "").trim();
+                return strA.localeCompare(strB, 'ja');
+            });
+        }
+        
+        return filtered;
     }
 
     function startMode(mode) {
@@ -1451,7 +1396,6 @@
         document.getElementById('view-quiz').classList.add('hidden');
         document.getElementById('view-list').classList.add('hidden');
         document.getElementById('view-card').classList.add('hidden');
-        document.getElementById('srs-logic-note').classList.add('hidden');
         document.getElementById('btn-view-daily-list').classList.add('hidden');
 
         if (mode === 'daily') {
@@ -1461,9 +1405,6 @@
         } else if (mode === 'list') {
             document.getElementById('view-list').classList.remove('hidden');
             renderList();
-        } else if (mode === 'srs') {
-            document.getElementById('view-quiz').classList.remove('hidden');
-            setupSRSQuiz();
         } else if (mode === 'quiz') {
             document.getElementById('view-quiz').classList.remove('hidden');
             setupRandomQuiz();
@@ -1568,39 +1509,11 @@
          renderQuizItem();
     }
 
-    function setupSRSQuiz() {
-        const now = Date.now();
-        let allDue = vocabulary.filter(v => v.learned === true && v.nextReview <= now)
-                              .sort(() => Math.random() - 0.5);
-        
-        if (allDue.length === 0) {
-            document.getElementById('quiz-content').classList.add('hidden');
-            document.getElementById('quiz-finished').classList.add('hidden');
-            document.getElementById('quiz-empty').classList.remove('hidden');
-            updateSRSNote();
-            return;
-        }
-
-        // Cắt nhỏ phiên ôn tập (Batching) để tránh ngợp
-        const batchSize = isTestMode ? 5 : 40;
-        quizQueue = allDue.slice(0, batchSize);
-        
-        curQuizIdx = 0;
-        currentQuizResult = 'pending';
-        
-        document.getElementById('quiz-content').classList.remove('hidden');
-        document.getElementById('quiz-finished').classList.add('hidden');
-        document.getElementById('quiz-empty').classList.add('hidden');
-        
-        updateSRSNote();
-        renderQuizItem();
-    }
-
     function setupLearnMode() {
         quizQueue = vocabulary.filter(v => !v.learned);
         if (quizQueue.length === 0) {
             alert("Đã học hết từ mới!");
-            startMode('srs');
+            startMode('list');
             return;
         }
         curQuizIdx = 0;
@@ -1627,15 +1540,13 @@
 
         if (activeMode === 'daily') {
             skipBtn.innerText = "⏩ Bỏ qua (Học sau)";
-        } else if (activeMode === 'srs') {
-            skipBtn.innerText = "⏩ Bỏ qua (Hạ xuống Level 1)";
         } else if (activeMode === 'level_review') {
              skipBtn.innerText = "⏩ Bỏ qua";
         } else {
             skipBtnCont.classList.add('hidden');
         }
 
-        if (activeMode === 'srs' || activeMode === 'level_review') {
+        if (activeMode === 'level_review') {
             const remaining = quizQueue.length - curQuizIdx;
             const possibleSizes = [10, 7, 5];
             const validSizes = possibleSizes.filter(s => remaining >= s);
@@ -1662,14 +1573,10 @@
              document.getElementById('quiz-meta').innerText = `CÂU HỎI ${curQuizIdx + 1}/${quizQueue.length}`;
         }
 
-        // Logic cho từ không có Kanji (Kana only)
         const isKanaOnly = (item.word === item.reading);
-
         let type = Math.random() > 0.5 ? 0 : 1;
         
         if (isKanaOnly) {
-            // Case 1: Hỏi Kana -> Đáp án Meaning
-            // Case 2: Hỏi Meaning -> Đáp án Kana
             if (type === 0) {
                 document.getElementById('quiz-q').innerText = item.word;
                 document.getElementById('quiz-hint').innerText = "Chọn ý nghĩa đúng:";
@@ -1680,14 +1587,11 @@
                 generateDistractors(item, 'word').forEach((opt, i) => createOptionBtn(opt, item.word, i));
             }
         } else {
-            // Logic cũ cho từ có Kanji
             if (type === 0) {
-                // Hỏi Kanji -> Đáp án Reading
                 document.getElementById('quiz-q').innerText = item.word;
                 document.getElementById('quiz-hint').innerText = "Chọn cách đọc đúng:";
                 generateDistractors(item, 'reading').forEach((opt, i) => createOptionBtn(opt, item.reading, i));
             } else {
-                // Hỏi Reading/Meaning -> Đáp án Kanji
                 document.getElementById('quiz-q').innerText = item.reading || item.meaning;
                 document.getElementById('quiz-hint').innerText = "Chọn từ vựng đúng:";
                 generateDistractors(item, 'word').forEach((opt, i) => createOptionBtn(opt, item.word, i));
@@ -1715,7 +1619,6 @@
         let rightSide = [];
 
         matchBatch.forEach(item => {
-            // Nếu từ chỉ có Kana (Word == Reading), cột phải sẽ là Meaning
             if (item.word === item.reading) {
                  leftSide.push({ id: item.id, text: item.word, type: 'word', side: 'left' });
                  rightSide.push({ id: item.id, text: item.meaning, type: 'meaning', side: 'right' });
@@ -1738,9 +1641,9 @@
         const btn = document.createElement('button');
         btn.className = 'option-btn match-btn';
         btn.innerText = data.text;
-        btn.dataset.id = data.id; // Stores as String in DOM
+        btn.dataset.id = data.id; 
         btn.dataset.type = data.type;
-        btn.dataset.side = data.side; // Add side to prevent same-side clicking
+        btn.dataset.side = data.side; 
         btn.onclick = () => handleMatchClick(btn);
         grid.appendChild(btn);
     }
@@ -1962,14 +1865,6 @@
             }
         });
 
-        if (activeMode === 'srs') {
-            if (mainIdx !== -1) {
-                vocabulary[mainIdx].level = 1;
-                setNextReview(vocabulary[mainIdx]);
-                saveData();
-            }
-        }
-
         showSingleDetail(item);
         document.getElementById('btn-skip-container').classList.add('hidden');
         document.getElementById('quiz-next-container').classList.remove('hidden');
@@ -1996,12 +1891,8 @@
     }
 
     function setNextReview(item) {
-        // Đảm bảo level luôn là số nguyên, tránh lỗi cộng chuỗi (VD: "3" + "1" = "31")
         const currentLevel = parseInt(item.level) || 1;
-        
-        // Khoảng thời gian (phút): [Lv1: 5p, Lv2: 30p, Lv3: 4h, Lv4: 12h, Lv5: 1d, Lv6: 3d, Lv7: 6d, Lv8: 10d]
         const intervals = [5, 30, 240, 720, 1440, 4320, 8640, 14400]; 
-        
         const levelIdx = Math.max(0, Math.min(currentLevel - 1, intervals.length - 1));
         const intervalValue = intervals[levelIdx]; 
         
@@ -2032,7 +1923,7 @@
             const icon = isCorrect ? '<span style="color:var(--success)">✅</span>' : '<span style="color:var(--danger)">❌</span>';
             const html = `
                 <div style="background:#fff; padding:12px; border-radius:12px; border:1px solid ${isCorrect ? '#eafaf1' : '#fdeded'};">
-                    <div style="font-size:1.1rem; font-weight:bold;">${icon} ${item.word} <span style="color:var(--color1); font-size:0.9rem;">【${item.reading}】</span></div>
+                    <div style="font-size:1.1rem; font-weight:bold;">${icon} <span style="font-size:1.8rem;">${item.word}</span> <span style="color:var(--color1); font-size:0.95rem;">【${item.reading}】</span></div>
                     <div style="color:#555; font-size:0.95rem; margin-top:4px;">Ý nghĩa: <strong>${item.meaning}</strong></div>
                 </div>
             `;
@@ -2083,11 +1974,7 @@
                 currentQuizResult = 'pending';
                 renderQuizItem();
             } else {
-                if (activeMode === 'srs') {
-                    showFinished("SRS");
-                } else {
-                    showFinished("Quiz");
-                }
+                showFinished("Quiz");
             }
         }
     }
@@ -2098,12 +1985,9 @@
         
         const target = isTestMode ? 5 : 50;
         const btnForceNext = document.getElementById('btn-force-next-day');
-        const btnContinueSRS = document.getElementById('btn-continue-srs');
         const dailyListBtn = document.getElementById('daily-list-btn-container');
         
-        // Reset các nút ẩn/hiện
         if (btnForceNext) btnForceNext.classList.add('hidden');
-        if (btnContinueSRS) btnContinueSRS.classList.add('hidden');
         if (dailyListBtn) dailyListBtn.classList.add('hidden');
 
         if (type === "Daily") {
@@ -2111,18 +1995,6 @@
             document.getElementById('finish-msg').innerText = `Tuyệt vời! Bạn đã hoàn thành ${target} từ của ngày hôm nay.`;
             if (btnForceNext) btnForceNext.classList.remove('hidden');
             if (dailyListBtn) dailyListBtn.classList.remove('hidden');
-        } else if (type === "SRS") {
-            const now = Date.now();
-            const remainingDue = vocabulary.filter(v => v.learned === true && v.nextReview <= now).length;
-            
-            if (remainingDue > 0) {
-                document.getElementById('finish-title').innerText = "Hoàn thành 1 phần!";
-                document.getElementById('finish-msg').innerText = `Giỏi lắm! Bạn vẫn còn ${remainingDue} từ đang chờ ôn tập. Bạn có thể nghỉ ngơi chút rồi học tiếp nhé!`;
-                if (btnContinueSRS) btnContinueSRS.classList.remove('hidden');
-            } else {
-                document.getElementById('finish-title').innerText = "Hoàn thành tuyệt đối!";
-                document.getElementById('finish-msg').innerText = "Bạn đã ôn tập xong TOÀN BỘ từ vựng đến hạn. Quá xuất sắc!";
-            }
         } else {
             document.getElementById('finish-title').innerText = "Kết thúc bài ôn!";
             document.getElementById('finish-msg').innerText = "Bạn đã hoàn thành lượt ôn tập này.";
@@ -2180,7 +2052,7 @@
             if (curQuizIdx >= quizQueue.length) curQuizIdx = 0;
             if (quizQueue.length === 0) {
                 alert("Chúc mừng! Bạn đã học hết từ mới.");
-                startMode('srs');
+                startMode('list');
             } else {
                 renderCard();
             }
@@ -2204,13 +2076,13 @@
         
         const saContainer = document.getElementById('select-all-container');
         
-        // Bỏ điều kiện if (currentFilter !== 'all') để luôn hiển thị các nút chọn
         const items = getFilteredItems();
         const allSelected = items.length > 0 && items.every(v => selectedIds.has(v.id));
         
         let btnHtml = `<button onclick="toggleSelectAll()" style="border:1px solid #ddd; background:${allSelected ? 'var(--color1)' : 'white'}; color:${allSelected ? 'white' : '#666'}; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${allSelected ? 'Bỏ chọn' : 'Chọn tất cả'}</button>`;
         btnHtml += `<button onclick="selectNext50()" style="border:1px solid var(--color1); background:white; color:var(--color1); padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Chọn 50</button>`;
         btnHtml += `<button onclick="openSelectRangeModal()" style="border:1px solid var(--color1); background:white; color:var(--color1); padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Chọn theo số...</button>`;
+        btnHtml += `<button onclick="toggleSortAZ()" style="border:1px solid var(--color1); background:${isSortedAZ ? 'var(--color1)' : 'white'}; color:${isSortedAZ ? 'white' : 'var(--color1)'}; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${isSortedAZ ? '🔤 Đang xếp あ-ん' : '🔤 Xếp あ-ん'}</button>`;
         
         saContainer.innerHTML = btnHtml;
     }
@@ -2221,7 +2093,7 @@
         renderBatchBar();
         renderFilterTags();
         renderList();
-        updateTimeFilterCounts(); // Ensure counts update when level changes
+        updateTimeFilterCounts(); 
     }
 
     function renderList() {
@@ -2247,7 +2119,7 @@
                 <div style="display:flex; align-items:center;">
                     <input type="checkbox" class="item-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect(${v.id})">
                     <div>
-                        <strong><span style="color:#999; font-weight:500; font-size:0.9em; margin-right:5px;">${index + 1}.</span>${v.word}</strong> <small style="color:var(--color1)">【${v.reading}】</small>
+                        <strong><span style="color:#999; font-weight:500; font-size:0.9em; margin-right:5px;">${index + 1}.</span><span style="font-size:1.8rem;">${v.word}</span></strong> <small style="color:var(--color1); font-size:0.95rem;">【${v.reading}】</small>
                         <div style="font-size:0.85rem; color:#666;">${v.meaning}</div>
                     </div>
                 </div>
@@ -2315,11 +2187,16 @@
 
     function updateTimeFilterCounts() {
         const now = Date.now();
-        const items = vocabulary.filter(v => currentFilter === 'all' || v.level == currentFilter);
+        const items = vocabulary.filter(v => {
+            if (currentFilter === 'all') return true;
+            if (currentFilter === 'relearn') return v.needsRelearn === true;
+            if (currentFilter == 0) return (!v.learned || v.level === 0) && !v.needsRelearn;
+            return v.level == currentFilter && v.learned && !v.needsRelearn;
+        });
 
         const total = items.length;
-        const due = items.filter(v => v.learned && v.nextReview <= now).length;
-        const notDue = items.filter(v => v.learned && v.nextReview > now).length;
+        const due = items.filter(v => v.learned && v.nextReview <= now && !v.needsRelearn).length;
+        const notDue = items.filter(v => v.learned && v.nextReview > now && !v.needsRelearn).length;
 
         document.getElementById('tf-all').innerText = `Tất cả (${total})`;
         document.getElementById('tf-due').innerText = `⏰ Đến hạn (${due})`;
@@ -2327,11 +2204,10 @@
     }
 
     window.onload = () => { 
-        loadTheme();
         loadData(); 
         updateDashboard(); 
         renderFilterTags(); 
-        updateTimeFilterCounts(); // Initial update
+        updateTimeFilterCounts(); 
         renderList(); 
         if (vocabulary.length > 0) startMode('daily'); 
         else startMode('list'); 
