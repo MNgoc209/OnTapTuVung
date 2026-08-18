@@ -36,9 +36,10 @@
         .container { background: white; padding: 25px; border-radius: 30px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.05); border: 1px solid var(--color2); }
         .box { background: var(--color3); padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 1px solid var(--color2); transition: background 0.3s, border-color 0.3s; }
         
-        .input-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-        input { flex: 1; padding: 12px 18px; border: 2px solid var(--color2); border-radius: 15px; outline: none; transition: 0.3s; font-family: 'Quicksand', sans-serif; font-size: 0.95rem; min-width: 100px; }
-        input:focus { border-color: var(--color1); background: #fff; }
+        .input-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: stretch; }
+        input, textarea { flex: 1; padding: 12px 18px; border: 2px solid var(--color2); border-radius: 15px; outline: none; transition: 0.3s; font-family: 'Quicksand', sans-serif; font-size: 0.95rem; min-width: 100px; }
+        input:focus, textarea:focus { border-color: var(--color1); background: #fff; }
+        textarea { resize: vertical; min-height: 46px; }
 
         .dashboard { background: linear-gradient(135deg, var(--color1), var(--color6)); color: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); position: relative; overflow: hidden; transition: background 0.3s; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; }
@@ -52,46 +53,43 @@
         .mode-selector { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .mode-selector::-webkit-scrollbar { display: none; }
         .mode-btn { 
-            flex: 1; /* Default for desktop */
-            min-width: 100px; 
-            padding: 14px 12px; 
-            border: none; border-radius: 18px; 
-            font-weight: 700; cursor: pointer; 
-            background: white; color: var(--color1); 
-            transition: 0.3s; border: 2px solid var(--color3); 
-            white-space: nowrap; font-family: 'Quicksand'; font-size: 0.85rem; 
+            flex: 1; min-width: 100px; padding: 14px 12px; border: none; border-radius: 18px; 
+            font-weight: 700; cursor: pointer; background: white; color: var(--color1); 
+            transition: 0.3s; border: 2px solid var(--color3); white-space: nowrap; font-family: 'Quicksand'; 
+            font-size: calc(0.85rem * var(--text-scale, 1)); 
         }
         .mode-btn.active { background: var(--color1); color: white; border-color: var(--color1); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); }
 
         .quiz-card { background: white; padding: 30px 20px; border-radius: 25px; border: 2px solid var(--color3); margin-bottom: 20px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; transition: border-color 0.3s; }
-        .quiz-q { font-size: 5.5rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
-        .quiz-hint { color: #888; font-size: 0.9rem; margin-bottom: 15px; }
+        .quiz-q { font-size: calc(5.5rem * var(--text-scale, 1)); font-weight: 700; color: var(--text); margin-bottom: 10px; }
+        .quiz-hint { color: #888; font-size: calc(0.9rem * var(--text-scale, 1)); margin-bottom: 15px; }
 
         .option-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        .option-btn { background: white; border: 2px solid #f0f0f0; padding: 15px; border-radius: 15px; text-align: left; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: 'Quicksand'; display: flex; align-items: center; color: var(--text); }
+        .option-btn { background: white; border: 2px solid #f0f0f0; padding: 15px; border-radius: 15px; text-align: left; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: 'Quicksand'; display: flex; align-items: center; color: var(--text); font-size: calc(1.15rem * var(--text-scale, 1)); }
         .option-btn:hover { border-color: var(--color2); background: var(--color5); }
         .option-btn.correct { background: #eafaf1 !important; border-color: var(--success) !important; color: var(--success) !important; }
         .option-btn.wrong { background: #fdeded !important; border-color: var(--danger) !important; color: var(--danger) !important; }
         .option-btn.disabled { pointer-events: none; opacity: 0.8; }
-        .opt-prefix { width: 30px; height: 30px; background: var(--color3); border-radius: 8px; display: grid; place-items: center; margin-right: 12px; font-weight: 700; color: var(--color1); }
+        .opt-prefix { width: calc(34px * var(--text-scale, 1)); height: calc(34px * var(--text-scale, 1)); background: var(--color3); border-radius: 8px; display: grid; place-items: center; margin-right: 12px; font-weight: 700; color: var(--color1); font-size: calc(1.05rem * var(--text-scale, 1)); flex-shrink: 0; }
 
-        /* MATCH GRID SPECIFIC STYLES */
+        /* Bổ sung white-space: pre-wrap cho nội dung match-btn để tránh lỗi giao diện nếu có text xuống dòng */
         .match-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-        .match-btn { justify-content: center; text-align: center; font-size: 1.4rem; padding: 18px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); height: 100%; }
+        .match-btn { justify-content: center; text-align: center; font-size: calc(1.4rem * var(--text-scale, 1)); padding: 18px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); height: 100%; white-space: pre-wrap; word-break: break-word; }
         .match-btn.selected { border-color: var(--color1); background: var(--color2); box-shadow: 0 0 12px rgba(0,0,0,0.1); transform: scale(0.96); }
 
         .ai-expansion { margin-top: 20px; text-align: left; animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .expansion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
         .expansion-item { background: #fffcfc; padding: 12px; border-radius: 15px; border-left: 5px solid var(--ai); border-bottom: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .expansion-title { font-weight: 700; color: var(--ai); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .expansion-content { font-size: 0.9rem; color: #555; font-weight: 500; }
+        .expansion-title { font-weight: 700; color: var(--ai); font-size: calc(0.75rem * var(--text-scale, 1)); text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .expansion-content { font-size: calc(0.9rem * var(--text-scale, 1)); color: #555; font-weight: 500; }
 
-        .btn-action { width: 100%; padding: 15px; border: none; border-radius: 18px; font-weight: 700; cursor: pointer; color: white; margin-top: 10px; font-family: 'Quicksand'; font-size: 1rem; transition: 0.3s; }
+        .btn-action { width: 100%; padding: 15px; border: none; border-radius: 18px; font-weight: 700; cursor: pointer; color: white; margin-top: 10px; font-family: 'Quicksand'; font-size: calc(1rem * var(--text-scale, 1)); transition: 0.3s; }
 
         .study-card { text-align: center; background: white; padding: 40px 20px; border-radius: 35px; border: 2px solid var(--color3); margin-bottom: 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02); position: relative; cursor: pointer; transition: border-color 0.3s; }
-        .word-main { font-size: 6.5rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
-        .word-reading { font-size: 1.4rem; color: var(--color1); font-weight: 600; opacity: 0; transition: 0.3s; min-height: 2rem; }
-        .word-meaning { font-size: 1.5rem; color: #636e72; border-top: 2px dashed var(--color2); padding-top: 20px; margin-top: 20px; font-weight: 600; }
+        .word-main { font-size: calc(6.5rem * var(--text-scale, 1)); font-weight: 700; color: var(--text); margin-bottom: 5px; }
+        .word-reading { font-size: calc(1.4rem * var(--text-scale, 1)); color: var(--color1); font-weight: 600; opacity: 0; transition: 0.3s; min-height: 2rem; }
+        /* Thêm white-space: pre-wrap cho ý nghĩa thẻ học */
+        .word-meaning { font-size: calc(1.5rem * var(--text-scale, 1)); color: #636e72; border-top: 2px dashed var(--color2); padding-top: 20px; margin-top: 20px; font-weight: 600; white-space: pre-wrap; word-break: break-word; }
 
         .search-container { position: relative; width: 100%; margin-bottom: 10px; display: flex; align-items: center; }
         .search-container input { padding-left: 40px; padding-right: 35px; margin-bottom: 0; width: 100%; box-sizing: border-box; }
@@ -99,16 +97,15 @@
         .clear-search-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: #eee; border: none; border-radius: 50%; width: 24px; height: 24px; color: #666; font-size: 0.8rem; cursor: pointer; display: none; align-items: center; justify-content: center; font-weight: bold; }
         .clear-search-btn:hover { background: #ddd; color: #333; }
 
-        /* Time Filter Styles */
         .time-filters { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .time-filter-btn { padding: 8px 12px; border-radius: 12px; border: 1px solid var(--color2); background: white; color: var(--text); font-size: 0.8rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .time-filter-btn { padding: 8px 12px; border-radius: 12px; border: 1px solid var(--color2); background: white; color: var(--text); font-size: calc(0.8rem * var(--text-scale, 1)); font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .time-filter-btn.active { background: var(--color3); color: var(--color1); border-color: var(--color1); font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
 
         .filter-scroll-wrapper { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--color2) transparent; margin-bottom: 20px; padding: 10px 0; -webkit-overflow-scrolling: touch; }
         .filter-scroll-wrapper::-webkit-scrollbar { height: 6px; }
         .filter-scroll-wrapper::-webkit-scrollbar-thumb { background: var(--color2); border-radius: 10px; }
         .filter-group { display: flex; gap: 12px; padding: 0 5px; min-width: max-content; }
-        .lvl-tag { padding: 10px 18px; border-radius: 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: 0.2s; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .lvl-tag { padding: 10px 18px; border-radius: 16px; font-size: calc(0.85rem * var(--text-scale, 1)); font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: 0.2s; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .lvl-tag.active { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.12); border-color: rgba(0,0,0,0.15); }
 
         .list-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-radius: 20px; background: white; margin-bottom: 15px; border: 1px solid var(--color2); flex-wrap: wrap; gap: 10px; }
@@ -118,12 +115,10 @@
         .success-state { text-align: center; padding: 50px 20px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Custom Colors */
         .btn-theme { background: var(--color1) !important; color: white !important; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); }
         .btn-theme-soft { background: var(--color3) !important; color: var(--color1) !important; border: 1px solid var(--color2); }
         .btn-skip { background: var(--color3) !important; color: var(--color1) !important; border: 2px solid var(--color2) !important; margin-bottom: 5px; margin-top: 15px; font-weight: 700; cursor: pointer; }
         
-        /* Debug Mode Button */
         .btn-test { background: var(--debug) !important; color: white !important; }
         .btn-test.active { border: 2px solid #2d3436; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
         
@@ -140,7 +135,6 @@
             margin-top: 10px;
         }
 
-        /* Level Badge & Quick Select Modal */
         .lvl-badge {
             padding: 5px 10px;
             border-radius: 12px;
@@ -173,7 +167,6 @@
         }
         .level-cell:active { transform: scale(0.9); }
 
-        /* Batch Action Bar */
         .batch-bar {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 600px;
@@ -197,14 +190,12 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        /* Updated Square Rounded Checkbox */
         .item-checkbox {
             appearance: none;
             -webkit-appearance: none;
             width: 22px; height: 22px;
             min-width: 22px; 
             flex: 0 0 22px;
-            
             border: 2px solid var(--color2);
             border-radius: 6px;
             cursor: pointer;
@@ -232,7 +223,6 @@
             transform: scale(1);
         }
 
-        /* Daily Status List */
         .daily-status-item {
             display: flex; align-items: center; justify-content: space-between;
             gap: 10px;
@@ -250,18 +240,16 @@
 
         @keyframes slideUp { from { transform: translate(-50%, 120%); } to { transform: translate(-50%, 0); } }
 
-        /* Modal Basic (Reused for Level Picker) */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
         .modal-content { background-color: #fefefe; margin: 15% auto; padding: 25px 20px; border: 1px solid #888; width: 90%; max-width: 500px; border-radius: 25px; text-align: center; position: relative; animation: fadeIn 0.3s; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; position: absolute; right: 15px; top: 10px; }
         .close-modal:hover { color: black; }
 
-        /* Mobile Optimization Fixes */
         @media (max-width: 600px) {
             body { padding: 10px; }
             .container { padding: 15px; }
-            .quiz-q { font-size: 4.5rem; }
-            .word-main { font-size: 5.2rem; }
+            .quiz-q { font-size: calc(4.5rem * var(--text-scale, 1)); }
+            .word-main { font-size: calc(5.2rem * var(--text-scale, 1)); }
             
             .mode-selector {
                 justify-content: flex-start;
@@ -272,14 +260,14 @@
                 width: auto;
                 min-width: unset;
                 padding: 12px 16px;
-                font-size: 0.85rem;
+                font-size: calc(0.85rem * var(--text-scale, 1));
             }
             
             .header-actions {
                 gap: 8px;
             }
             .btn-action {
-                font-size: 0.9rem;
+                font-size: calc(0.9rem * var(--text-scale, 1));
             }
         }
     </style>
@@ -288,12 +276,11 @@
 
 <div class="container">
     <div class="box">
-        <!-- Đã xóa phần Ngày bắt đầu học theo yêu cầu -->
-
+        <!-- ĐÃ ĐỔI THẺ input TẠI ĐÂY THÀNH textarea ĐỂ CHO PHÉP XUỐNG DÒNG -->
         <div class="input-group">
             <input type="text" id="manual-word" placeholder="Từ vựng (Kanji)">
             <input type="text" id="manual-reading" placeholder="Cách đọc (Hiragana)">
-            <input type="text" id="manual-meaning" placeholder="Ý nghĩa">
+            <textarea id="manual-meaning" placeholder="Ý nghĩa (Có thể xuống dòng)" rows="2"></textarea>
             <button onclick="addManual()" style="background:var(--color1); color:white; border:none; width:50px; border-radius:15px; font-weight:bold; font-size:1.2rem; cursor:pointer;">+</button>
         </div>
 
@@ -390,7 +377,8 @@
                 </div>
                 <div>
                     <label style="font-size: 0.85rem; font-weight: bold; color: var(--color1);">Ý nghĩa:</label>
-                    <input type="text" id="edit-meaning" style="width: 100%; box-sizing: border-box; margin-top: 5px;">
+                    <!-- ĐÃ ĐỔI THẺ input TẠI ĐÂY THÀNH textarea -->
+                    <textarea id="edit-meaning" rows="3" style="width: 100%; box-sizing: border-box; margin-top: 5px; border: 2px solid var(--color2); border-radius: 10px; padding: 10px; font-family: 'Quicksand'; outline: none;"></textarea>
                 </div>
                 <button class="btn-action btn-theme" onclick="saveEditWord()" style="margin-top: 15px;">💾 Lưu Thay Đổi</button>
             </div>
@@ -454,135 +442,152 @@
         </div>
     </div>
 
-    <div class="mode-selector">
-        <button class="mode-btn active" id="btn-daily" onclick="startMode('daily')">🔥 ÔN LỘ TRÌNH</button>
-        <button class="mode-btn" id="btn-list" onclick="startMode('list')">📚 DANH SÁCH</button>
-        <button class="mode-btn" id="btn-level-review" onclick="openReviewLevelModal()">ÔN TẬP LEVEL</button>
+    <!-- KÊNH LỰA CHỌN CỠ CHỮ -->
+    <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 15px;">
+        <label style="font-size: 0.85rem; font-weight: bold; color: var(--color1); margin-right: 10px;">🔍 Cỡ chữ:</label>
+        <select id="font-size-selector" onchange="changeFontSize(this.value)" style="padding: 6px 12px; border-radius: 12px; border: 2px solid var(--color2); outline: none; font-family: 'Quicksand'; font-weight: 700; color: var(--text); background: white; cursor: pointer;">
+            <option value="0.85">Nhỏ</option>
+            <option value="1">Tiêu chuẩn</option>
+            <option value="1.2">Lớn</option>
+            <option value="1.4">Rất lớn</option>
+        </select>
     </div>
 
-    <!-- View Trắc nghiệm -->
-    <div id="view-quiz">
-        <div id="quiz-content">
-            <div class="quiz-card">
-                <div id="quiz-meta" style="font-size:0.85rem; color:var(--color1); font-weight:bold; margin-bottom:10px;">CÂU HỎI --/--</div>
-                <div id="quiz-q" class="quiz-q">---</div>
-                <div id="quiz-hint" class="quiz-hint">---</div>
+    <!-- VÙNG ĐIỀU CHỈNH KÍCH THƯỚC CHỮ TỪ MODE-SELECTOR TRỞ XUỐNG -->
+    <div id="content-scale-wrapper" style="--text-scale: 1;">
+        
+        <div class="mode-selector">
+            <button class="mode-btn active" id="btn-daily" onclick="startMode('daily')">🔥 ÔN LỘ TRÌNH</button>
+            <button class="mode-btn" id="btn-list" onclick="startMode('list')">📚 DANH SÁCH</button>
+            <button class="mode-btn" id="btn-level-review" onclick="openReviewLevelModal()">ÔN TẬP LEVEL</button>
+        </div>
+
+        <!-- View Trắc nghiệm -->
+        <div id="view-quiz">
+            <div id="quiz-content">
+                <div class="quiz-card">
+                    <div id="quiz-meta" style="font-size:calc(0.85rem * var(--text-scale, 1)); color:var(--color1); font-weight:bold; margin-bottom:10px;">CÂU HỎI --/--</div>
+                    <div id="quiz-q" class="quiz-q">---</div>
+                    <div id="quiz-hint" class="quiz-hint">---</div>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <button onclick="openDailyListModal()" id="btn-view-daily-list" class="hidden" style="font-size: calc(0.8rem * var(--text-scale, 1)); background: transparent; border: 1px solid var(--color1); color: var(--color1); padding: 5px 12px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 600;">📋 Danh sách hôm nay</button>
+                </div>
+
+                <!-- Single Quiz Option Grid -->
+                <div id="options" class="option-grid"></div>
+                
+                <!-- Match Quiz Option Grid -->
+                <div id="match-grid" class="option-grid match-grid hidden"></div>
+                
+                <!-- Nút Skip -->
+                <div id="btn-skip-container">
+                    <button id="btn-skip-quiz" class="btn-action btn-skip" onclick="skipCurrentQuiz()">⏩ Bỏ qua (Học sau)</button>
+                </div>
+
+                <div id="quiz-explanation" class="hidden ai-expansion">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 20px; border: 1px solid #eee; margin-top: 15px;">
+                        <!-- Vùng cho Single Quiz -->
+                        <div id="expl-single">
+                            <div style="font-size: calc(3.5rem * var(--text-scale, 1)); font-weight: 700; color: var(--color1); margin-bottom: 5px;" id="expl-word"></div>
+                            <div style="font-size: calc(1rem * var(--text-scale, 1)); color: #555; font-weight: 600;" id="expl-reading"></div>
+                            <!-- THÊM white-space: pre-wrap CHO Ý NGHĨA TRONG TRẮC NGHIỆM ĐƠN -->
+                            <div style="font-size: calc(1.1rem * var(--text-scale, 1)); color: #333; margin-top: 8px; font-weight: 600; border-top: 1px solid #ddd; padding-top: 8px; white-space: pre-wrap;" id="expl-meaning"></div>
+                            <div id="expl-extra"></div>
+                        </div>
+                        <!-- Vùng cho Match Quiz -->
+                        <div id="expl-batch" class="hidden">
+                            <div style="font-size: calc(1.1rem * var(--text-scale, 1)); font-weight: 700; color: var(--color1); margin-bottom: 15px;">Danh sách từ vừa gặp:</div>
+                            <div id="expl-batch-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quiz-next-container" class="hidden">
+                    <button class="btn-action btn-theme" onclick="renderNextQuiz()">Tiếp theo ❯</button>
+                </div>
             </div>
             
-            <div style="text-align: center; margin-bottom: 15px;">
-                <button onclick="openDailyListModal()" id="btn-view-daily-list" class="hidden" style="font-size: 0.8rem; background: transparent; border: 1px solid var(--color1); color: var(--color1); padding: 5px 12px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 600;">📋 Danh sách hôm nay</button>
+            <!-- State Empty / Finished -->
+            <div id="quiz-empty" class="hidden success-state">
+                <div style="font-size: calc(4rem * var(--text-scale, 1));">🎉</div>
+                <h2 style="color: var(--success); font-weight: 700;">Tuyệt vời!</h2>
+                <p style="color:#666">Bạn đã hoàn thành hết bài ôn tập hiện tại.</p>
+                <button class="btn-action btn-theme" onclick="startMode('list')">Về danh sách</button>
             </div>
 
-            <!-- Single Quiz Option Grid -->
-            <div id="options" class="option-grid"></div>
+            <div id="quiz-finished" class="hidden success-state">
+                <div style="font-size: calc(4rem * var(--text-scale, 1));">🔥</div>
+                <h2 id="finish-title" style="color: var(--success); font-weight: 700;">Hoàn thành lộ trình!</h2>
+                <p id="finish-msg" style="color:#666">Đã học xong bài của ngày hôm nay.</p>
+                <div id="daily-list-btn-container" style="margin-bottom: 20px;">
+                    <button onclick="openDailyListModal()" style="font-size: calc(0.9rem * var(--text-scale, 1)); background: #fff; border: 2px solid var(--color1); color: var(--color1); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 700;">📋 Xem lại danh sách</button>
+                </div>
+                
+                <button id="btn-force-next-day" class="btn-action btn-next-day hidden" onclick="advanceNextDay()" style="margin-bottom: 10px;">📅 Học trước ngày mai</button>
+                <button class="btn-action btn-theme" onclick="startMode('list')">Quay lại danh sách</button>
+            </div>
+        </div>
+
+        <!-- View Danh sách -->
+        <div id="view-list" class="hidden">
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" placeholder="Tìm kiếm từ vựng, ý nghĩa..." oninput="checkSearchInput()">
+                <button class="clear-search-btn" id="clear-search-btn" onclick="clearSearch()">✕</button>
+            </div>
             
-            <!-- Match Quiz Option Grid -->
-            <div id="match-grid" class="option-grid match-grid hidden"></div>
-            
-            <!-- Nút Skip -->
-            <div id="btn-skip-container">
-                <button id="btn-skip-quiz" class="btn-action btn-skip" onclick="skipCurrentQuiz()">⏩ Bỏ qua (Học sau)</button>
+            <!-- Time Filters -->
+            <div class="time-filters">
+                <button class="time-filter-btn active" onclick="setTimeFilter('all')" id="tf-all">Tất cả (0)</button>
+                <button class="time-filter-btn" onclick="setTimeFilter('due')" id="tf-due">⏰ Đến hạn (0)</button>
+                <button class="time-filter-btn" onclick="setTimeFilter('not_due')" id="tf-not_due">zzz Chưa đến hạn (0)</button>
             </div>
 
-            <div id="quiz-explanation" class="hidden ai-expansion">
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 20px; border: 1px solid #eee; margin-top: 15px;">
-                    <!-- Vùng cho Single Quiz -->
-                    <div id="expl-single">
-                        <div style="font-size: 3.5rem; font-weight: 700; color: var(--color1); margin-bottom: 5px;" id="expl-word"></div>
-                        <div style="font-size: 1rem; color: #555; font-weight: 600;" id="expl-reading"></div>
-                        <div style="font-size: 1.1rem; color: #333; margin-top: 8px; font-weight: 600; border-top: 1px solid #ddd; padding-top: 8px;" id="expl-meaning"></div>
-                        <div id="expl-extra"></div>
-                    </div>
-                    <!-- Vùng cho Match Quiz -->
-                    <div id="expl-batch" class="hidden">
-                        <div style="font-size: 1.1rem; font-weight: 700; color: var(--color1); margin-bottom: 15px;">Danh sách từ vừa gặp:</div>
-                        <div id="expl-batch-list" style="display:flex; flex-direction:column; gap:10px;"></div>
-                    </div>
+            <div class="filter-scroll-wrapper">
+                <div id="level-filter-btns" class="filter-group"></div>
+            </div>
+
+            <div class="list-header">
+                <h3 style="margin:0; font-size:calc(1.1rem * var(--text-scale, 1)); color:var(--color1); font-weight:700; display:flex; align-items:center;">
+                    DỮ LIỆU TỪ VỰNG 
+                    <span id="list-toggle-icon" onclick="toggleList()" style="font-size:calc(0.8rem * var(--text-scale, 1)); margin-left:10px; cursor:pointer; padding: 5px 10px; background: var(--color3); border: 1px solid var(--color2); border-radius: 10px; color: var(--color1);">▼</span>
+                </h3>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <!-- Select All Button (Injected via JS) -->
+                    <div id="select-all-container" style="display:flex; gap:5px; flex-wrap:wrap; justify-content: flex-end;"></div>
+                    <button onclick="clearAllData(); event.stopPropagation();" style="border:none; color:#ff7675; background:#fff0f0; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Xóa hết</button>
                 </div>
             </div>
 
-            <div id="quiz-next-container" class="hidden">
-                <button class="btn-action btn-theme" onclick="renderNextQuiz()">Tiếp theo ❯</button>
+            <div id="list-collapsible">
+                <div id="list-items" style="max-height: 450px; overflow-y: auto;"></div>
             </div>
         </div>
-        
-        <!-- State Empty / Finished -->
-        <div id="quiz-empty" class="hidden success-state">
-            <div style="font-size: 4rem;">🎉</div>
-            <h2 style="color: var(--success); font-weight: 700;">Tuyệt vời!</h2>
-            <p style="color:#666">Bạn đã hoàn thành hết bài ôn tập hiện tại.</p>
-            <button class="btn-action btn-theme" onclick="startMode('list')">Về danh sách</button>
-        </div>
 
-        <div id="quiz-finished" class="hidden success-state">
-            <div style="font-size: 4rem;">🔥</div>
-            <h2 id="finish-title" style="color: var(--success); font-weight: 700;">Hoàn thành lộ trình!</h2>
-            <p id="finish-msg" style="color:#666">Đã học xong bài của ngày hôm nay.</p>
-            <div id="daily-list-btn-container" style="margin-bottom: 20px;">
-                <button onclick="openDailyListModal()" style="font-size: 0.9rem; background: #fff; border: 2px solid var(--color1); color: var(--color1); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 700;">📋 Xem lại danh sách</button>
+        <!-- View Card (Learn Mode) -->
+        <div id="view-card" class="hidden">
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
+                <button onclick="changeIdx(-1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❮</button>
+                <span id="card-index" style="font-weight: 700; color: var(--color1);">- / -</span>
+                <button onclick="changeIdx(1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❯</button>
             </div>
             
-            <button id="btn-force-next-day" class="btn-action btn-next-day hidden" onclick="advanceNextDay()" style="margin-bottom: 10px;">📅 Học trước ngày mai</button>
-            <button class="btn-action btn-theme" onclick="startMode('list')">Quay lại danh sách</button>
-        </div>
-    </div>
+            <div class="study-card" onclick="toggleMeaning()">
+                <div id="display-word" class="word-main">---</div>
+                <div id="display-reading" class="word-reading">---</div>
+                <div id="display-meaning" class="word-meaning hidden">---</div>
+                <div id="expansion-card" class="ai-expansion hidden"></div>
+            </div>
 
-    <!-- View Danh sách -->
-    <div id="view-list" class="hidden">
-        <div class="search-container">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="search-input" placeholder="Tìm kiếm từ vựng, ý nghĩa..." oninput="checkSearchInput()">
-            <button class="clear-search-btn" id="clear-search-btn" onclick="clearSearch()">✕</button>
-        </div>
-        
-        <!-- Time Filters -->
-        <div class="time-filters">
-            <button class="time-filter-btn active" onclick="setTimeFilter('all')" id="tf-all">Tất cả (0)</button>
-            <button class="time-filter-btn" onclick="setTimeFilter('due')" id="tf-due">⏰ Đến hạn (0)</button>
-            <button class="time-filter-btn" onclick="setTimeFilter('not_due')" id="tf-not_due">zzz Chưa đến hạn (0)</button>
-        </div>
-
-        <div class="filter-scroll-wrapper">
-            <div id="level-filter-btns" class="filter-group"></div>
-        </div>
-
-        <div class="list-header">
-            <h3 style="margin:0; font-size:1.1rem; color:var(--color1); font-weight:700; display:flex; align-items:center;">
-                DỮ LIỆU TỪ VỰNG 
-                <span id="list-toggle-icon" onclick="toggleList()" style="font-size:0.8rem; margin-left:10px; cursor:pointer; padding: 5px 10px; background: var(--color3); border: 1px solid var(--color2); border-radius: 10px; color: var(--color1);">▼</span>
-            </h3>
-            <div style="display:flex; gap:10px; align-items:center;">
-                <!-- Select All Button (Injected via JS) -->
-                <div id="select-all-container" style="display:flex; gap:5px; flex-wrap:wrap; justify-content: flex-end;"></div>
-                <button onclick="clearAllData(); event.stopPropagation();" style="border:none; color:#ff7675; background:#fff0f0; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Xóa hết</button>
+            <div id="ctrl-learn" class="hidden">
+                <button class="btn-action btn-theme" onclick="markAsLearned()">✅ Đã thuộc từ này</button>
             </div>
         </div>
-
-        <div id="list-collapsible">
-            <div id="list-items" style="max-height: 450px; overflow-y: auto;"></div>
-        </div>
-    </div>
-
-    <!-- View Card (Learn Mode) -->
-    <div id="view-card" class="hidden">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
-            <button onclick="changeIdx(-1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❮</button>
-            <span id="card-index" style="font-weight: 700; color: var(--color1);">- / -</span>
-            <button onclick="changeIdx(1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❯</button>
-        </div>
         
-        <div class="study-card" onclick="toggleMeaning()">
-            <div id="display-word" class="word-main">---</div>
-            <div id="display-reading" class="word-reading">---</div>
-            <div id="display-meaning" class="word-meaning hidden">---</div>
-            <div id="expansion-card" class="ai-expansion hidden"></div>
-        </div>
-
-        <div id="ctrl-learn" class="hidden">
-            <button class="btn-action btn-theme" onclick="markAsLearned()">✅ Đã thuộc từ này</button>
-        </div>
-    </div>
-</div>
+    </div> <!-- END content-scale-wrapper -->
+</div> <!-- END container -->
 
 <script>
     // Core Variables (Will be loaded by loadData based on mode)
@@ -615,6 +620,13 @@
     
     let pendingImportData = null; 
     let isSortedAZ = false;
+
+    // --- Thay Đổi Cỡ Chữ ---
+    function changeFontSize(val) {
+        document.getElementById('content-scale-wrapper').style.setProperty('--text-scale', val);
+        localStorage.setItem(getStorageKey('jlpt_font_size'), val);
+    }
+    // -----------------------
     
     // Backup & Restore Logic
     function exportBackup() {
@@ -645,7 +657,6 @@
                 const data = JSON.parse(e.target.result);
                 if (data.vocabulary) {
                     
-                    // --- BẮT ĐẦU XỬ LÝ BÙ TRỪ THỜI GIAN ---
                     if (data.exportTime) {
                         const now = Date.now();
                         const elapsedMs = now - data.exportTime;
@@ -674,7 +685,6 @@
                     } else {
                         alert("Bản sao lưu này quá cũ và không chứa thông tin thời gian xuất. Hệ thống sẽ nhập theo thời gian gốc.");
                     }
-                    // --- KẾT THÚC XỬ LÝ BÙ TRỪ THỜI GIAN ---
 
                     vocabulary = data.vocabulary;
                     dailyPointer = data.dailyPointer || 0;
@@ -698,7 +708,7 @@
 
     // Level Picker Logic
     function openLevelPicker(id) {
-        editingWordId = id;
+        editingWordId = String(id);
         const grid = document.getElementById('level-grid');
         grid.innerHTML = '';
         
@@ -728,9 +738,9 @@
 
     // Edit Word Logic
     function openEditModal(id) {
-        const word = vocabulary.find(v => v.id === id);
+        const word = vocabulary.find(v => String(v.id) === String(id));
         if (!word) return;
-        currentEditId = id;
+        currentEditId = String(id);
         document.getElementById('edit-word').value = word.word || '';
         document.getElementById('edit-reading').value = word.reading || '';
         document.getElementById('edit-meaning').value = word.meaning || '';
@@ -754,15 +764,13 @@
             return;
         }
 
-        // Auto fill if missing
         if (!w && r) w = r;
         if (w && !r) r = w;
 
-        const idx = vocabulary.findIndex(v => v.id === currentEditId);
+        const idx = vocabulary.findIndex(v => String(v.id) === currentEditId);
         if (idx !== -1) {
-            // Check for duplicate ONLY if the word has changed
             if (vocabulary[idx].word.toLowerCase() !== w.toLowerCase()) {
-                 if (vocabulary.some(v => v.id !== currentEditId && v.word.toLowerCase() === w.toLowerCase())) {
+                 if (vocabulary.some(v => String(v.id) !== currentEditId && v.word.toLowerCase() === w.toLowerCase())) {
                      alert("Từ này đã tồn tại trong danh sách!");
                      return;
                  }
@@ -811,7 +819,7 @@
                     const end = parseInt(bounds[1], 10);
                     if (!isNaN(start) && !isNaN(end) && start <= end) {
                         for (let i = start; i <= end; i++) {
-                            indicesToSelect.add(i - 1); // User types 1-based, array is 0-based
+                            indicesToSelect.add(i - 1); 
                         }
                     }
                 }
@@ -826,8 +834,9 @@
         let addedCount = 0;
         indicesToSelect.forEach(idx => {
             if (idx >= 0 && idx < items.length) {
-                if (!selectedIds.has(items[idx].id)) {
-                    selectedIds.add(items[idx].id);
+                const strId = String(items[idx].id);
+                if (!selectedIds.has(strId)) {
+                    selectedIds.add(strId);
                     addedCount++;
                 }
             }
@@ -989,9 +998,9 @@
         let html = `
             <div style="position: sticky; top: 0; background: white; padding-bottom: 10px; border-bottom: 1px solid #eee; margin-bottom: 10px; z-index: 10;">
                 <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 5px;">
-                    <button onclick="setDailyFilter('all')" style="flex:1; padding: 6px; border-radius: 8px; border: 1px solid var(--color2); background: ${dailyFilter==='all'?'var(--color1)':'white'}; color: ${dailyFilter==='all'?'white':'var(--text)'}; font-weight: 700; cursor: pointer; font-size: 0.8rem;">Tất cả</button>
-                    <button onclick="setDailyFilter('pending')" style="flex:1; padding: 6px; border-radius: 8px; border: 1px solid var(--color2); background: ${dailyFilter==='pending'?'var(--color1)':'white'}; color: ${dailyFilter==='pending'?'white':'var(--text)'}; font-weight: 700; cursor: pointer; font-size: 0.8rem;">Chưa học</button>
-                    <button onclick="setDailyFilter('done')" style="flex:1; padding: 6px; border-radius: 8px; border: 1px solid var(--color2); background: ${dailyFilter==='done'?'var(--color1)':'white'}; color: ${dailyFilter==='done'?'white':'var(--text)'}; font-weight: 700; cursor: pointer; font-size: 0.8rem;">Đã xong</button>
+                    <button onclick="setDailyFilter('all')" style="flex:1; padding: 6px; border-radius: 8px; border: 1px solid var(--color2); background: ${dailyFilter==='all'?'var(--color1)':'white'}; color: ${dailyFilter==='all'?'white':'var(--text)'}; font-weight: 700; cursor: pointer; font-size: calc(0.8rem * var(--text-scale, 1));">Tất cả</button>
+                    <button onclick="setDailyFilter('pending')" style="flex:1; padding: 6px; border-radius: 8px; border: 1px solid var(--color2); background: ${dailyFilter==='pending'?'var(--color1)':'white'}; color: ${dailyFilter==='pending'?'white':'var(--text)'}; font-weight: 700; cursor: pointer; font-size: calc(0.8rem * var(--text-scale, 1));">Chưa học</button>
+                    <button onclick="setDailyFilter('done')" style="flex:1; padding: 6px; border-radius: 8px; border: 1px solid var(--color2); background: ${dailyFilter==='done'?'var(--color1)':'white'}; color: ${dailyFilter==='done'?'white':'var(--text)'}; font-weight: 700; cursor: pointer; font-size: calc(0.8rem * var(--text-scale, 1));">Đã xong</button>
                 </div>
             </div>
             <div style="padding-bottom: 20px;">
@@ -1004,10 +1013,10 @@
             let doneCount = 0;
             
              dailyTargetIds.forEach(id => {
-            const item = vocabulary.find(v => v.id === id);
+            const item = vocabulary.find(v => String(v.id) === String(id));
             if (!item) return;
 
-            const isPending = dailyQueue.some(q => q.id === id);
+            const isPending = dailyQueue.some(q => String(q.id) === String(id));
             
             if (dailyFilter === 'pending' && !isPending) return;
             if (dailyFilter === 'done' && isPending) return;
@@ -1022,9 +1031,10 @@
             html += `
                 <div class="daily-status-item">
                     <div style="flex: 1; min-width: 0;">
-                        <strong style="font-size:2rem">${item.word}</strong>
-                        <div style="font-size:0.95rem; color:var(--color1); font-weight:600;">${item.reading}</div>
-                        <div style="font-size:0.8rem; color:#666;">${item.meaning}</div>
+                        <strong style="font-size:calc(2rem * var(--text-scale, 1));">${item.word}</strong>
+                        <div style="font-size:calc(0.95rem * var(--text-scale, 1)); color:var(--color1); font-weight:600;">${item.reading}</div>
+                        <!-- BỔ SUNG white-space: pre-wrap CHO Ý NGHĨA TRONG DANH SÁCH HÔM NAY -->
+                        <div style="font-size:calc(0.8rem * var(--text-scale, 1)); color:#666; white-space: pre-wrap; word-break: break-word;">${item.meaning}</div>
                     </div>
                     ${statusHtml}
                 </div>
@@ -1034,7 +1044,7 @@
             if (visibleCount === 0) {
                  html += `<div style="text-align:center; padding:20px; color:#999;">Không có từ nào theo bộ lọc này.</div>`;
             } else {
-                 html = html.replace('<div style="padding-bottom: 20px;">', `<div style="padding-bottom: 20px;"><div style="text-align:center; font-weight:bold; color:var(--color1); margin-bottom:10px; font-size:0.9rem;">Tiến độ: ${doneCount} / ${dailyTargetIds.length}</div>`);
+                 html = html.replace('<div style="padding-bottom: 20px;">', `<div style="padding-bottom: 20px;"><div style="text-align:center; font-weight:bold; color:var(--color1); margin-bottom:10px; font-size:calc(0.9rem * var(--text-scale, 1));">Tiến độ: ${doneCount} / ${dailyTargetIds.length}</div>`);
             }
         }
         
@@ -1083,9 +1093,15 @@
         lastStudyDate = localStorage.getItem(dateKey) || "";
 
         if (dailyQueue.length > 0 && dailyTargetIds.length === 0) {
-            dailyTargetIds = dailyQueue.map(v => v.id);
+            dailyTargetIds = dailyQueue.map(v => String(v.id));
             localStorage.setItem(idsKey, JSON.stringify(dailyTargetIds));
         }
+
+        // Tải thiết lập cỡ chữ
+        const savedScale = localStorage.getItem(getStorageKey('jlpt_font_size')) || "1";
+        document.getElementById('content-scale-wrapper').style.setProperty('--text-scale', savedScale);
+        const fontSelector = document.getElementById('font-size-selector');
+        if(fontSelector) fontSelector.value = savedScale;
     }
 
     function toggleTestMode() {
@@ -1234,7 +1250,7 @@
         document.getElementById('stat-total').innerText = total + " TỪ";
         const high = vocabulary.filter(v => v.level >= 6).length;
         const mid = vocabulary.filter(v => v.level > 1 && v.level < 6).length;
-        const low = total - (high + mid); // Level 9 cũng tính vào tổng, nhưng được gộp riêng
+        const low = total - (high + mid); 
         document.getElementById('stat-new').innerText = low;
         document.getElementById('stat-mid').innerText = mid;
         document.getElementById('stat-high').innerText = high;
@@ -1251,14 +1267,15 @@
     window.updateDashboard = updateDashboard;
 
     function changeWordLevel(id, newLevel) {
+        id = String(id);
         newLevel = parseInt(newLevel);
-        const idx = vocabulary.findIndex(v => v.id === id);
+        const idx = vocabulary.findIndex(v => String(v.id) === id);
         if (idx !== -1) {
             vocabulary[idx].level = newLevel;
             vocabulary[idx].learned = true; 
             setNextReview(vocabulary[idx]); 
             
-            const inDaily = dailyQueue.findIndex(q => q.id === id);
+            const inDaily = dailyQueue.findIndex(q => String(q.id) === id);
             if (inDaily !== -1) {
                 dailyQueue.splice(inDaily, 1);
             }
@@ -1271,6 +1288,7 @@
     window.changeWordLevel = changeWordLevel;
 
     function toggleSelect(id) {
+        id = String(id);
         if (selectedIds.has(id)) selectedIds.delete(id);
         else selectedIds.add(id);
         renderBatchBar();
@@ -1302,7 +1320,7 @@
         if(!confirm(msg)) return;
 
         vocabulary.forEach(v => {
-            if(selectedIds.has(v.id)) {
+            if(selectedIds.has(String(v.id))) {
                 v.level = newLevel;
                 v.learned = true;
                 setNextReview(v);
@@ -1322,7 +1340,7 @@
         if(selectedIds.size === items.length && items.length > 0) {
             selectedIds.clear();
         } else {
-            items.forEach(v => selectedIds.add(v.id));
+            items.forEach(v => selectedIds.add(String(v.id)));
         }
         renderList();
         renderBatchBar();
@@ -1338,7 +1356,7 @@
 
     function selectNext50() {
         const items = getFilteredItems();
-        const unselectedItems = items.filter(v => !selectedIds.has(v.id));
+        const unselectedItems = items.filter(v => !selectedIds.has(String(v.id)));
         const toSelect = unselectedItems.slice(0, 50);
         
         if (toSelect.length === 0) {
@@ -1346,7 +1364,7 @@
             return;
         }
         
-        toSelect.forEach(v => selectedIds.add(v.id));
+        toSelect.forEach(v => selectedIds.add(String(v.id)));
         renderList();
         renderBatchBar();
     }
@@ -1358,6 +1376,7 @@
         renderList();
     }
 
+    let searchTimeout = null;
     function checkSearchInput() {
         const query = document.getElementById('search-input').value;
         const clearBtn = document.getElementById('clear-search-btn');
@@ -1366,12 +1385,16 @@
         } else {
             clearBtn.style.display = 'none';
         }
-        renderList();
+        
+        if (searchTimeout) clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            renderList();
+        }, 300);
     }
 
     function clearSearch() {
         document.getElementById('search-input').value = '';
-        checkSearchInput();
+        checkSearchInput(); 
     }
 
     function getFilteredItems() {
@@ -1384,7 +1407,6 @@
             
             let mTime = true;
             if (currentTimeFilter === 'due') {
-                // Không bao giờ hiển thị level 9 trong danh sách đến hạn
                 mTime = v.learned && v.nextReview <= now && v.level !== 9;
             } else if (currentTimeFilter === 'not_due') {
                 mTime = v.learned && v.nextReview > now;
@@ -1437,7 +1459,7 @@
         if (vocabulary.length === 0) return alert("Vui lòng thêm dữ liệu!");
         
         dailyQueue = dailyQueue.filter(item => {
-             const realWord = vocabulary.find(v => v.id === item.id);
+             const realWord = vocabulary.find(v => String(v.id) === String(item.id));
              return realWord && !realWord.learned;
         });
         saveData(); 
@@ -1481,14 +1503,13 @@
         
         if (batch.length === 0 && vocabulary.length > 0) {
             if(candidatePointer >= vocabulary.length && count === 0) {
-                // Xóa alert confirm, hiển thị thẳng màn hình hoàn thành Hết Từ Mới
                 showFinished("AllDone");
                 return;
             }
         }
         
         dailyPointer = candidatePointer;
-        dailyTargetIds = batch.map(v => v.id);
+        dailyTargetIds = batch.map(v => String(v.id));
         dailyQueue = [...batch].sort(() => Math.random() - 0.5);
         saveData();
         
@@ -1619,7 +1640,7 @@
         
         matchBatch = quizQueue.slice(curQuizIdx, curQuizIdx + matchSize);
         matchResults = {}; 
-        matchBatch.forEach(item => matchResults[item.id] = 'pending');
+        matchBatch.forEach(item => matchResults[String(item.id)] = 'pending');
         
         matchSelectedBtn = null;
         matchedPairsCount = 0;
@@ -1632,11 +1653,11 @@
 
         matchBatch.forEach(item => {
             if (item.word === item.reading) {
-                 leftSide.push({ id: item.id, text: item.word, type: 'word', side: 'left' });
-                 rightSide.push({ id: item.id, text: item.meaning, type: 'meaning', side: 'right' });
+                 leftSide.push({ id: String(item.id), text: item.word, type: 'word', side: 'left' });
+                 rightSide.push({ id: String(item.id), text: item.meaning, type: 'meaning', side: 'right' });
             } else {
-                 leftSide.push({ id: item.id, text: item.word, type: 'word', side: 'left' });
-                 rightSide.push({ id: item.id, text: item.reading, type: 'reading', side: 'right' });
+                 leftSide.push({ id: String(item.id), text: item.word, type: 'word', side: 'left' });
+                 rightSide.push({ id: String(item.id), text: item.reading, type: 'reading', side: 'right' });
             }
         });
 
@@ -1796,16 +1817,16 @@
 
     function processWrongAnswer(mainIdx) {
         if (mainIdx !== -1) {
-            vocabulary[mainIdx].learned = false;
-            vocabulary[mainIdx].level = 0;
-            console.log(`[SAI] Đã đánh dấu Cần ôn lại: ${vocabulary[mainIdx].word}`);
+            vocabulary[mainIdx].level = 1;
+            vocabulary[mainIdx].learned = true; 
+            setNextReview(vocabulary[mainIdx]);
         }
     }
 
     function checkAnswer(selectedText, btn, correctValue) {
         document.querySelectorAll('.option-btn').forEach(b => b.classList.add('disabled'));
         const item = quizQueue[curQuizIdx];
-        const mainIdx = vocabulary.findIndex(v => v.id === item.id);
+        const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
 
         let isCorrect = false;
         const selTrimmed = String(selectedText).trim().toLowerCase();
@@ -1839,7 +1860,6 @@
                 vocabulary[mainIdx].needsRelearn = false; 
                 vocabulary[mainIdx].level = Math.min(8, parseInt(vocabulary[mainIdx].level || 0) + 1);
                 setNextReview(vocabulary[mainIdx]);
-                console.log(`[ĐÚNG] Từ '${vocabulary[mainIdx].word}' -> Level mới: ${vocabulary[mainIdx].level}`);
             }
         } else {
             btn.classList.add('wrong');
@@ -1867,8 +1887,15 @@
         }
 
         const item = quizQueue[curQuizIdx];
-        const mainIdx = vocabulary.findIndex(v => v.id === item.id);
+        const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
         currentQuizResult = 'skip';
+
+        if (mainIdx !== -1) {
+            vocabulary[mainIdx].level = 1;
+            vocabulary[mainIdx].learned = true; 
+            setNextReview(vocabulary[mainIdx]);
+            saveData();
+        }
 
         document.querySelectorAll('#options .option-btn').forEach(b => {
             b.classList.add('disabled');
@@ -1884,15 +1911,16 @@
 
     function finishMatchBatch(isSkip = false) {
         matchBatch.forEach(item => {
-             const res = matchResults[item.id];
-             const mainIdx = vocabulary.findIndex(v => v.id === item.id);
+             const res = matchResults[String(item.id)];
+             const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
              if (mainIdx === -1) return;
 
              if (res === 'correct') {
-                  vocabulary[mainIdx].level = Math.min(8, parseInt(vocabulary[mainIdx].level) + 1);
+                  vocabulary[mainIdx].level = Math.min(8, parseInt(vocabulary[mainIdx].level || 0) + 1);
                   setNextReview(vocabulary[mainIdx]);
              } else if (res === 'wrong' || (res === 'pending' && isSkip)) {
                   vocabulary[mainIdx].level = 1;
+                  vocabulary[mainIdx].learned = true; 
                   setNextReview(vocabulary[mainIdx]);
              }
         });
@@ -1903,7 +1931,6 @@
     }
 
     function setNextReview(item) {
-        // Xử lý Level 9 - Không bao giờ hiển thị lại (set time tới năm 2100)
         if (parseInt(item.level) === 9) {
             item.nextReview = 4102444800000; 
             item.learned = true;
@@ -1938,12 +1965,13 @@
         listDiv.innerHTML = '';
         
         matchBatch.forEach(item => {
-            const isCorrect = matchResults[item.id] === 'correct';
+            const isCorrect = matchResults[String(item.id)] === 'correct';
             const icon = isCorrect ? '<span style="color:var(--success)">✅</span>' : '<span style="color:var(--danger)">❌</span>';
             const html = `
                 <div style="background:#fff; padding:12px; border-radius:12px; border:1px solid ${isCorrect ? '#eafaf1' : '#fdeded'};">
-                    <div style="font-size:1.1rem; font-weight:bold;">${icon} <span style="font-size:2.2rem;">${item.word}</span> <span style="color:var(--color1); font-size:0.95rem;">【${item.reading}】</span></div>
-                    <div style="color:#555; font-size:0.95rem; margin-top:4px;">Ý nghĩa: <strong>${item.meaning}</strong></div>
+                    <div style="font-size:calc(1.1rem * var(--text-scale, 1)); font-weight:bold;">${icon} <span style="font-size:calc(2.2rem * var(--text-scale, 1));">${item.word}</span> <span style="color:var(--color1); font-size:calc(0.95rem * var(--text-scale, 1));">【${item.reading}】</span></div>
+                    <!-- BỔ SUNG white-space: pre-wrap CHO Ý NGHĨA TRONG TRẮC NGHIỆM NHÓM -->
+                    <div style="color:#555; font-size:calc(0.95rem * var(--text-scale, 1)); margin-top:4px; white-space: pre-wrap; word-break: break-word;">Ý nghĩa: <strong>${item.meaning}</strong></div>
                 </div>
             `;
             listDiv.innerHTML += html;
@@ -2064,7 +2092,7 @@
     
     function markAsLearned() {
         const item = quizQueue[curQuizIdx];
-        const mainIdx = vocabulary.findIndex(v => v.id === item.id);
+        const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
         if (mainIdx !== -1) {
             vocabulary[mainIdx].learned = true;
             vocabulary[mainIdx].level = 1; 
@@ -2095,7 +2123,6 @@
             html += `<span class="lvl-tag ${currentFilter == lvl ? 'active' : ''}" style="background:${color}; color:#fff;" onclick="setFilter(${lvl})">Lv ${lvl} (${count})</span>`;
         });
 
-        // Thêm tag cho Level 9
         const lv9Count = vocabulary.filter(v => v.level === 9 && v.learned).length;
         html += `<span class="lvl-tag ${currentFilter == 9 ? 'active' : ''}" style="background:var(--lv9); color:#fff;" onclick="setFilter(9)">Không ôn (${lv9Count})</span>`;
 
@@ -2104,7 +2131,7 @@
         const saContainer = document.getElementById('select-all-container');
         
         const items = getFilteredItems();
-        const allSelected = items.length > 0 && items.every(v => selectedIds.has(v.id));
+        const allSelected = items.length > 0 && items.every(v => selectedIds.has(String(v.id)));
         
         let btnHtml = `<button onclick="toggleSelectAll()" style="border:1px solid #ddd; background:${allSelected ? 'var(--color1)' : 'white'}; color:${allSelected ? 'white' : '#666'}; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${allSelected ? 'Bỏ chọn' : 'Chọn tất cả'}</button>`;
         btnHtml += `<button onclick="selectNext50()" style="border:1px solid var(--color1); background:white; color:var(--color1); padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Chọn 50</button>`;
@@ -2126,44 +2153,51 @@
     function renderList() {
         const items = getFilteredItems();
         const listDiv = document.getElementById('list-items');
-        listDiv.innerHTML = items.length === 0 ? '<div style="text-align:center; padding:20px; color:#999;">Không có dữ liệu phù hợp.</div>' : '';
+        
+        if (items.length === 0) {
+            listDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">Không có dữ liệu phù hợp.</div>';
+            return;
+        }
+
+        let htmlStr = ""; 
         
         items.forEach((v, index) => { 
-            const div = document.createElement('div');
-            div.className = 'list-item';
-            
             let displayLevel = v.learned ? v.level : 0;
             let lvColor = displayLevel === 0 ? 'var(--lv0)' : getComputedStyle(document.documentElement).getPropertyValue(`--lv${displayLevel}`).trim();
             
             let timerHtml = '';
             if (v.learned && v.level >= 1) {
                 if (v.level === 9) {
-                    timerHtml = `<div class="review-timer" style="font-size:0.75rem; color:#888; margin-top:4px; font-weight:600; text-align:right;">🚫 Đã bỏ qua</div>`;
+                    timerHtml = `<div class="review-timer" style="font-size:calc(0.75rem * var(--text-scale, 1)); color:#888; margin-top:4px; font-weight:600; text-align:right;">🚫 Đã bỏ qua</div>`;
                 } else {
-                    timerHtml = `<div class="review-timer" data-next="${v.nextReview}" style="font-size:0.75rem; color:#888; margin-top:4px; font-weight:600; text-align:right;">⏳ ...</div>`;
+                    timerHtml = `<div class="review-timer" data-next="${v.nextReview}" style="font-size:calc(0.75rem * var(--text-scale, 1)); color:#888; margin-top:4px; font-weight:600; text-align:right;">⏳ ...</div>`;
                 }
             }
 
-            const isSelected = selectedIds.has(v.id);
+            const isSelected = selectedIds.has(String(v.id));
 
-            div.innerHTML = `
-                <div style="display:flex; align-items:center;">
-                    <input type="checkbox" class="item-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect(${v.id})">
-                    <div>
-                        <strong><span style="color:#999; font-weight:500; font-size:0.9em; margin-right:5px;">${index + 1}.</span><span style="font-size:2.2rem;">${v.word}</span></strong> <small style="color:var(--color1); font-size:0.95rem;">【${v.reading}】</small>
-                        <div style="font-size:0.85rem; color:#666;">${v.meaning}</div>
+            htmlStr += `
+                <div class="list-item">
+                    <div style="display:flex; align-items:center;">
+                        <input type="checkbox" class="item-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect('${v.id}')">
+                        <div>
+                            <strong><span style="color:#999; font-weight:500; font-size:calc(0.9em * var(--text-scale, 1)); margin-right:5px;">${index + 1}.</span><span style="font-size:calc(2.2rem * var(--text-scale, 1));">${v.word}</span></strong> <small style="color:var(--color1); font-size:calc(0.95rem * var(--text-scale, 1));">【${v.reading}】</small>
+                            <!-- BỔ SUNG white-space: pre-wrap CHO Ý NGHĨA Ở MÀN HÌNH DANH SÁCH -->
+                            <div style="font-size:calc(0.85rem * var(--text-scale, 1)); color:#666; white-space: pre-wrap; word-break: break-word;">${v.meaning}</div>
+                        </div>
                     </div>
-                </div>
-                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <button class="lvl-badge" style="background:${lvColor};" onclick="openLevelPicker(${v.id})">${displayLevel === 9 ? 'X' : 'Lv ' + displayLevel}</button>
-                        <button onclick="openEditModal(${v.id})" style="border:none; background:#f0f8ff; color:#3498db; width:30px; height:30px; border-radius:10px; cursor:pointer;" title="Sửa">✏️</button>
-                        <button onclick="deleteWord(${v.id})" style="border:none; background:#fff0f0; color:#ff7675; width:30px; height:30px; border-radius:10px; cursor:pointer;" title="Xóa">🗑️</button>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <button class="lvl-badge" style="background:${lvColor};" onclick="openLevelPicker('${v.id}')">${displayLevel === 9 ? 'X' : 'Lv ' + displayLevel}</button>
+                            <button onclick="openEditModal('${v.id}')" style="border:none; background:#f0f8ff; color:#3498db; width:30px; height:30px; border-radius:10px; cursor:pointer;" title="Sửa">✏️</button>
+                            <button onclick="deleteWord('${v.id}')" style="border:none; background:#fff0f0; color:#ff7675; width:30px; height:30px; border-radius:10px; cursor:pointer;" title="Xóa">🗑️</button>
+                        </div>
+                        ${timerHtml}
                     </div>
-                    ${timerHtml}
                 </div>`;
-            listDiv.appendChild(div);
         });
+        
+        listDiv.innerHTML = htmlStr;
         updateTimers(); 
     }
     window.renderList = renderList;
@@ -2172,7 +2206,7 @@
         const now = Date.now();
         document.querySelectorAll('.review-timer').forEach(el => {
             const nextAttr = el.getAttribute('data-next');
-            if(!nextAttr) return; // Nếu là Level 9 (Đã bỏ qua) thì bỏ qua
+            if(!nextAttr) return; 
             
             const next = parseInt(nextAttr);
             const diff = next - now;
@@ -2199,8 +2233,9 @@
     setInterval(updateTimers, 1000);
 
     function deleteWord(id) { 
+        id = String(id);
         if(confirm("Xóa từ này?")) { 
-            vocabulary = vocabulary.filter(v => v.id !== id); 
+            vocabulary = vocabulary.filter(v => String(v.id) !== id); 
             if(selectedIds.has(id)) selectedIds.delete(id);
             if(dailyPointer > vocabulary.length) dailyPointer = Math.max(0, vocabulary.length);
             saveData(); renderList(); renderBatchBar();
@@ -2227,7 +2262,6 @@
         });
 
         const total = items.length;
-        // Loại bỏ level 9 khỏi danh sách đếm đến hạn
         const due = items.filter(v => v.learned && v.nextReview <= now && !v.needsRelearn && v.level !== 9).length;
         const notDue = items.filter(v => v.learned && v.nextReview > now && !v.needsRelearn && v.level !== 9).length;
 
@@ -2242,7 +2276,6 @@
         renderFilterTags(); 
         updateTimeFilterCounts(); 
         renderList(); 
-        // Luôn mở mặc định trang Danh sách
         startMode('list'); 
     };
 </script>
