@@ -32,8 +32,14 @@
             --lv9: #7f8c8d; /* Level 9 - Không cần ôn lại */
         }
         
-        body { font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text); padding: 15px; max-width: 900px; margin: 0 auto; line-height: 1.6; transition: background 0.3s, color 0.3s; padding-bottom: 80px; }
+        body { font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text); padding: 15px; max-width: 1200px; margin: 0 auto; line-height: 1.6; transition: background 0.3s, color 0.3s; padding-bottom: 80px; }
+        
         .container { background: white; padding: 25px; border-radius: 30px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.05); border: 1px solid var(--color2); }
+        
+        .layout-wrapper { display: flex; gap: 25px; align-items: flex-start; }
+        .sidebar-left { flex: 0 0 320px; display: flex; flex-direction: column; }
+        .content-right { flex: 1; min-width: 0; }
+
         .box { background: var(--color3); padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 1px solid var(--color2); transition: background 0.3s, border-color 0.3s; }
         
         .input-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: stretch; }
@@ -72,7 +78,6 @@
         .option-btn.disabled { pointer-events: none; opacity: 0.8; }
         .opt-prefix { width: calc(34px * var(--text-scale, 1)); height: calc(34px * var(--text-scale, 1)); background: var(--color3); border-radius: 8px; display: grid; place-items: center; margin-right: 12px; font-weight: 700; color: var(--color1); font-size: calc(1.05rem * var(--text-scale, 1)); flex-shrink: 0; }
 
-        /* Bổ sung white-space: pre-wrap cho nội dung match-btn để tránh lỗi giao diện nếu có text xuống dòng */
         .match-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
         .match-btn { justify-content: center; text-align: center; font-size: calc(1.4rem * var(--text-scale, 1)); padding: 18px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); height: 100%; white-space: pre-wrap; word-break: break-word; }
         .match-btn.selected { border-color: var(--color1); background: var(--color2); box-shadow: 0 0 12px rgba(0,0,0,0.1); transform: scale(0.96); }
@@ -88,7 +93,6 @@
         .study-card { text-align: center; background: white; padding: 40px 20px; border-radius: 35px; border: 2px solid var(--color3); margin-bottom: 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02); position: relative; cursor: pointer; transition: border-color 0.3s; }
         .word-main { font-size: calc(6.5rem * var(--text-scale, 1)); font-weight: 700; color: var(--text); margin-bottom: 5px; }
         .word-reading { font-size: calc(1.4rem * var(--text-scale, 1)); color: var(--color1); font-weight: 600; opacity: 0; transition: 0.3s; min-height: 2rem; }
-        /* Thêm white-space: pre-wrap cho ý nghĩa thẻ học */
         .word-meaning { font-size: calc(1.5rem * var(--text-scale, 1)); color: #636e72; border-top: 2px dashed var(--color2); padding-top: 20px; margin-top: 20px; font-weight: 600; white-space: pre-wrap; word-break: break-word; }
 
         .search-container { position: relative; width: 100%; margin-bottom: 10px; display: flex; align-items: center; }
@@ -245,6 +249,11 @@
         .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; position: absolute; right: 15px; top: 10px; }
         .close-modal:hover { color: black; }
 
+        @media (max-width: 850px) {
+            .layout-wrapper { flex-direction: column; }
+            .sidebar-left { flex: 1 1 auto; width: 100%; }
+        }
+
         @media (max-width: 600px) {
             body { padding: 10px; }
             .container { padding: 15px; }
@@ -275,25 +284,198 @@
 <body>
 
 <div class="container">
-    <div class="box">
-        <!-- ĐÃ ĐỔI THẺ input TẠI ĐÂY THÀNH textarea ĐỂ CHO PHÉP XUỐNG DÒNG -->
-        <div class="input-group">
-            <input type="text" id="manual-word" placeholder="Từ vựng (Kanji)">
-            <input type="text" id="manual-reading" placeholder="Cách đọc (Hiragana)">
-            <textarea id="manual-meaning" placeholder="Ý nghĩa (Có thể xuống dòng)" rows="2"></textarea>
-            <button onclick="addManual()" style="background:var(--color1); color:white; border:none; width:50px; border-radius:15px; font-weight:bold; font-size:1.2rem; cursor:pointer;">+</button>
+    <div class="layout-wrapper">
+        
+        <!-- CỘT BÊN TRÁI -->
+        <div class="sidebar-left">
+            <div class="box">
+                <div class="input-group">
+                    <input type="text" id="manual-word" placeholder="Từ vựng (Kanji)">
+                    <input type="text" id="manual-reading" placeholder="Cách đọc (Hiragana)">
+                    <textarea id="manual-meaning" placeholder="Ý nghĩa (Có thể xuống dòng)" rows="2"></textarea>
+                    <button onclick="addManual()" style="background:var(--color1); color:white; border:none; width:50px; border-radius:15px; font-weight:bold; font-size:1.2rem; cursor:pointer;">+</button>
+                </div>
+
+                <div class="header-actions">
+                    <button onclick="document.getElementById('file-in').click()" class="btn-action" style="background: white; color: var(--color1); border: 2px dashed var(--color2); margin-top: 0; font-size: 0.85rem; flex: 1;">📥 Import Excel (Từ mới)</button>
+                    <button onclick="exportBackup()" class="btn-action" style="background: var(--color5); color: var(--color1); border: none; margin-top: 0; font-size: 0.85rem; flex: 1;">💾 Xuất Backup</button>
+                    <button onclick="document.getElementById('backup-in').click()" class="btn-action" style="background: var(--color5); color: var(--color1); border: none; margin-top: 0; font-size: 0.85rem; flex: 1;">📂 Nhập Backup</button>
+                    <button id="btn-test-mode" onclick="toggleTestMode()" class="btn-action btn-test" style="margin-top: 0; font-size: 0.85rem; flex: 0 0 80px;">🧪 Test</button>
+                </div>
+                <input type="file" id="file-in" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleExcel()">
+                <input type="file" id="backup-in" class="hidden" accept=".json" onchange="importBackup(event)">
+            </div>
+
+            <div id="daily-warning" class="warning-alert hidden">
+                <span>⚠️ Bạn chưa hoàn thành từ hôm nay!</span>
+                <button class="warning-btn" onclick="startMode('daily')">Học Ngay</button>
+            </div>
+
+            <div class="dashboard">
+                <div style="display:flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 5px;">
+                    <span>TIẾN ĐỘ THUỘC LÒNG</span>
+                    <span id="stat-total">0 TỪ</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.3); height: 10px; border-radius: 10px; overflow: hidden; margin-bottom: 15px;">
+                    <div id="progress-bar" style="width: 0%; background: white; height: 100%; transition: 0.5s;"></div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item"><span class="stat-val" id="stat-new">0</span><span style="font-size:0.7rem">Mới/Sai</span></div>
+                    <div class="stat-item"><span class="stat-val" id="stat-mid">0</span><span style="font-size:0.7rem">Đang học</span></div>
+                    <div class="stat-item"><span class="stat-val" id="stat-high">0</span><span style="font-size:0.7rem">Đã thuộc</span></div>
+                </div>
+            </div>
         </div>
 
-        <div class="header-actions">
-            <button onclick="document.getElementById('file-in').click()" class="btn-action" style="background: white; color: var(--color1); border: 2px dashed var(--color2); margin-top: 0; font-size: 0.85rem; flex: 1;">📥 Import Excel (Từ mới)</button>
-            <button onclick="exportBackup()" class="btn-action" style="background: var(--color5); color: var(--color1); border: none; margin-top: 0; font-size: 0.85rem; flex: 1;">💾 Xuất Backup</button>
-            <button onclick="document.getElementById('backup-in').click()" class="btn-action" style="background: var(--color5); color: var(--color1); border: none; margin-top: 0; font-size: 0.85rem; flex: 1;">📂 Nhập Backup</button>
-            <button id="btn-test-mode" onclick="toggleTestMode()" class="btn-action btn-test" style="margin-top: 0; font-size: 0.85rem; flex: 0 0 80px;">🧪 Test</button>
-        </div>
-        <input type="file" id="file-in" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleExcel()">
-        <input type="file" id="backup-in" class="hidden" accept=".json" onchange="importBackup(event)">
-    </div>
+        <!-- CỘT BÊN PHẢI -->
+        <div class="content-right">
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 15px;">
+                <label style="font-size: 0.85rem; font-weight: bold; color: var(--color1); margin-right: 10px;">🔍 Cỡ chữ:</label>
+                <select id="font-size-selector" onchange="changeFontSize(this.value)" style="padding: 6px 12px; border-radius: 12px; border: 2px solid var(--color2); outline: none; font-family: 'Quicksand'; font-weight: 700; color: var(--text); background: white; cursor: pointer;">
+                    <option value="0.85">Nhỏ</option>
+                    <option value="1">Tiêu chuẩn</option>
+                    <option value="1.2">Lớn</option>
+                    <option value="1.4">Rất lớn</option>
+                </select>
+            </div>
 
+            <div id="content-scale-wrapper" style="--text-scale: 1;">
+                
+                <div class="mode-selector">
+                    <button class="mode-btn active" id="btn-daily" onclick="startMode('daily')">🔥 ÔN LỘ TRÌNH</button>
+                    <button class="mode-btn" id="btn-list" onclick="startMode('list')">📚 DANH SÁCH</button>
+                    <button class="mode-btn" id="btn-level-review" onclick="openReviewLevelModal()">ÔN TẬP LEVEL</button>
+                </div>
+
+                <!-- View Trắc nghiệm -->
+                <div id="view-quiz">
+                    <div id="quiz-content">
+                        <div class="quiz-card">
+                            <div id="quiz-meta" style="font-size:calc(0.85rem * var(--text-scale, 1)); color:var(--color1); font-weight:bold; margin-bottom:10px;">CÂU HỎI --/--</div>
+                            <div id="quiz-q" class="quiz-q">---</div>
+                            <div id="quiz-hint" class="quiz-hint">---</div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <button onclick="openDailyListModal()" id="btn-view-daily-list" class="hidden" style="font-size: calc(0.8rem * var(--text-scale, 1)); background: transparent; border: 1px solid var(--color1); color: var(--color1); padding: 5px 12px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 600;">📋 Danh sách hôm nay</button>
+                        </div>
+
+                        <!-- Single Quiz Option Grid -->
+                        <div id="options" class="option-grid"></div>
+                        
+                        <!-- Match Quiz Option Grid -->
+                        <div id="match-grid" class="option-grid match-grid hidden"></div>
+                        
+                        <!-- Nút Skip -->
+                        <div id="btn-skip-container">
+                            <button id="btn-skip-quiz" class="btn-action btn-skip" onclick="skipCurrentQuiz()">⏩ Bỏ qua (Học sau)</button>
+                        </div>
+
+                        <div id="quiz-explanation" class="hidden ai-expansion">
+                            <div style="background: #f8f9fa; padding: 20px; border-radius: 20px; border: 1px solid #eee; margin-top: 15px;">
+                                <!-- Vùng cho Single Quiz -->
+                                <div id="expl-single">
+                                    <div style="font-size: calc(3.5rem * var(--text-scale, 1)); font-weight: 700; color: var(--color1); margin-bottom: 5px;" id="expl-word"></div>
+                                    <div style="font-size: calc(1rem * var(--text-scale, 1)); color: #555; font-weight: 600;" id="expl-reading"></div>
+                                    <div style="font-size: calc(1.1rem * var(--text-scale, 1)); color: #333; margin-top: 8px; font-weight: 600; border-top: 1px solid #ddd; padding-top: 8px; white-space: pre-wrap;" id="expl-meaning"></div>
+                                    <div id="expl-extra"></div>
+                                </div>
+                                <!-- Vùng cho Match Quiz -->
+                                <div id="expl-batch" class="hidden">
+                                    <div style="font-size: calc(1.1rem * var(--text-scale, 1)); font-weight: 700; color: var(--color1); margin-bottom: 15px;">Danh sách từ vừa gặp:</div>
+                                    <div id="expl-batch-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="quiz-next-container" class="hidden">
+                            <button class="btn-action btn-theme" onclick="renderNextQuiz()">Tiếp theo ❯</button>
+                        </div>
+                    </div>
+                    
+                    <!-- State Empty / Finished -->
+                    <div id="quiz-empty" class="hidden success-state">
+                        <div style="font-size: calc(4rem * var(--text-scale, 1));">🎉</div>
+                        <h2 style="color: var(--success); font-weight: 700;">Tuyệt vời!</h2>
+                        <p style="color:#666">Bạn đã hoàn thành hết bài ôn tập hiện tại.</p>
+                        <button class="btn-action btn-theme" onclick="startMode('list')">Về danh sách</button>
+                    </div>
+
+                    <div id="quiz-finished" class="hidden success-state">
+                        <div style="font-size: calc(4rem * var(--text-scale, 1));">🔥</div>
+                        <h2 id="finish-title" style="color: var(--success); font-weight: 700;">Hoàn thành lộ trình!</h2>
+                        <p id="finish-msg" style="color:#666">Đã học xong bài của ngày hôm nay.</p>
+                        <div id="daily-list-btn-container" style="margin-bottom: 20px;">
+                            <button onclick="openDailyListModal()" style="font-size: calc(0.9rem * var(--text-scale, 1)); background: #fff; border: 2px solid var(--color1); color: var(--color1); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 700;">📋 Xem lại danh sách</button>
+                        </div>
+                        
+                        <button id="btn-force-next-day" class="btn-action btn-next-day hidden" onclick="advanceNextDay()" style="margin-bottom: 10px;">📅 Học trước ngày mai</button>
+                        <button class="btn-action btn-theme" onclick="startMode('list')">Quay lại danh sách</button>
+                    </div>
+                </div>
+
+                <!-- View Danh sách -->
+                <div id="view-list" class="hidden">
+                    <div class="search-container">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="search-input" placeholder="Tìm kiếm từ vựng, ý nghĩa..." oninput="checkSearchInput()">
+                        <button class="clear-search-btn" id="clear-search-btn" onclick="clearSearch()">✕</button>
+                    </div>
+                    
+                    <!-- Time Filters -->
+                    <div class="time-filters">
+                        <button class="time-filter-btn active" onclick="setTimeFilter('all')" id="tf-all">Tất cả (0)</button>
+                        <button class="time-filter-btn" onclick="setTimeFilter('due')" id="tf-due">⏰ Đến hạn (0)</button>
+                        <button class="time-filter-btn" onclick="setTimeFilter('not_due')" id="tf-not_due">zzz Chưa đến hạn (0)</button>
+                    </div>
+
+                    <div class="filter-scroll-wrapper">
+                        <div id="level-filter-btns" class="filter-group"></div>
+                    </div>
+
+                    <div class="list-header">
+                        <h3 style="margin:0; font-size:calc(1.1rem * var(--text-scale, 1)); color:var(--color1); font-weight:700; display:flex; align-items:center;">
+                            DỮ LIỆU TỪ VỰNG 
+                            <span id="list-toggle-icon" onclick="toggleList()" style="font-size:calc(0.8rem * var(--text-scale, 1)); margin-left:10px; cursor:pointer; padding: 5px 10px; background: var(--color3); border: 1px solid var(--color2); border-radius: 10px; color: var(--color1);">▼</span>
+                        </h3>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <!-- Select All Button (Injected via JS) -->
+                            <div id="select-all-container" style="display:flex; gap:5px; flex-wrap:wrap; justify-content: flex-end;"></div>
+                            <button onclick="clearAllData(); event.stopPropagation();" style="border:none; color:#ff7675; background:#fff0f0; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Xóa hết</button>
+                        </div>
+                    </div>
+
+                    <div id="list-collapsible">
+                        <div id="list-items" style="max-height: 450px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+
+                <!-- View Card (Learn Mode) -->
+                <div id="view-card" class="hidden">
+                    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
+                        <button onclick="changeIdx(-1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❮</button>
+                        <span id="card-index" style="font-weight: 700; color: var(--color1);">- / -</span>
+                        <button onclick="changeIdx(1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❯</button>
+                    </div>
+                    
+                    <div class="study-card" onclick="toggleMeaning()">
+                        <div id="display-word" class="word-main">---</div>
+                        <div id="display-reading" class="word-reading">---</div>
+                        <div id="display-meaning" class="word-meaning hidden">---</div>
+                        <div id="expansion-card" class="ai-expansion hidden"></div>
+                    </div>
+
+                    <div id="ctrl-learn" class="hidden">
+                        <button class="btn-action btn-theme" onclick="markAsLearned()">✅ Đã thuộc từ này</button>
+                    </div>
+                </div>
+                
+            </div> <!-- END content-scale-wrapper -->
+        </div> <!-- END content-right -->
+    </div> <!-- END layout-wrapper -->
+
+    <!-- CÁC THÀNH PHẦN MODAL ĐỂ BÊN NGOÀI KHUNG LAYOUT ĐỂ TRÁNH LỖI GIAO DIỆN -->
+    
     <!-- Quick Level Picker Modal -->
     <div id="levelPickerModal" class="modal" style="z-index: 1001;">
         <div class="modal-content" style="max-width: 320px;">
@@ -301,9 +483,7 @@
             <h3 style="color:var(--text); margin-top:0;">Chọn Nhanh Level</h3>
             <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Chạm để đổi cấp độ ngay lập tức:</p>
             
-            <div id="level-grid" class="level-grid">
-                <!-- JS will inject buttons here -->
-            </div>
+            <div id="level-grid" class="level-grid"></div>
             
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button onclick="setLevel(8)" class="btn-action" style="background:var(--lv8); margin-top:0; font-size:0.9rem; flex: 1;">🏆 Đã thuộc</button>
@@ -317,13 +497,14 @@
         <div class="modal-content" style="max-width: 320px;">
             <span class="close-modal" onclick="closeReviewLevelModal()">&times;</span>
             <h3 style="color:var(--text); margin-top:0;">Chọn Level để Ôn Tập</h3>
-            <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Chọn Level bạn muốn ôn tập:</p>
+            <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Chọn một hoặc nhiều Level:</p>
             
-            <div id="review-level-grid" class="level-grid">
-                <!-- JS will inject buttons here -->
+            <div id="review-level-grid" class="level-grid"></div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="showReviewOptions('selected')" class="btn-action btn-theme" style="margin-top:0; font-size:0.9rem; flex: 1;">▶️ Ôn Cấp Đã Chọn</button>
+                <button onclick="showReviewOptions('all')" class="btn-action" style="background:var(--color1); margin-top:0; font-size:0.9rem; flex: 1;">📚 Ôn Tất Cả</button>
             </div>
-            
-            <button onclick="showReviewOptions('all')" class="btn-action" style="background:var(--color1); margin-top:15px; font-size:0.9rem;">📚 Ôn Tập Tất Cả Các Level</button>
         </div>
     </div>
 
@@ -377,8 +558,7 @@
                 </div>
                 <div>
                     <label style="font-size: 0.85rem; font-weight: bold; color: var(--color1);">Ý nghĩa:</label>
-                    <!-- ĐÃ ĐỔI THẺ input TẠI ĐÂY THÀNH textarea -->
-                    <textarea id="edit-meaning" rows="3" style="width: 100%; box-sizing: border-box; margin-top: 5px; border: 2px solid var(--color2); border-radius: 10px; padding: 10px; font-family: 'Quicksand'; outline: none;"></textarea>
+                    <textarea id="edit-meaning" rows="3" style="width: 100%; box-sizing: border-box; margin-top: 5px; border: 2px solid var(--color2); border-radius: 10px; padding: 10px; font-family: 'Quicksand'; outline: none; resize: vertical;"></textarea>
                 </div>
                 <button class="btn-action btn-theme" onclick="saveEditWord()" style="margin-top: 15px;">💾 Lưu Thay Đổi</button>
             </div>
@@ -422,171 +602,6 @@
         </div>
     </div>
 
-    <div id="daily-warning" class="warning-alert hidden">
-        <span>⚠️ Bạn chưa hoàn thành từ hôm nay!</span>
-        <button class="warning-btn" onclick="startMode('daily')">Học Ngay</button>
-    </div>
-
-    <div class="dashboard">
-        <div style="display:flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 5px;">
-            <span>TIẾN ĐỘ THUỘC LÒNG</span>
-            <span id="stat-total">0 TỪ</span>
-        </div>
-        <div style="background: rgba(255,255,255,0.3); height: 10px; border-radius: 10px; overflow: hidden; margin-bottom: 15px;">
-            <div id="progress-bar" style="width: 0%; background: white; height: 100%; transition: 0.5s;"></div>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-item"><span class="stat-val" id="stat-new">0</span><span style="font-size:0.7rem">Mới/Sai</span></div>
-            <div class="stat-item"><span class="stat-val" id="stat-mid">0</span><span style="font-size:0.7rem">Đang học</span></div>
-            <div class="stat-item"><span class="stat-val" id="stat-high">0</span><span style="font-size:0.7rem">Đã thuộc</span></div>
-        </div>
-    </div>
-
-    <!-- KÊNH LỰA CHỌN CỠ CHỮ -->
-    <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 15px;">
-        <label style="font-size: 0.85rem; font-weight: bold; color: var(--color1); margin-right: 10px;">🔍 Cỡ chữ:</label>
-        <select id="font-size-selector" onchange="changeFontSize(this.value)" style="padding: 6px 12px; border-radius: 12px; border: 2px solid var(--color2); outline: none; font-family: 'Quicksand'; font-weight: 700; color: var(--text); background: white; cursor: pointer;">
-            <option value="0.85">Nhỏ</option>
-            <option value="1">Tiêu chuẩn</option>
-            <option value="1.2">Lớn</option>
-            <option value="1.4">Rất lớn</option>
-        </select>
-    </div>
-
-    <!-- VÙNG ĐIỀU CHỈNH KÍCH THƯỚC CHỮ TỪ MODE-SELECTOR TRỞ XUỐNG -->
-    <div id="content-scale-wrapper" style="--text-scale: 1;">
-        
-        <div class="mode-selector">
-            <button class="mode-btn active" id="btn-daily" onclick="startMode('daily')">🔥 ÔN LỘ TRÌNH</button>
-            <button class="mode-btn" id="btn-list" onclick="startMode('list')">📚 DANH SÁCH</button>
-            <button class="mode-btn" id="btn-level-review" onclick="openReviewLevelModal()">ÔN TẬP LEVEL</button>
-        </div>
-
-        <!-- View Trắc nghiệm -->
-        <div id="view-quiz">
-            <div id="quiz-content">
-                <div class="quiz-card">
-                    <div id="quiz-meta" style="font-size:calc(0.85rem * var(--text-scale, 1)); color:var(--color1); font-weight:bold; margin-bottom:10px;">CÂU HỎI --/--</div>
-                    <div id="quiz-q" class="quiz-q">---</div>
-                    <div id="quiz-hint" class="quiz-hint">---</div>
-                </div>
-                
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <button onclick="openDailyListModal()" id="btn-view-daily-list" class="hidden" style="font-size: calc(0.8rem * var(--text-scale, 1)); background: transparent; border: 1px solid var(--color1); color: var(--color1); padding: 5px 12px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 600;">📋 Danh sách hôm nay</button>
-                </div>
-
-                <!-- Single Quiz Option Grid -->
-                <div id="options" class="option-grid"></div>
-                
-                <!-- Match Quiz Option Grid -->
-                <div id="match-grid" class="option-grid match-grid hidden"></div>
-                
-                <!-- Nút Skip -->
-                <div id="btn-skip-container">
-                    <button id="btn-skip-quiz" class="btn-action btn-skip" onclick="skipCurrentQuiz()">⏩ Bỏ qua (Học sau)</button>
-                </div>
-
-                <div id="quiz-explanation" class="hidden ai-expansion">
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 20px; border: 1px solid #eee; margin-top: 15px;">
-                        <!-- Vùng cho Single Quiz -->
-                        <div id="expl-single">
-                            <div style="font-size: calc(3.5rem * var(--text-scale, 1)); font-weight: 700; color: var(--color1); margin-bottom: 5px;" id="expl-word"></div>
-                            <div style="font-size: calc(1rem * var(--text-scale, 1)); color: #555; font-weight: 600;" id="expl-reading"></div>
-                            <!-- THÊM white-space: pre-wrap CHO Ý NGHĨA TRONG TRẮC NGHIỆM ĐƠN -->
-                            <div style="font-size: calc(1.1rem * var(--text-scale, 1)); color: #333; margin-top: 8px; font-weight: 600; border-top: 1px solid #ddd; padding-top: 8px; white-space: pre-wrap;" id="expl-meaning"></div>
-                            <div id="expl-extra"></div>
-                        </div>
-                        <!-- Vùng cho Match Quiz -->
-                        <div id="expl-batch" class="hidden">
-                            <div style="font-size: calc(1.1rem * var(--text-scale, 1)); font-weight: 700; color: var(--color1); margin-bottom: 15px;">Danh sách từ vừa gặp:</div>
-                            <div id="expl-batch-list" style="display:flex; flex-direction:column; gap:10px;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="quiz-next-container" class="hidden">
-                    <button class="btn-action btn-theme" onclick="renderNextQuiz()">Tiếp theo ❯</button>
-                </div>
-            </div>
-            
-            <!-- State Empty / Finished -->
-            <div id="quiz-empty" class="hidden success-state">
-                <div style="font-size: calc(4rem * var(--text-scale, 1));">🎉</div>
-                <h2 style="color: var(--success); font-weight: 700;">Tuyệt vời!</h2>
-                <p style="color:#666">Bạn đã hoàn thành hết bài ôn tập hiện tại.</p>
-                <button class="btn-action btn-theme" onclick="startMode('list')">Về danh sách</button>
-            </div>
-
-            <div id="quiz-finished" class="hidden success-state">
-                <div style="font-size: calc(4rem * var(--text-scale, 1));">🔥</div>
-                <h2 id="finish-title" style="color: var(--success); font-weight: 700;">Hoàn thành lộ trình!</h2>
-                <p id="finish-msg" style="color:#666">Đã học xong bài của ngày hôm nay.</p>
-                <div id="daily-list-btn-container" style="margin-bottom: 20px;">
-                    <button onclick="openDailyListModal()" style="font-size: calc(0.9rem * var(--text-scale, 1)); background: #fff; border: 2px solid var(--color1); color: var(--color1); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 700;">📋 Xem lại danh sách</button>
-                </div>
-                
-                <button id="btn-force-next-day" class="btn-action btn-next-day hidden" onclick="advanceNextDay()" style="margin-bottom: 10px;">📅 Học trước ngày mai</button>
-                <button class="btn-action btn-theme" onclick="startMode('list')">Quay lại danh sách</button>
-            </div>
-        </div>
-
-        <!-- View Danh sách -->
-        <div id="view-list" class="hidden">
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" placeholder="Tìm kiếm từ vựng, ý nghĩa..." oninput="checkSearchInput()">
-                <button class="clear-search-btn" id="clear-search-btn" onclick="clearSearch()">✕</button>
-            </div>
-            
-            <!-- Time Filters -->
-            <div class="time-filters">
-                <button class="time-filter-btn active" onclick="setTimeFilter('all')" id="tf-all">Tất cả (0)</button>
-                <button class="time-filter-btn" onclick="setTimeFilter('due')" id="tf-due">⏰ Đến hạn (0)</button>
-                <button class="time-filter-btn" onclick="setTimeFilter('not_due')" id="tf-not_due">zzz Chưa đến hạn (0)</button>
-            </div>
-
-            <div class="filter-scroll-wrapper">
-                <div id="level-filter-btns" class="filter-group"></div>
-            </div>
-
-            <div class="list-header">
-                <h3 style="margin:0; font-size:calc(1.1rem * var(--text-scale, 1)); color:var(--color1); font-weight:700; display:flex; align-items:center;">
-                    DỮ LIỆU TỪ VỰNG 
-                    <span id="list-toggle-icon" onclick="toggleList()" style="font-size:calc(0.8rem * var(--text-scale, 1)); margin-left:10px; cursor:pointer; padding: 5px 10px; background: var(--color3); border: 1px solid var(--color2); border-radius: 10px; color: var(--color1);">▼</span>
-                </h3>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <!-- Select All Button (Injected via JS) -->
-                    <div id="select-all-container" style="display:flex; gap:5px; flex-wrap:wrap; justify-content: flex-end;"></div>
-                    <button onclick="clearAllData(); event.stopPropagation();" style="border:none; color:#ff7675; background:#fff0f0; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Xóa hết</button>
-                </div>
-            </div>
-
-            <div id="list-collapsible">
-                <div id="list-items" style="max-height: 450px; overflow-y: auto;"></div>
-            </div>
-        </div>
-
-        <!-- View Card (Learn Mode) -->
-        <div id="view-card" class="hidden">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
-                <button onclick="changeIdx(-1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❮</button>
-                <span id="card-index" style="font-weight: 700; color: var(--color1);">- / -</span>
-                <button onclick="changeIdx(1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❯</button>
-            </div>
-            
-            <div class="study-card" onclick="toggleMeaning()">
-                <div id="display-word" class="word-main">---</div>
-                <div id="display-reading" class="word-reading">---</div>
-                <div id="display-meaning" class="word-meaning hidden">---</div>
-                <div id="expansion-card" class="ai-expansion hidden"></div>
-            </div>
-
-            <div id="ctrl-learn" class="hidden">
-                <button class="btn-action btn-theme" onclick="markAsLearned()">✅ Đã thuộc từ này</button>
-            </div>
-        </div>
-        
-    </div> <!-- END content-scale-wrapper -->
 </div> <!-- END container -->
 
 <script>
@@ -620,6 +635,7 @@
     
     let pendingImportData = null; 
     let isSortedAZ = false;
+    let selectedReviewLevels = new Set(); // Biến lưu trữ các Level được chọn để ôn tập
 
     // --- Thay Đổi Cỡ Chữ ---
     function changeFontSize(val) {
@@ -641,7 +657,12 @@
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
         const downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "JLPT_Mastery_Backup_" + new Date().toISOString().slice(0,10) + ".json");
+        
+        const now = new Date();
+        const pad = num => String(num).padStart(2, '0');
+        const datetime = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+        downloadAnchorNode.setAttribute("download", "TuVung_Backup_" + datetime + ".json");
+        
         document.body.appendChild(downloadAnchorNode); // required for firefox
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
@@ -847,8 +868,9 @@
         closeSelectRangeModal();
     }
 
-    // Review Level Modal Logic
+    // Review Level Modal Logic (CẬP NHẬT CHỌN NHIỀU LEVEL)
     function openReviewLevelModal() {
+        selectedReviewLevels.clear();
         const grid = document.getElementById('review-level-grid');
         grid.innerHTML = '';
         
@@ -857,8 +879,21 @@
             const color = getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim();
             btn.className = 'level-cell';
             btn.style.background = color;
+            btn.style.opacity = '0.4';
+            btn.style.border = '3px solid transparent';
+            btn.style.boxSizing = 'border-box';
             btn.innerText = `Lv ${i}`;
-            btn.onclick = () => showReviewOptions(i);
+            btn.onclick = () => {
+                if (selectedReviewLevels.has(i)) {
+                    selectedReviewLevels.delete(i);
+                    btn.style.opacity = '0.4';
+                    btn.style.borderColor = 'transparent';
+                } else {
+                    selectedReviewLevels.add(i);
+                    btn.style.opacity = '1';
+                    btn.style.borderColor = '#333';
+                }
+            };
             grid.appendChild(btn);
         }
         document.getElementById('reviewLevelModal').style.display = "block";
@@ -879,32 +914,41 @@
         }
     }
 
-    function showReviewOptions(level) {
+    let currentReviewSelection = 'all';
+
+    function showReviewOptions(mode) {
+        let allItems = [];
+        const title = document.getElementById('review-opt-title');
+        
+        if (mode === 'all') {
+            currentReviewSelection = 'all';
+            title.innerText = "Tất cả các Level";
+            allItems = [...vocabulary];
+        } else {
+            if (selectedReviewLevels.size === 0) {
+                alert("Vui lòng chọn ít nhất 1 Level để ôn tập!");
+                return;
+            }
+            currentReviewSelection = Array.from(selectedReviewLevels).sort((a,b)=>a-b);
+            title.innerText = `Level ${currentReviewSelection.join(', ')}`;
+            allItems = vocabulary.filter(v => currentReviewSelection.includes(parseInt(v.level)));
+        }
+
         closeReviewLevelModal();
         const modal = document.getElementById('reviewOptionsModal');
-        const title = document.getElementById('review-opt-title');
         const cntDue = document.getElementById('cnt-due');
         const cntAll = document.getElementById('cnt-all');
         const btnDue = document.getElementById('btn-review-due');
         const btnAll = document.getElementById('btn-review-all');
         
-        let allItems = [];
-        if (level === 'all') {
-            title.innerText = "Tất cả các Level";
-            allItems = [...vocabulary];
-        } else {
-            title.innerText = `Level ${level}`;
-            allItems = vocabulary.filter(v => v.level === parseInt(level));
-        }
-        
         const now = Date.now();
-        const dueItems = allItems.filter(v => v.learned && v.nextReview <= now && v.level !== 9);
+        const dueItems = allItems.filter(v => v.learned && v.nextReview <= now && parseInt(v.level) !== 9);
         
         cntDue.innerText = dueItems.length;
         cntAll.innerText = allItems.length;
         
-        btnDue.onclick = () => startLevelReview(level, 'due');
-        btnAll.onclick = () => startLevelReview(level, 'all');
+        btnDue.onclick = () => startLevelReview(currentReviewSelection, 'due');
+        btnAll.onclick = () => startLevelReview(currentReviewSelection, 'all');
         
         modal.style.display = "block";
     }
@@ -913,18 +957,18 @@
         document.getElementById('reviewOptionsModal').style.display = "none";
     }
 
-    function startLevelReview(level, mode) {
+    function startLevelReview(selection, mode) {
         closeReviewOptionsModal();
         let items = [];
         
-        if (level === 'all') {
+        if (selection === 'all') {
             items = [...vocabulary];
         } else {
-            items = vocabulary.filter(v => v.level === parseInt(level));
+            items = vocabulary.filter(v => selection.includes(parseInt(v.level)));
         }
 
         // Bỏ qua Level 9 khi ôn tập
-        items = items.filter(v => v.level !== 9);
+        items = items.filter(v => parseInt(v.level) !== 9);
 
         if (mode === 'due') {
             const now = Date.now();
@@ -1033,7 +1077,6 @@
                     <div style="flex: 1; min-width: 0;">
                         <strong style="font-size:calc(2rem * var(--text-scale, 1));">${item.word}</strong>
                         <div style="font-size:calc(0.95rem * var(--text-scale, 1)); color:var(--color1); font-weight:600;">${item.reading}</div>
-                        <!-- BỔ SUNG white-space: pre-wrap CHO Ý NGHĨA TRONG DANH SÁCH HÔM NAY -->
                         <div style="font-size:calc(0.8rem * var(--text-scale, 1)); color:#666; white-space: pre-wrap; word-break: break-word;">${item.meaning}</div>
                     </div>
                     ${statusHtml}
@@ -1970,7 +2013,6 @@
             const html = `
                 <div style="background:#fff; padding:12px; border-radius:12px; border:1px solid ${isCorrect ? '#eafaf1' : '#fdeded'};">
                     <div style="font-size:calc(1.1rem * var(--text-scale, 1)); font-weight:bold;">${icon} <span style="font-size:calc(2.2rem * var(--text-scale, 1));">${item.word}</span> <span style="color:var(--color1); font-size:calc(0.95rem * var(--text-scale, 1));">【${item.reading}】</span></div>
-                    <!-- BỔ SUNG white-space: pre-wrap CHO Ý NGHĨA TRONG TRẮC NGHIỆM NHÓM -->
                     <div style="color:#555; font-size:calc(0.95rem * var(--text-scale, 1)); margin-top:4px; white-space: pre-wrap; word-break: break-word;">Ý nghĩa: <strong>${item.meaning}</strong></div>
                 </div>
             `;
@@ -2182,7 +2224,6 @@
                         <input type="checkbox" class="item-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect('${v.id}')">
                         <div>
                             <strong><span style="color:#999; font-weight:500; font-size:calc(0.9em * var(--text-scale, 1)); margin-right:5px;">${index + 1}.</span><span style="font-size:calc(2.2rem * var(--text-scale, 1));">${v.word}</span></strong> <small style="color:var(--color1); font-size:calc(0.95rem * var(--text-scale, 1));">【${v.reading}】</small>
-                            <!-- BỔ SUNG white-space: pre-wrap CHO Ý NGHĨA Ở MÀN HÌNH DANH SÁCH -->
                             <div style="font-size:calc(0.85rem * var(--text-scale, 1)); color:#666; white-space: pre-wrap; word-break: break-word;">${v.meaning}</div>
                         </div>
                     </div>
