@@ -288,6 +288,30 @@
         
         <!-- CỘT BÊN TRÁI -->
         <div class="sidebar-left">
+
+            <!-- THÊM MỚI: BẢNG ĐỒNG BỘ ĐÁM MÂY -->
+            <div id="sync-panel" class="box" style="background: #e8f4fd; border-color: #bce0fd; padding: 15px; text-align: center;">
+                <div style="font-size: 0.9rem; font-weight: 700; color: #2980b9; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    ☁️ ĐỒNG BỘ ĐÁM MÂY (GOOGLE)
+                </div>
+                <div id="sync-status" style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">Chưa đăng nhập</div>
+                
+                <!-- Nút Đăng nhập -->
+                <button id="btn-google-login" style="width: 100%; padding: 10px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; background: #fff; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G" style="width: 18px;"> Đăng nhập Google
+                </button>
+                
+                <!-- Giao diện sau khi đăng nhập (Được ẩn đi mặc định) -->
+                <div id="logged-in-ui" class="hidden">
+                    <div id="user-email" style="font-size: 0.85rem; font-weight: bold; color: #333; margin-bottom: 10px; word-break: break-all;"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btn-force-sync" style="flex: 1; padding: 8px; border: none; border-radius: 10px; background: #3498db; color: white; font-weight: bold; cursor: pointer; font-size: 0.8rem;">🔄 Tải & Đồng bộ</button>
+                        <button id="btn-google-logout" style="flex: 1; padding: 8px; border: none; border-radius: 10px; background: #e74c3c; color: white; font-weight: bold; cursor: pointer; font-size: 0.8rem;">Đăng xuất</button>
+                    </div>
+                </div>
+            </div>
+            <!-- KẾT THÚC THÊM MỚI -->
+
             <div class="box">
                 <div class="input-group">
                     <input type="text" id="manual-word" placeholder="Từ vựng (Kanji)">
@@ -324,6 +348,19 @@
                     <div class="stat-item"><span class="stat-val" id="stat-mid">0</span><span style="font-size:0.7rem">Đang học</span></div>
                     <div class="stat-item"><span class="stat-val" id="stat-high">0</span><span style="font-size:0.7rem">Đã thuộc</span></div>
                 </div>
+                
+                <div id="daily-tracking-ui" style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.4); text-align: center;">
+                    <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 5px;">MỤC TIÊU HÔM NAY</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.1); padding: 8px 12px; border-radius: 12px;">
+                        <span style="font-size: 0.8rem;">Đã ôn: <strong id="stat-today-reviewed" style="font-size: 1.1rem; color: #fff;">0</strong></span>
+                        <span id="stat-today-missing" style="font-size: 0.8rem; background: var(--warning); padding: 3px 8px; border-radius: 8px; font-weight: bold;">Thiếu: 50</span>
+                    </div>
+                    
+                    <div style="margin-top: 10px;">
+                        <button onclick="openHistoryModal()" style="background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 5px 15px; border-radius: 12px; font-size: 0.8rem; cursor: pointer; font-weight: bold; width: 100%;">📊 Xem Lịch Sử Học Các Ngày</button>
+                    </div>
+                </div>
+                
             </div>
         </div>
 
@@ -373,14 +410,12 @@
 
                         <div id="quiz-explanation" class="hidden ai-expansion">
                             <div style="background: #f8f9fa; padding: 20px; border-radius: 20px; border: 1px solid #eee; margin-top: 15px;">
-                                <!-- Vùng cho Single Quiz -->
                                 <div id="expl-single">
                                     <div style="font-size: calc(3.5rem * var(--text-scale, 1)); font-weight: 700; color: var(--color1); margin-bottom: 5px;" id="expl-word"></div>
                                     <div style="font-size: calc(1rem * var(--text-scale, 1)); color: #555; font-weight: 600;" id="expl-reading"></div>
                                     <div style="font-size: calc(1.1rem * var(--text-scale, 1)); color: #333; margin-top: 8px; font-weight: 600; border-top: 1px solid #ddd; padding-top: 8px; white-space: pre-wrap;" id="expl-meaning"></div>
                                     <div id="expl-extra"></div>
                                 </div>
-                                <!-- Vùng cho Match Quiz -->
                                 <div id="expl-batch" class="hidden">
                                     <div style="font-size: calc(1.1rem * var(--text-scale, 1)); font-weight: 700; color: var(--color1); margin-bottom: 15px;">Danh sách từ vừa gặp:</div>
                                     <div id="expl-batch-list" style="display:flex; flex-direction:column; gap:10px;"></div>
@@ -591,6 +626,18 @@
         </div>
     </div>
 
+    <!-- History Modal -->
+    <div id="historyModal" class="modal" style="z-index: 1003;">
+        <div class="modal-content" style="max-width: 400px; max-height: 70vh; display: flex; flex-direction: column;">
+            <span class="close-modal" onclick="closeHistoryModal()">&times;</span>
+            <h3 style="color:var(--text); margin-top:0; margin-bottom: 5px;">Lịch Sử Ôn Tập</h3>
+            <p style="font-size: 0.85rem; color: #666; margin-top: 0; margin-bottom: 15px;">Thống kê số lượng từ đã ôn trong các ngày</p>
+            <div id="history-list-content" style="overflow-y: auto; flex: 1; text-align: left; padding-right: 5px;">
+                <!-- JS Inject -->
+            </div>
+        </div>
+    </div>
+
     <!-- Batch Action Bar -->
     <div id="batch-action-bar" class="batch-bar hidden">
         <div class="batch-header">
@@ -611,6 +658,12 @@
     var dailyQueue = [];
     var dailyTargetIds = []; // Stores IDs of all words assigned for today
     var lastStudyDate = "";
+
+    // --- BIẾN CHO LỊCH SỬ ÔN TẬP ---
+    let reviewHistory = {}; // Cấu trúc lưu trữ: { "YYYY-MM-DD": [id1, id2, ...] }
+    let reviewedTodayIds = []; // Danh sách tham chiếu nhanh cho ngày hiện tại
+    let reviewedTodayDate = ""; 
+    // -------------------------------------------------------------
 
     let quizQueue = [];
     let curQuizIdx = 0;
@@ -637,6 +690,111 @@
     let isSortedAZ = false;
     let selectedReviewLevels = new Set(); // Biến lưu trữ các Level được chọn để ôn tập
 
+    // --- HÀM LẤY CHÍNH XÁC NGÀY GIỜ ĐỊA PHƯƠNG THEO ĐỊNH DẠNG YYYY-MM-DD ---
+    function getLocalYYYYMMDD() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    // --- HÀM XỬ LÝ LỊCH SỬ & ĐẾM SỐ TỪ ---
+    function loadReviewedToday() {
+        const historyKey = getStorageKey('jlpt_review_history');
+        const todayStr = getLocalYYYYMMDD();
+
+        let savedHistory = localStorage.getItem(historyKey);
+        if (savedHistory) {
+            try { reviewHistory = JSON.parse(savedHistory); } catch(e) { reviewHistory = {}; }
+        } else {
+            const oldIdsKey = getStorageKey('jlpt_reviewed_ids');
+            const oldDateKey = getStorageKey('jlpt_reviewed_date');
+            const oldDate = localStorage.getItem(oldDateKey);
+            const oldIds = JSON.parse(localStorage.getItem(oldIdsKey) || "[]");
+            if (oldDate && oldIds.length > 0) {
+                reviewHistory[oldDate] = oldIds;
+            }
+        }
+
+        if (!reviewHistory[todayStr]) {
+            reviewHistory[todayStr] = [];
+        }
+        
+        reviewedTodayDate = todayStr;
+        reviewedTodayIds = reviewHistory[todayStr];
+        
+        localStorage.setItem(historyKey, JSON.stringify(reviewHistory));
+    }
+
+    function trackWordReviewed(id) {
+        id = String(id);
+        const historyKey = getStorageKey('jlpt_review_history');
+        const todayStr = getLocalYYYYMMDD();
+
+        if (reviewedTodayDate !== todayStr) {
+            reviewedTodayDate = todayStr;
+            if (!reviewHistory[todayStr]) {
+                reviewHistory[todayStr] = [];
+            }
+            reviewedTodayIds = reviewHistory[todayStr];
+        }
+
+        if (!reviewedTodayIds.includes(id)) {
+            reviewedTodayIds.push(id);
+            localStorage.setItem(historyKey, JSON.stringify(reviewHistory));
+            updateDashboard(); 
+        }
+    }
+    // ---------------------------------
+
+    // --- LÔ-GIC CHO MODAL LỊCH SỬ (DASHBOARD) ---
+    function openHistoryModal() {
+        renderHistoryUI();
+        document.getElementById('historyModal').style.display = "block";
+    }
+
+    function closeHistoryModal() {
+        document.getElementById('historyModal').style.display = "none";
+    }
+
+    function renderHistoryUI() {
+        const listDiv = document.getElementById('history-list-content');
+        const dates = Object.keys(reviewHistory).sort((a, b) => new Date(b) - new Date(a));
+        
+        if (dates.length === 0) {
+            listDiv.innerHTML = '<div style="text-align:center; padding: 20px; color:#999;">Chưa có dữ liệu ôn tập. Hãy bắt đầu học ngay nhé!</div>';
+            return;
+        }
+
+        let html = '';
+        dates.forEach(date => {
+            const count = reviewHistory[date].length;
+            if (count === 0 && date !== reviewedTodayDate) return; 
+            
+            const dateParts = date.split('-');
+            const displayDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+            
+            const isToday = date === reviewedTodayDate;
+            const badge = isToday ? '<span style="background:var(--color1); color:white; padding:2px 6px; border-radius:6px; font-size:0.7rem; font-weight:bold; margin-left: 8px;">Hôm nay</span>' : '';
+
+            html += `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: ${isToday ? 'rgba(245,175,175,0.1)' : 'white'}; border-radius: 8px; margin-bottom: 5px;">
+                    <div style="display: flex; align-items: center;">
+                        <strong style="color:var(--text); font-size: 1rem;">${displayDate}</strong>
+                        ${badge}
+                    </div>
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--color1);">
+                        ${count} <span style="font-size: 0.8rem; font-weight: normal; color: #666;">từ</span>
+                    </div>
+                </div>
+            `;
+        });
+        
+        listDiv.innerHTML = html;
+    }
+    // ---------------------------------
+
     // --- Thay Đổi Cỡ Chữ ---
     function changeFontSize(val) {
         document.getElementById('content-scale-wrapper').style.setProperty('--text-scale', val);
@@ -652,7 +810,8 @@
             dailyPointer: dailyPointer,
             dailyQueue: dailyQueue,
             dailyTargetIds: dailyTargetIds,
-            lastStudyDate: lastStudyDate
+            lastStudyDate: lastStudyDate,
+            reviewHistory: reviewHistory
         };
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
         const downloadAnchorNode = document.createElement('a');
@@ -663,7 +822,7 @@
         const datetime = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
         downloadAnchorNode.setAttribute("download", "TuVung_Backup_" + datetime + ".json");
         
-        document.body.appendChild(downloadAnchorNode); // required for firefox
+        document.body.appendChild(downloadAnchorNode); 
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
     }
@@ -712,6 +871,11 @@
                     dailyQueue = data.dailyQueue || [];
                     dailyTargetIds = data.dailyTargetIds || [];
                     lastStudyDate = data.lastStudyDate || "";
+
+                    if (data.reviewHistory) {
+                        reviewHistory = data.reviewHistory;
+                        localStorage.setItem(getStorageKey('jlpt_review_history'), JSON.stringify(reviewHistory));
+                    }
                     
                     saveData();
                     alert("Nhập dữ liệu thành công! Trình duyệt sẽ được tải lại.");
@@ -724,7 +888,7 @@
             }
         }
         reader.readAsText(file);
-        event.target.value = ''; // Reset input
+        event.target.value = ''; 
     }
 
     // Level Picker Logic
@@ -868,7 +1032,7 @@
         closeSelectRangeModal();
     }
 
-    // Review Level Modal Logic (CẬP NHẬT CHỌN NHIỀU LEVEL)
+    // Review Level Modal Logic
     function openReviewLevelModal() {
         selectedReviewLevels.clear();
         const grid = document.getElementById('review-level-grid');
@@ -967,7 +1131,6 @@
             items = vocabulary.filter(v => selection.includes(parseInt(v.level)));
         }
 
-        // Bỏ qua Level 9 khi ôn tập
         items = items.filter(v => parseInt(v.level) !== 9);
 
         if (mode === 'due') {
@@ -1102,6 +1265,7 @@
         const optionsModal = document.getElementById('reviewOptionsModal');
         const editModal = document.getElementById('editWordModal');
         const rangeModal = document.getElementById('selectRangeModal');
+        const historyModal = document.getElementById('historyModal'); 
         
         if (event.target == pickerModal) closeLevelPicker();
         if (event.target == reviewModal) closeReviewLevelModal();
@@ -1109,6 +1273,7 @@
         if (event.target == optionsModal) closeReviewOptionsModal();
         if (event.target == editModal) closeEditModal();
         if (event.target == rangeModal) closeSelectRangeModal();
+        if (event.target == historyModal) closeHistoryModal(); 
     }
 
     function getStorageKey(baseKey) {
@@ -1140,17 +1305,18 @@
             localStorage.setItem(idsKey, JSON.stringify(dailyTargetIds));
         }
 
-        // Tải thiết lập cỡ chữ
         const savedScale = localStorage.getItem(getStorageKey('jlpt_font_size')) || "1";
         document.getElementById('content-scale-wrapper').style.setProperty('--text-scale', savedScale);
         const fontSelector = document.getElementById('font-size-selector');
         if(fontSelector) fontSelector.value = savedScale;
+
+        loadReviewedToday();
     }
 
     function toggleTestMode() {
         isTestMode = !isTestMode;
         const btn = document.getElementById('btn-test-mode');
-        loadData();
+        loadData(); 
         
         if (isTestMode) {
             btn.classList.add('active');
@@ -1275,6 +1441,7 @@
         reader.readAsArrayBuffer(file);
     }
 
+    // --- CẬP NHẬT HÀM SAVEDATA ĐỂ KÍCH HOẠT LƯU LÊN ĐÁM MÂY ---
     function saveData() {
         localStorage.setItem(getStorageKey('jlpt_vocab_v3'), JSON.stringify(vocabulary));
         localStorage.setItem(getStorageKey('jlpt_daily_pointer'), dailyPointer);
@@ -1285,8 +1452,14 @@
         updateDashboard();
         updateTimeFilterCounts(); 
         renderFilterTags();
+        
+        // Kích hoạt đồng bộ đám mây nếu có hàm (được định nghĩa ở module Firebase bên dưới)
+        if (window.uploadToCloud) {
+            window.uploadToCloud();
+        }
     }
     window.saveData = saveData;
+    // -------------------------------------------------------------
 
     function updateDashboard() {
         const total = vocabulary.length;
@@ -1300,7 +1473,24 @@
         const p = total > 0 ? Math.round(((high + mid) / total) * 100) : 0;
         document.getElementById('progress-bar').style.width = Math.min(100, p) + '%';
         
+        loadReviewedToday(); 
         const target = isTestMode ? 5 : 50;
+        const reviewedCount = reviewedTodayIds.length;
+        const missing = Math.max(0, target - reviewedCount);
+
+        document.getElementById('stat-today-reviewed').innerText = reviewedCount;
+
+        const missingEl = document.getElementById('stat-today-missing');
+        if (missing > 0) {
+            missingEl.innerText = `Thiếu: ${missing}`;
+            missingEl.style.background = 'var(--warning)';
+            missingEl.style.color = 'white';
+        } else {
+            missingEl.innerText = `🎉 Đạt chỉ tiêu!`;
+            missingEl.style.background = 'var(--success)';
+            missingEl.style.color = 'white';
+        }
+
         if (dailyQueue.length > 0 && dailyQueue.length < target) {
              document.getElementById('daily-warning').classList.remove('hidden');
         } else {
@@ -1317,6 +1507,7 @@
             vocabulary[idx].level = newLevel;
             vocabulary[idx].learned = true; 
             setNextReview(vocabulary[idx]); 
+            trackWordReviewed(id); 
             
             const inDaily = dailyQueue.findIndex(q => String(q.id) === id);
             if (inDaily !== -1) {
@@ -1367,6 +1558,7 @@
                 v.level = newLevel;
                 v.learned = true;
                 setNextReview(v);
+                trackWordReviewed(v.id); 
             }
         });
 
@@ -1871,6 +2063,8 @@
         const item = quizQueue[curQuizIdx];
         const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
 
+        trackWordReviewed(item.id);
+
         let isCorrect = false;
         const selTrimmed = String(selectedText).trim().toLowerCase();
         const corrTrimmed = String(correctValue).trim().toLowerCase();
@@ -1933,6 +2127,8 @@
         const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
         currentQuizResult = 'skip';
 
+        trackWordReviewed(item.id);
+
         if (mainIdx !== -1) {
             vocabulary[mainIdx].level = 1;
             vocabulary[mainIdx].learned = true; 
@@ -1954,6 +2150,8 @@
 
     function finishMatchBatch(isSkip = false) {
         matchBatch.forEach(item => {
+             trackWordReviewed(item.id);
+
              const res = matchResults[String(item.id)];
              const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
              if (mainIdx === -1) return;
@@ -2139,6 +2337,9 @@
             vocabulary[mainIdx].learned = true;
             vocabulary[mainIdx].level = 1; 
             setNextReview(vocabulary[mainIdx]);
+            
+            trackWordReviewed(item.id);
+
             saveData();
             quizQueue.splice(curQuizIdx, 1);
             if (curQuizIdx >= quizQueue.length) curQuizIdx = 0;
@@ -2231,7 +2432,7 @@
                         <div style="display:flex; align-items:center; gap:8px;">
                             <button class="lvl-badge" style="background:${lvColor};" onclick="openLevelPicker('${v.id}')">${displayLevel === 9 ? 'X' : 'Lv ' + displayLevel}</button>
                             <button onclick="openEditModal('${v.id}')" style="border:none; background:#f0f8ff; color:#3498db; width:30px; height:30px; border-radius:10px; cursor:pointer;" title="Sửa">✏️</button>
-                            <button onclick="deleteWord('${v.id}')" style="border:none; background:#fff0f0; color:#ff7675; width:30px; height:30px; border-radius:10px; cursor:pointer;" title="Xóa">🗑️</button>
+                            <button onclick="deleteWord('${v.id}')" style="border:none; background:#fff0f0; color:#ff7675; width:30px; height:30px; border-radius:10px; cursor:pointer;" title="Xóa">🗑️️</button>
                         </div>
                         ${timerHtml}
                     </div>
@@ -2284,7 +2485,10 @@
     }
     
     function clearAllData() { 
-        if(confirm("Xóa toàn bộ dữ liệu?")) { localStorage.clear(); location.reload(); } 
+        if(confirm("Xóa toàn bộ dữ liệu? Mọi dữ liệu trên máy này sẽ bị mất!")) { 
+            localStorage.clear(); 
+            location.reload(); 
+        } 
     }
 
     function toggleList() {
@@ -2319,6 +2523,159 @@
         renderList(); 
         startMode('list'); 
     };
+</script>
+
+<!-- ========================================== -->
+<!-- TÍCH HỢP FIREBASE (CLOUD SYNC)             -->
+<!-- ========================================== -->
+<script type="module">
+    // Import thư viện với version 12.19.0 như hệ thống Firebase của bạn cung cấp
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+    // Cấu hình bằng chính mã bạn đã cấp
+    const firebaseConfig = {
+        apiKey: "AIzaSyDWpr_hYq1wo1_XjLTZi5SxCF3N-oZzCBU",
+        authDomain: "tuvungjlpt.firebaseapp.com",
+        projectId: "tuvungjlpt",
+        storageBucket: "tuvungjlpt.firebasestorage.app",
+        messagingSenderId: "135699703434",
+        appId: "1:135699703434:web:3ccba4e775056ee25a6f73",
+        measurementId: "G-4ZTW5T05YY"
+    };
+    
+    // Khởi tạo Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
+    let isDownloading = false; // Cờ để tránh upload đè khi đang tải về máy
+
+    // Các phần tử giao diện liên kết
+    const btnLogin = document.getElementById('btn-google-login');
+    const btnLogout = document.getElementById('btn-google-logout');
+    const btnForceSync = document.getElementById('btn-force-sync');
+    const loggedInUI = document.getElementById('logged-in-ui');
+    const userEmailEl = document.getElementById('user-email');
+    const syncStatusEl = document.getElementById('sync-status');
+
+    // Hàm theo dõi trạng thái đăng nhập
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Đã đăng nhập
+            currentUser = user;
+            btnLogin.classList.add('hidden');
+            loggedInUI.classList.remove('hidden');
+            userEmailEl.innerText = `👤 ${user.email}`;
+            syncStatusEl.innerText = "🟢 Đã kết nối đám mây";
+            syncStatusEl.style.color = "var(--success)";
+            
+            // Tự động tải dữ liệu từ mây về máy khi vừa đăng nhập
+            downloadFromCloud();
+        } else {
+            // Chưa đăng nhập
+            currentUser = null;
+            btnLogin.classList.remove('hidden');
+            loggedInUI.classList.add('hidden');
+            syncStatusEl.innerText = "Chưa đăng nhập";
+            syncStatusEl.style.color = "#666";
+        }
+    });
+
+    // Xử lý nút đăng nhập
+    btnLogin.addEventListener('click', () => {
+        syncStatusEl.innerText = "⏳ Đang kết nối...";
+        signInWithPopup(auth, provider).catch((error) => {
+            alert("Đăng nhập thất bại: " + error.message);
+            syncStatusEl.innerText = "Chưa đăng nhập";
+        });
+    });
+
+    // Xử lý nút đăng xuất
+    btnLogout.addEventListener('click', () => {
+        if(confirm("Bạn muốn đăng xuất? Dữ liệu trên máy này vẫn được giữ lại nhưng sẽ không đồng bộ nữa.")) {
+            signOut(auth);
+        }
+    });
+
+    // Xử lý nút tải ép buộc (Force Sync)
+    btnForceSync.addEventListener('click', () => {
+        downloadFromCloud();
+    });
+
+    // Hàm Upload lên Firestore (Tự động kích hoạt khi có thay đổi dữ liệu)
+    window.uploadToCloud = async function() {
+        if (!currentUser || !db || isDownloading) return;
+        
+        syncStatusEl.innerText = "⏳ Đang lưu lên mây...";
+        
+        try {
+            // Gom toàn bộ dữ liệu ứng dụng hiện tại
+            const dataToSave = {
+                vocabulary: JSON.stringify(window.vocabulary || []),
+                dailyPointer: window.dailyPointer || 0,
+                dailyQueue: JSON.stringify(window.dailyQueue || []),
+                dailyTargetIds: JSON.stringify(window.dailyTargetIds || []),
+                lastStudyDate: window.lastStudyDate || "",
+                reviewHistory: JSON.stringify(window.reviewHistory || {}),
+                lastUpdated: Date.now()
+            };
+
+            // Lưu vào file đám mây mang tên ID của người dùng để bảo mật
+            await setDoc(doc(db, "jlpt_users", currentUser.uid), dataToSave);
+            
+            const time = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+            syncStatusEl.innerText = "🟢 Đã đồng bộ lúc " + time;
+        } catch (error) {
+            console.error("Lỗi khi lưu lên mây:", error);
+            syncStatusEl.innerText = "🔴 Lỗi đồng bộ! Có thể do bạn chưa cấp quyền ghi trên Firestore.";
+            syncStatusEl.style.color = "var(--danger)";
+        }
+    };
+
+    // Hàm Download từ Firestore
+    async function downloadFromCloud() {
+        if (!currentUser || !db) return;
+        
+        isDownloading = true;
+        syncStatusEl.innerText = "⏳ Đang tải dữ liệu về...";
+        
+        try {
+            const docRef = doc(db, "jlpt_users", currentUser.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                // Trực tiếp ghi đè dữ liệu trên mây vào bộ nhớ trình duyệt
+                localStorage.setItem(getStorageKey('jlpt_vocab_v3'), data.vocabulary || "[]");
+                localStorage.setItem(getStorageKey('jlpt_daily_pointer'), data.dailyPointer || 0);
+                localStorage.setItem(getStorageKey('jlpt_daily_queue'), data.dailyQueue || "[]");
+                localStorage.setItem(getStorageKey('jlpt_daily_target_ids'), data.dailyTargetIds || "[]");
+                localStorage.setItem(getStorageKey('jlpt_last_study_date'), data.lastStudyDate || "");
+                localStorage.setItem(getStorageKey('jlpt_review_history'), data.reviewHistory || "{}");
+
+                syncStatusEl.innerText = "✅ Tải thành công!";
+                
+                // Load lại trang để cập nhật giao diện ngay lập tức
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            } else {
+                // Tài khoản mới chưa có dữ liệu mây -> Đẩy dữ liệu hiện tại lên
+                syncStatusEl.innerText = "Tài khoản mới, đang đưa dữ liệu lên mây...";
+                isDownloading = false;
+                window.uploadToCloud();
+            }
+        } catch (error) {
+            console.error("Lỗi khi tải từ mây:", error);
+            syncStatusEl.innerText = "🔴 Lỗi tải dữ liệu!";
+            isDownloading = false;
+        }
+    }
 </script>
 </body>
 </html>
