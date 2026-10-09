@@ -317,7 +317,7 @@
                     <div id="quiz-empty" class="hidden success-state">
                         <div style="font-size: calc(4rem * var(--text-scale, 1));">🎉</div>
                         <h2 style="color: var(--success); font-weight: 700;">Tuyệt vời!</h2>
-                        <p style="color:#666">Bạn đã hoàn thành hết bài ôn tập hiện tại.</p>
+                        <p style="color:#666">Bạn đã hoàn thành bài ôn tập hiện tại.</p>
                         <button class="btn-action btn-theme" onclick="startMode('list')">Về danh sách</button>
                     </div>
 
@@ -367,12 +367,31 @@
                     </div>
                 </div>
                 
+                <!-- View Card -->
+                <div id="view-card" class="hidden">
+                    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
+                        <button onclick="changeIdx(-1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❮</button>
+                        <span id="card-index" style="font-weight: 700; color: var(--color1);">- / -</span>
+                        <button onclick="changeIdx(1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❯</button>
+                    </div>
+                    
+                    <div class="study-card" onclick="toggleMeaning()">
+                        <div id="display-word" class="word-main">---</div>
+                        <div id="display-reading" class="word-reading">---</div>
+                        <div id="display-meaning" class="word-meaning hidden">---</div>
+                        <div id="expansion-card" class="ai-expansion hidden"></div>
+                    </div>
+
+                    <div id="ctrl-learn" class="hidden">
+                        <button class="btn-action btn-theme" onclick="markAsLearned()">✅ Đã thuộc từ này</button>
+                    </div>
+                </div>
+
             </div> <!-- END content-scale-wrapper -->
         </div> <!-- END content-right -->
     </div> <!-- END layout-wrapper -->
 
     <!-- CÁC THÀNH PHẦN MODAL -->
-    
     <div id="levelPickerModal" class="modal" style="z-index: 1001;">
         <div class="modal-content" style="max-width: 320px;">
             <span class="close-modal" onclick="closeLevelPicker()">&times;</span>
@@ -513,9 +532,7 @@
     let isSortedAZ = false;
     let selectedReviewLevels = new Set(); 
 
-    function getStorageKey(baseKey) {
-        return isTestMode ? baseKey + "_test" : baseKey;
-    }
+    function getStorageKey(baseKey) { return isTestMode ? baseKey + "_test" : baseKey; }
     window.getStorageKey = getStorageKey; 
 
     function getLocalYYYYMMDD() {
@@ -530,14 +547,9 @@
         const historyKey = getStorageKey('jlpt_review_history');
         const todayStr = getLocalYYYYMMDD();
         
-        try {
-            reviewHistory = JSON.parse(localStorage.getItem(historyKey) || "{}");
-        } catch(e) { reviewHistory = {}; }
-
+        try { reviewHistory = JSON.parse(localStorage.getItem(historyKey) || "{}"); } catch(e) { reviewHistory = {}; }
         if (!reviewHistory[todayStr]) reviewHistory[todayStr] = [];
-        
-        reviewedTodayDate = todayStr;
-        reviewedTodayIds = reviewHistory[todayStr];
+        reviewedTodayDate = todayStr; reviewedTodayIds = reviewHistory[todayStr];
         localStorage.setItem(historyKey, JSON.stringify(reviewHistory));
     }
 
@@ -655,7 +667,6 @@
         document.getElementById('edit-word').value = word.word || ''; document.getElementById('edit-reading').value = word.reading || '';
         document.getElementById('edit-meaning').value = word.meaning || ''; document.getElementById('editWordModal').style.display = "block";
     }
-
     function closeEditModal() { document.getElementById('editWordModal').style.display = "none"; currentEditId = null; }
 
     function saveEditWord() {
@@ -695,11 +706,13 @@
     }
 
     // =========================================================
-    // NÂNG CẤP: MODAL ÔN TẬP ĐỘC LẬP TỪNG NÚT
+    // NÂNG CẤP: MODAL ÔN TẬP - LOGIC CHỌN LEVEL HOÀN CHỈNH
     // =========================================================
     function openAdvancedReviewModal() {
-        selectedReviewLevels.clear();
-        [0, 1, 2, 3, 4, 5, 6, 7, 8].forEach(l => selectedReviewLevels.add(l)); // Bôi đen mặc định từ 0->8
+        // Chỉ bôi đen mặc định nếu mảng rỗng (giữ lại lựa chọn cũ của người dùng)
+        if (selectedReviewLevels.size === 0) {
+            [0, 1, 2, 3, 4, 5, 6, 7, 8].forEach(l => selectedReviewLevels.add(l)); 
+        }
         document.getElementById('adv-review-step-1').classList.remove('hidden');
         document.getElementById('adv-review-step-2').classList.add('hidden');
         renderAdvancedLevelButtons();
@@ -710,12 +723,12 @@
 
     function renderAdvancedLevelButtons() {
         const grid = document.getElementById('adv-level-grid'); grid.innerHTML = '';
-        const allItemsCount = vocabulary.filter(v => parseInt(v.level) !== 9).length;
         
-        // Kiểm tra xem tất cả 0->8 đã được chọn chưa
+        // Kiểm tra xem tất cả các Level từ 0 đến 8 đã được bật chưa
         const allLevels = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         const isAllSelected = allLevels.every(l => selectedReviewLevels.has(l));
 
+        const allItemsCount = vocabulary.filter(v => parseInt(v.level) !== 9).length;
         createAdvLvlBtn('all', 'Tất cả Level 0-8', allItemsCount, '#f5f6fa', '#2f3640', grid, isAllSelected);
 
         const lv0Count = vocabulary.filter(v => !v.learned || v.level == 0).length;
@@ -740,16 +753,22 @@
         btn.innerHTML = `${text} (${count})`;
         
         btn.onclick = () => {
+            const allLevels = [0, 1, 2, 3, 4, 5, 6, 7, 8];
             if (levelValue === 'all') {
-                const allLevels = [0, 1, 2, 3, 4, 5, 6, 7, 8];
                 const isAllSelected = allLevels.every(l => selectedReviewLevels.has(l));
-                if (isAllSelected) allLevels.forEach(l => selectedReviewLevels.delete(l)); // Đang chọn tất cả thì bỏ hết
-                else allLevels.forEach(l => selectedReviewLevels.add(l)); // Chọn hết
+                if (isAllSelected) {
+                    allLevels.forEach(l => selectedReviewLevels.delete(l)); // Đang bật hết -> Tắt hết
+                } else {
+                    allLevels.forEach(l => selectedReviewLevels.add(l)); // Bật hết
+                }
+            } else if (levelValue === 9) {
+                if (selectedReviewLevels.has(9)) selectedReviewLevels.delete(9); else selectedReviewLevels.add(9);
             } else {
+                // Tắt/Bật lẻ tẻ các level
                 if (selectedReviewLevels.has(levelValue)) selectedReviewLevels.delete(levelValue);
                 else selectedReviewLevels.add(levelValue);
             }
-            renderAdvancedLevelButtons();
+            renderAdvancedLevelButtons(); // Vẽ lại để cập nhật màu của nút "Tất cả"
         };
         container.appendChild(btn);
     }
@@ -766,8 +785,9 @@
         const all0to8 = [0,1,2,3,4,5,6,7,8];
         const hasAll0to8 = all0to8.every(l => selectedReviewLevels.has(l));
         
-        if (hasAll0to8 && selectedReviewLevels.size === 9) titleParts.push("Tất cả Level 0-8");
-        else {
+        if (hasAll0to8 && !selectedReviewLevels.has(9)) {
+            titleParts.push("Tất cả Level 0-8");
+        } else {
             selArray.forEach(lvl => {
                 if (lvl === 0) titleParts.push("Mới"); else if (lvl === 9) titleParts.push("Không ôn"); else titleParts.push(`Lv ${lvl}`);
             });
@@ -818,15 +838,32 @@
 
         quizQueue = [...lv8Old, ...others, ...lv8Recent];
         
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active')); document.getElementById('btn-level-review').classList.add('active');
-        activeMode = 'level_review'; 
-        
-        document.getElementById('view-list').classList.add('hidden'); document.getElementById('view-card').classList.add('hidden');
-        document.getElementById('view-quiz').classList.remove('hidden'); document.getElementById('btn-view-daily-list').classList.add('hidden');
-        
-        curQuizIdx = 0; currentQuizResult = 'pending';
-        document.getElementById('quiz-content').classList.remove('hidden'); document.getElementById('quiz-finished').classList.add('hidden'); document.getElementById('quiz-empty').classList.add('hidden');
-        renderQuizItem();
+        // Chuyển màn hình cực kỳ an toàn
+        try {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active')); 
+            document.getElementById('btn-level-review').classList.add('active');
+            activeMode = 'level_review'; 
+            
+            document.getElementById('view-list').classList.add('hidden'); 
+            document.getElementById('view-card').classList.add('hidden');
+            document.getElementById('btn-view-daily-list').classList.add('hidden');
+            
+            // Hiện View Quiz
+            document.getElementById('view-quiz').classList.remove('hidden'); 
+            
+            curQuizIdx = 0; currentQuizResult = 'pending';
+            document.getElementById('quiz-content').classList.remove('hidden'); 
+            document.getElementById('quiz-finished').classList.add('hidden'); 
+            document.getElementById('quiz-empty').classList.add('hidden');
+            
+            if (quizQueue.length === 0) {
+                showFinished("Quiz"); // Tránh lỗi renderQuizItem bị trống
+            } else {
+                renderQuizItem();
+            }
+        } catch (e) {
+            console.error("Lỗi khi chuyển view:", e);
+        }
     }
     // =========================================================
 
@@ -869,39 +906,33 @@
             if (visibleCount === 0) html += `<div style="text-align:center; padding:20px; color:#999;">Không có từ nào theo bộ lọc này.</div>`;
             else html = html.replace('<div style="padding-bottom: 20px;">', `<div style="padding-bottom: 20px;"><div style="text-align:center; font-weight:bold; color:var(--color1); margin-bottom:10px; font-size:calc(0.9rem * var(--text-scale, 1));">Tiến độ: ${doneCount} / ${dailyTargetIds.length}</div>`);
         }
-        listDiv.innerHTML = html + `</div>`;
+        document.getElementById('daily-list-content').innerHTML = html + `</div>`;
     }
 
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('levelPickerModal')) closeLevelPicker();
-        if (event.target == document.getElementById('advancedReviewModal')) closeAdvancedReviewModal();
-        if (event.target == document.getElementById('dailyListModal')) closeDailyListModal();
-        if (event.target == document.getElementById('editWordModal')) closeEditModal();
-        if (event.target == document.getElementById('selectRangeModal')) closeSelectRangeModal();
-        if (event.target == document.getElementById('historyModal')) closeHistoryModal(); 
-    }
-
+    // BỘ LỌC AN TOÀN TRÁNH SẬP WEB 
     function safeParse(rawStr, fallback) {
-        try { const res = JSON.parse(rawStr); return Array.isArray(res) || typeof res === 'object' ? res : fallback; } catch(e) { return fallback; }
+        if (!rawStr) return fallback;
+        try { 
+            const res = JSON.parse(rawStr); 
+            // Nếu parse ra mà vẫn là mảng thì lấy, không thì dùng mảng rỗng fallback
+            return Array.isArray(res) ? res : fallback; 
+        } catch(e) { 
+            return fallback; 
+        }
     }
 
-    // FIX LỖI "TRỐNG TRƠN DANH SÁCH": Bọc try...catch cực kỳ an toàn
     function loadData() {
         const vocabKey = getStorageKey('jlpt_vocab_v3');
         let rawVocab = localStorage.getItem(vocabKey) || "[]";
         
         if (isTestMode && !localStorage.getItem(vocabKey)) rawVocab = localStorage.getItem('jlpt_vocab_v3') || "[]";
 
+        // Ép dữ liệu phải là một mảng
         vocabulary = safeParse(rawVocab, []);
-        if (!Array.isArray(vocabulary)) vocabulary = []; // Đảm bảo luôn là mảng
-
+        
         dailyPointer = parseInt(localStorage.getItem(getStorageKey('jlpt_daily_pointer'))) || 0;
-        dailyQueue = safeParse(localStorage.getItem(getStorageKey('jlpt_daily_queue')) || "[]", []);
-        if (!Array.isArray(dailyQueue)) dailyQueue = [];
-
-        dailyTargetIds = safeParse(localStorage.getItem(getStorageKey('jlpt_daily_target_ids')) || "[]", []);
-        if (!Array.isArray(dailyTargetIds)) dailyTargetIds = [];
-
+        dailyQueue = safeParse(localStorage.getItem(getStorageKey('jlpt_daily_queue')), []);
+        dailyTargetIds = safeParse(localStorage.getItem(getStorageKey('jlpt_daily_target_ids')), []);
         lastStudyDate = localStorage.getItem(getStorageKey('jlpt_last_study_date')) || "";
 
         if (dailyQueue.length > 0 && dailyTargetIds.length === 0) {
@@ -1092,11 +1123,12 @@
         const query = input ? input.value.toLowerCase() : "";
         const now = Date.now();
         
-        if (!Array.isArray(vocabulary)) return [];
+        if (!vocabulary || !Array.isArray(vocabulary)) return [];
 
         let filtered = vocabulary.filter(v => {
+            if (!v) return false; // Lọc an toàn chống mảng có khoảng trống
+
             const mFilter = currentFilter === 'all' || v.level == currentFilter;
-            // Ép kiểu chuỗi để tránh lỗi "toLowerCase is not a function" nếu object bị rỗng
             const wordStr = v.word ? String(v.word).toLowerCase() : "";
             const readingStr = v.reading ? String(v.reading).toLowerCase() : "";
             const meaningStr = v.meaning ? String(v.meaning).toLowerCase() : "";
@@ -1104,27 +1136,49 @@
             const mSearch = wordStr.includes(query) || readingStr.includes(query) || meaningStr.includes(query);
             
             let mTime = true;
-            if (currentTimeFilter === 'due') mTime = v.learned && v.nextReview <= now && v.level !== 9;
-            else if (currentTimeFilter === 'not_due') mTime = v.learned && v.nextReview > now;
+            if (currentTimeFilter === 'due') mTime = v.learned && v.nextReview <= now && parseInt(v.level) !== 9;
+            else if (currentTimeFilter === 'not_due') mTime = v.learned && v.nextReview > now && parseInt(v.level) !== 9;
+            
             return mFilter && mSearch && mTime;
         });
 
-        if (isSortedAZ) filtered.sort((a, b) => String(a.reading || a.word || "").trim().localeCompare(String(b.reading || b.word || "").trim(), 'ja'));
+        if (isSortedAZ) {
+            filtered.sort((a, b) => String(a.reading || a.word || "").trim().localeCompare(String(b.reading || b.word || "").trim(), 'ja'));
+        }
         return filtered;
     }
 
+    // CHUYỂN ĐỔI CHẾ ĐỘ AN TOÀN
     function startMode(mode) {
-        activeMode = mode; document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        const btn = document.getElementById(`btn-${mode}`); if(btn) btn.classList.add('active');
-        
-        document.getElementById('view-quiz').classList.add('hidden'); document.getElementById('view-list').classList.add('hidden');
-        document.getElementById('view-card').classList.add('hidden'); document.getElementById('btn-view-daily-list').classList.add('hidden');
+        try {
+            activeMode = mode; 
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById(`btn-${mode}`); if(btn) btn.classList.add('active');
+            
+            document.getElementById('view-quiz').classList.add('hidden'); 
+            document.getElementById('view-list').classList.add('hidden');
+            document.getElementById('view-card').classList.add('hidden'); 
+            document.getElementById('btn-view-daily-list').classList.add('hidden');
 
-        if (mode === 'daily') { document.getElementById('view-quiz').classList.remove('hidden'); document.getElementById('btn-view-daily-list').classList.remove('hidden'); setupDailyQuiz(); } 
-        else if (mode === 'list') { document.getElementById('view-list').classList.remove('hidden'); renderList(); } 
-        else if (mode === 'quiz') { document.getElementById('view-quiz').classList.remove('hidden'); setupRandomQuiz(); } 
-        else if (mode === 'learn') { document.getElementById('view-card').classList.remove('hidden'); setupLearnMode(); } 
-        else if (mode === 'level_review') { document.getElementById('view-quiz').classList.remove('hidden'); }
+            if (mode === 'daily') { 
+                document.getElementById('view-quiz').classList.remove('hidden'); 
+                document.getElementById('btn-view-daily-list').classList.remove('hidden'); 
+                setupDailyQuiz(); 
+            } else if (mode === 'list') { 
+                document.getElementById('view-list').classList.remove('hidden'); 
+                renderList(); 
+            } else if (mode === 'quiz') { 
+                document.getElementById('view-quiz').classList.remove('hidden'); 
+                setupRandomQuiz(); 
+            } else if (mode === 'learn') { 
+                document.getElementById('view-card').classList.remove('hidden'); 
+                setupLearnMode(); 
+            } else if (mode === 'level_review') { 
+                document.getElementById('view-quiz').classList.remove('hidden'); 
+            }
+        } catch (e) {
+            console.error("Lỗi chuyển đổi UI:", e);
+        }
     }
 
     function setupDailyQuiz() {
@@ -1172,7 +1226,12 @@
     }
 
     function renderQuizItem() {
-        const item = quizQueue[curQuizIdx]; if (!item) return;
+        const item = quizQueue[curQuizIdx]; 
+        if (!item) {
+            // Failsafe nếu mảng rỗng thì kết thúc luôn
+            showFinished(activeMode === 'daily' ? 'Daily' : 'Quiz');
+            return;
+        }
 
         document.getElementById('options').classList.add('hidden'); document.getElementById('match-grid').classList.add('hidden');
         document.getElementById('quiz-next-container').classList.add('hidden'); document.getElementById('quiz-explanation').classList.add('hidden');
@@ -1476,21 +1535,22 @@
     }
 
     function renderFilterTags() {
+        if (!Array.isArray(vocabulary)) return;
         const container = document.getElementById('level-filter-btns');
         let html = `<span class="lvl-tag ${currentFilter === 'all' ? 'active' : ''}" style="background: ${currentFilter === 'all' ? '#f5f6fa' : '#f5f6fa33'}; color: #2f3640; border: 1px solid #dcdde1;" onclick="setFilter('all')">Tất cả (${vocabulary.length})</span>`;
         
-        const lv0Count = vocabulary.filter(v => !v.learned || v.level == 0).length;
+        const lv0Count = vocabulary.filter(v => v && (!v.learned || v.level == 0)).length;
         const is0Active = currentFilter == 0; const col0 = getComputedStyle(document.documentElement).getPropertyValue('--lv0').trim();
         html += `<span class="lvl-tag ${is0Active ? 'active' : ''}" style="background: ${is0Active ? col0 : col0 + '33'}; color: ${is0Active ? '#fff' : col0}; border: 1px solid ${col0};" onclick="setFilter(0)">Mới (${lv0Count})</span>`;
 
         for (let i = 1; i <= 8; i++) {
-            const count = vocabulary.filter(v => v.level == i && v.learned).length;
+            const count = vocabulary.filter(v => v && v.level == i && v.learned).length;
             const color = getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim();
             const isActive = currentFilter == i;
             html += `<span class="lvl-tag ${isActive ? 'active' : ''}" style="background: ${isActive ? color : color + '33'}; color: ${isActive ? '#fff' : color}; border: 1px solid ${color};" onclick="setFilter(${i})">Lv ${i} (${count})</span>`;
         }
 
-        const lv9Count = vocabulary.filter(v => v.level == 9 && v.learned).length;
+        const lv9Count = vocabulary.filter(v => v && v.level == 9 && v.learned).length;
         const col9 = getComputedStyle(document.documentElement).getPropertyValue('--lv9').trim();
         html += `<span class="lvl-tag ${currentFilter == 9 ? 'active' : ''}" style="background: ${currentFilter == 9 ? col9 : col9 + '33'}; color: ${currentFilter == 9 ? '#fff' : col9}; border: 1px solid ${col9};" onclick="setFilter(9)">Không ôn (${lv9Count})</span>`;
 
@@ -1510,7 +1570,12 @@
     function setFilter(lvl) { currentFilter = lvl; selectedIds.clear(); renderBatchBar(); renderFilterTags(); renderList(); updateTimeFilterCounts(); }
 
     function renderList() {
-        const items = getFilteredItems(); const listDiv = document.getElementById('list-items');
+        const listDiv = document.getElementById('list-items');
+        if (!Array.isArray(vocabulary) || vocabulary.length === 0) {
+            return listDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">Không có dữ liệu phù hợp.</div>';
+        }
+
+        const items = getFilteredItems(); 
         if (items.length === 0) return listDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">Không có dữ liệu phù hợp.</div>';
 
         let htmlStr = ""; 
@@ -1579,8 +1644,10 @@
     }
 
     function updateTimeFilterCounts() {
+        if (!Array.isArray(vocabulary)) return;
         const now = Date.now();
         const items = vocabulary.filter(v => {
+            if (!v) return false;
             if (currentFilter === 'all') return true;
             if (currentFilter == 0) return !v.learned || v.level == 0;
             return v.level == currentFilter && v.learned;
@@ -1654,7 +1721,6 @@
         }
     };
 
-    // BỘ LỌC AN TOÀN: Chống sập ứng dụng nếu Firebase gửi sai định dạng
     function safeStringify(data, fallback) {
         if (typeof data === 'string') return data;
         if (data === undefined || data === null) return fallback;
