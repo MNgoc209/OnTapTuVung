@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- Cấu hình để chạy như App trên điện thoại (PWA) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,36 +14,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <style>
-        /* FIX: Thêm box-sizing mặc định cho mọi phần tử để padding không làm tràn chiều rộng */
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
 
         :root {
-            /* Palette Pastel Pink */
-            --color1: #F5AFAF; 
-            --color2: #F9DFDF; 
-            --color3: #FBEFEF; 
-            --color4: #FCF8F8; 
-            --color5: #FDEDED; 
-            --color6: #FDACAC; 
+            --color1: #F5AFAF; --color2: #F9DFDF; --color3: #FBEFEF; 
+            --color4: #FCF8F8; --color5: #FDEDED; --color6: #FDACAC; 
             
             --success: #27ae60; --danger: #e74c3c; --ai: #8e44ad; --warning: #f39c12; --debug: #576574;
             --text: #4A4A4A; --bg: #fdf8f8;
-            --lv0: #95a5a6; 
+            --lv0: #bdc3c7; /* Đổi màu Lv0 (Mới) thành xám nhạt cho giống thiết kế */
             --lv1: #e74c3c; --lv2: #e67e22; --lv3: #f1c40f; --lv4: #2ecc71;
-            --lv5: #3498db; --lv6: #9b59b6; --lv7: #1abc9c; --lv8: #2c3e50;
-            --lv9: #7f8c8d; 
+            --lv5: #3498db; --lv6: #9b59b6; --lv7: #1abc9c; --lv8: #34495e;
+            --lv9: #95a5a6; /* Đổi màu Không ôn thành xám đậm */
         }
         
         body { font-family: 'Quicksand', sans-serif; background: var(--bg); color: var(--text); padding: 15px; max-width: 1200px; margin: 0 auto; line-height: 1.6; transition: background 0.3s, color 0.3s; padding-bottom: 80px; }
-        
         .container { background: white; padding: 25px; border-radius: 30px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.05); border: 1px solid var(--color2); width: 100%; }
-        
         .layout-wrapper { display: flex; gap: 25px; align-items: flex-start; }
         .sidebar-left { flex: 0 0 320px; display: flex; flex-direction: column; max-width: 100%; }
         .content-right { flex: 1; min-width: 0; width: 100%; }
-
         .box { background: var(--color3); padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 1px solid var(--color2); transition: background 0.3s, border-color 0.3s; }
         
         .input-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: stretch; }
@@ -63,17 +51,10 @@
 
         .mode-selector { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .mode-selector::-webkit-scrollbar { display: none; }
-        .mode-btn { 
-            flex: 1; min-width: 100px; padding: 14px 12px; border: none; border-radius: 18px; 
-            font-weight: 700; cursor: pointer; background: white; color: var(--color1); 
-            transition: 0.3s; border: 2px solid var(--color3); white-space: nowrap; font-family: 'Quicksand'; 
-            font-size: calc(0.85rem * var(--text-scale, 1)); 
-        }
+        .mode-btn { flex: 1; min-width: 100px; padding: 14px 12px; border: none; border-radius: 18px; font-weight: 700; cursor: pointer; background: white; color: var(--color1); transition: 0.3s; border: 2px solid var(--color3); white-space: nowrap; font-family: 'Quicksand'; font-size: calc(0.85rem * var(--text-scale, 1)); }
         .mode-btn.active { background: var(--color1); color: white; border-color: var(--color1); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); }
 
         .quiz-card { background: white; padding: 30px 20px; border-radius: 25px; border: 2px solid var(--color3); margin-bottom: 20px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; transition: border-color 0.3s; }
-        
-        /* FIX: Đảm bảo chữ dài tự rớt dòng */
         .quiz-q { font-size: calc(5.5rem * var(--text-scale, 1)); font-weight: 700; color: var(--text); margin-bottom: 10px; word-break: break-word; overflow-wrap: break-word; }
         .quiz-hint { color: #888; font-size: calc(0.9rem * var(--text-scale, 1)); margin-bottom: 15px; }
 
@@ -98,8 +79,6 @@
         .btn-action { width: 100%; padding: 15px; border: none; border-radius: 18px; font-weight: 700; cursor: pointer; color: white; margin-top: 10px; font-family: 'Quicksand'; font-size: calc(1rem * var(--text-scale, 1)); transition: 0.3s; }
 
         .study-card { text-align: center; background: white; padding: 40px 20px; border-radius: 35px; border: 2px solid var(--color3); margin-bottom: 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02); position: relative; cursor: pointer; transition: border-color 0.3s; }
-        
-        /* FIX: Đảm bảo chữ rớt dòng trên Card */
         .word-main { font-size: calc(6.5rem * var(--text-scale, 1)); font-weight: 700; color: var(--text); margin-bottom: 5px; word-break: break-word; overflow-wrap: break-word;}
         .word-reading { font-size: calc(1.4rem * var(--text-scale, 1)); color: var(--color1); font-weight: 600; opacity: 0; transition: 0.3s; min-height: 2rem; word-break: break-word;}
         .word-meaning { font-size: calc(1.5rem * var(--text-scale, 1)); color: #636e72; border-top: 2px dashed var(--color2); padding-top: 20px; margin-top: 20px; font-weight: 600; white-space: pre-wrap; word-break: break-word; }
@@ -108,7 +87,6 @@
         .search-container input { padding-left: 40px; padding-right: 35px; margin-bottom: 0; width: 100%; box-sizing: border-box; }
         .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; color: var(--color1); pointer-events: none;}
         .clear-search-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: #eee; border: none; border-radius: 50%; width: 24px; height: 24px; color: #666; font-size: 0.8rem; cursor: pointer; display: none; align-items: center; justify-content: center; font-weight: bold; }
-        .clear-search-btn:hover { background: #ddd; color: #333; }
 
         .time-filters { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .time-filter-btn { padding: 8px 12px; border-radius: 12px; border: 1px solid var(--color2); background: white; color: var(--text); font-size: calc(0.8rem * var(--text-scale, 1)); font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; }
@@ -118,15 +96,12 @@
         .filter-scroll-wrapper::-webkit-scrollbar { height: 6px; }
         .filter-scroll-wrapper::-webkit-scrollbar-thumb { background: var(--color2); border-radius: 10px; }
         
-        /* FIX: CSS Nút Lọc Level Hiệu Ứng Mới */
         .filter-group { display: flex; gap: 12px; padding: 0 5px; min-width: max-content; }
         .lvl-tag { padding: 6px 15px; border-radius: 12px; font-size: calc(0.85rem * var(--text-scale, 1)); font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .lvl-tag.active { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
         .lvl-tag:active { transform: scale(0.95); }
 
         .list-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-radius: 20px; background: white; margin-bottom: 15px; border: 1px solid var(--color2); flex-wrap: wrap; gap: 10px; }
-        
-        /* FIX: Cấu trúc item danh sách linh hoạt, không đẩy nút ra khỏi màn hình */
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: white; border-radius: 15px; margin-bottom: 10px; border: 1px solid #f0f0f0; width: 100%; gap: 10px; }
         .list-item-content { display: flex; align-items: center; flex: 1; min-width: 0; }
         .list-item-text { min-width: 0; flex: 1; word-break: break-word; }
@@ -138,123 +113,31 @@
         .btn-theme { background: var(--color1) !important; color: white !important; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); }
         .btn-theme-soft { background: var(--color3) !important; color: var(--color1) !important; border: 1px solid var(--color2); }
         .btn-skip { background: var(--color3) !important; color: var(--color1) !important; border: 2px solid var(--color2) !important; margin-bottom: 5px; margin-top: 15px; font-weight: 700; cursor: pointer; }
-        
         .btn-test { background: var(--debug) !important; color: white !important; }
         .btn-test.active { border: 2px solid #2d3436; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
-        
         .header-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
         
-        .srs-note {
-            background: #fff3cd; color: #856404; font-size: 0.8rem; padding: 8px; 
-            border-radius: 10px; margin-top: 10px; text-align: center; border: 1px dashed #ffeeba;
-        }
-        
-        .btn-next-day {
-            background: #3498db !important;
-            color: white !important;
-            margin-top: 10px;
-        }
-
-        .lvl-badge {
-            padding: 5px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: white;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: 0.2s;
-            min-width: 50px;
-        }
+        .lvl-badge { padding: 5px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; color: white; border: none; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s; min-width: 50px; }
         .lvl-badge:active { transform: scale(0.95); }
 
-        .level-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .level-cell {
-            padding: 15px 0;
-            border-radius: 12px;
-            color: white;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-        }
+        .level-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+        .level-cell { padding: 15px 0; border-radius: 12px; color: white; font-weight: bold; border: none; cursor: pointer; font-size: 1.1rem; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
         .level-cell:active { transform: scale(0.9); }
 
-        .batch-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 600px;
-            background: white; padding: 12px; border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            display: flex; flex-direction: column; gap: 8px;
-            border: 2px solid var(--color1); z-index: 999;
-            animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .batch-header {
-            font-size: 0.9rem; font-weight: bold; color: var(--color1);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .batch-levels {
-            display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none;
-        }
+        .batch-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 600px; background: white; padding: 12px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column; gap: 8px; border: 2px solid var(--color1); z-index: 999; animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .batch-header { font-size: 0.9rem; font-weight: bold; color: var(--color1); display: flex; justify-content: space-between; align-items: center; }
+        .batch-levels { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .batch-levels::-webkit-scrollbar { display: none; }
-        .batch-btn {
-            flex: 0 0 auto; padding: 8px 14px; border-radius: 12px;
-            border: none; color: white; font-weight: bold; cursor: pointer; font-size: 0.8rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        .batch-btn { flex: 0 0 auto; padding: 8px 14px; border-radius: 12px; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        .item-checkbox {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 22px; height: 22px;
-            min-width: 22px; 
-            flex: 0 0 22px;
-            border: 2px solid var(--color2);
-            border-radius: 6px;
-            cursor: pointer;
-            display: grid;
-            place-content: center;
-            margin-right: 12px;
-            transition: 0.2s;
-            flex-shrink: 0;
-            background: white;
-        }
-        .item-checkbox::before {
-            content: "";
-            width: 12px; height: 12px;
-            transform: scale(0);
-            transition: 0.2s;
-            box-shadow: inset 1em 1em white;
-            transform-origin: center;
-            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-        }
-        .item-checkbox:checked {
-            background-color: var(--color1);
-            border-color: var(--color1);
-        }
-        .item-checkbox:checked::before {
-            transform: scale(1);
-        }
+        .item-checkbox { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; flex: 0 0 22px; border: 2px solid var(--color2); border-radius: 6px; cursor: pointer; display: grid; place-content: center; margin-right: 12px; transition: 0.2s; flex-shrink: 0; background: white; }
+        .item-checkbox::before { content: ""; width: 12px; height: 12px; transform: scale(0); transition: 0.2s; box-shadow: inset 1em 1em white; transform-origin: center; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); }
+        .item-checkbox:checked { background-color: var(--color1); border-color: var(--color1); }
+        .item-checkbox:checked::before { transform: scale(1); }
 
-        .daily-status-item {
-            display: flex; align-items: center; justify-content: space-between;
-            gap: 10px;
-            padding: 10px; border-bottom: 1px solid #eee;
-            font-size: 0.9rem;
-        }
+        .daily-status-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         .daily-status-item:last-child { border-bottom: none; }
-        .status-badge {
-            font-size: 0.75rem; padding: 4px 8px; border-radius: 8px; font-weight: bold;
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
+        .status-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 8px; font-weight: bold; flex-shrink: 0; white-space: nowrap; }
         .status-pending { background: #f0f0f0; color: #666; }
         .status-done { background: #eafaf1; color: var(--success); }
 
@@ -265,6 +148,24 @@
         .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; position: absolute; right: 15px; top: 10px; }
         .close-modal:hover { color: black; }
 
+        /* NÂNG CẤP UI: Nút chọn Level trong Modal Ôn Tập (Giống thiết kế) */
+        .adv-lvl-btn {
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Quicksand';
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            min-width: 80px;
+        }
+        .adv-lvl-btn.active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
         @media (max-width: 850px) {
             .layout-wrapper { flex-direction: column; }
             .sidebar-left { flex: 1 1 auto; width: 100%; }
@@ -273,34 +174,15 @@
         @media (max-width: 600px) {
             body { padding: 10px; }
             .container { padding: 15px; }
-            
-            /* FIX: Giảm đáng kể cỡ chữ trên thiết bị nhỏ để không tràn màn hình */
             .quiz-q { font-size: calc(2.8rem * var(--text-scale, 1)) !important; }
             .word-main { font-size: calc(3.5rem * var(--text-scale, 1)) !important; }
-            
-            /* Sắp xếp lại item danh sách thành cột dọc để dễ đọc */
             .list-item { flex-direction: column; align-items: flex-start; }
             .list-item-content { width: 100%; margin-bottom: 8px;}
             .list-item > div:last-child { width: 100%; flex-direction: row !important; justify-content: space-between; align-items: center; }
-            
-            .mode-selector {
-                justify-content: flex-start;
-                gap: 8px;
-            }
-            .mode-btn {
-                flex: 0 0 auto;
-                width: auto;
-                min-width: unset;
-                padding: 12px 16px;
-                font-size: calc(0.85rem * var(--text-scale, 1));
-            }
-            
-            .header-actions {
-                gap: 8px;
-            }
-            .btn-action {
-                font-size: calc(0.9rem * var(--text-scale, 1));
-            }
+            .mode-selector { justify-content: flex-start; gap: 8px; }
+            .mode-btn { flex: 0 0 auto; width: auto; min-width: unset; padding: 12px 16px; font-size: calc(0.85rem * var(--text-scale, 1)); }
+            .header-actions { gap: 8px; }
+            .btn-action { font-size: calc(0.9rem * var(--text-scale, 1)); }
         }
     </style>
 </head>
@@ -308,19 +190,14 @@
 
 <div class="container">
     <div class="layout-wrapper">
-        
         <!-- CỘT BÊN TRÁI -->
         <div class="sidebar-left">
-
             <!-- BẢNG ĐỒNG BỘ ĐÁM MÂY -->
             <div id="sync-panel" class="box" style="background: #e8f4fd; border-color: #bce0fd; padding: 15px; text-align: center;">
                 <div style="font-size: 0.9rem; font-weight: 700; color: #2980b9; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 5px;">
                     ☁️ ĐỒNG BỘ ĐÁM MÂY
                 </div>
-                
-                <!-- FIX: Mặc định hiện trạng thái đang tải thay vì "Chưa đăng nhập" để tránh nhấp nháy UI -->
                 <div id="sync-status" style="font-size: 0.8rem; color: #666; margin-bottom: 10px; font-weight: 600;">🔄 Đang kiểm tra đăng nhập...</div>
-                
                 <button id="btn-google-login" class="hidden" style="width: 100%; padding: 10px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; background: #fff; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="18px" height="18px">
                         <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.24-2.618-.611-3.917z"/>
@@ -330,7 +207,6 @@
                     </svg>
                     Đăng nhập Google
                 </button>
-                
                 <div id="logged-in-ui" class="hidden">
                     <div id="user-email" style="font-size: 0.85rem; font-weight: bold; color: #333; margin-bottom: 10px; word-break: break-all;"></div>
                     <div style="display: flex; gap: 10px;">
@@ -339,7 +215,6 @@
                     </div>
                 </div>
             </div>
-            <!-- KẾT THÚC THÊM MỚI -->
 
             <div class="box">
                 <div class="input-group">
@@ -348,9 +223,8 @@
                     <textarea id="manual-meaning" placeholder="Ý nghĩa (Có thể xuống dòng)" rows="2"></textarea>
                     <button onclick="addManual()" style="background:var(--color1); color:white; border:none; width:50px; border-radius:15px; font-weight:bold; font-size:1.2rem; cursor:pointer;">+</button>
                 </div>
-
                 <div class="header-actions">
-                    <button onclick="document.getElementById('file-in').click()" class="btn-action" style="background: white; color: var(--color1); border: 2px dashed var(--color2); margin-top: 0; font-size: 0.85rem; flex: 1;">📥 Import Excel (Từ mới)</button>
+                    <button onclick="document.getElementById('file-in').click()" class="btn-action" style="background: white; color: var(--color1); border: 2px dashed var(--color2); margin-top: 0; font-size: 0.85rem; flex: 1;">📥 Import Excel</button>
                     <button onclick="exportBackup()" class="btn-action" style="background: var(--color5); color: var(--color1); border: none; margin-top: 0; font-size: 0.85rem; flex: 1;">💾 Xuất Backup</button>
                     <button onclick="document.getElementById('backup-in').click()" class="btn-action" style="background: var(--color5); color: var(--color1); border: none; margin-top: 0; font-size: 0.85rem; flex: 1;">📂 Nhập Backup</button>
                     <button id="btn-test-mode" onclick="toggleTestMode()" class="btn-action btn-test" style="margin-top: 0; font-size: 0.85rem; flex: 0 0 80px;">🧪 Test</button>
@@ -384,12 +258,10 @@
                         <span style="font-size: 0.8rem;">Đã ôn: <strong id="stat-today-reviewed" style="font-size: 1.1rem; color: #fff;">0</strong></span>
                         <span id="stat-today-missing" style="font-size: 0.8rem; background: var(--warning); padding: 3px 8px; border-radius: 8px; font-weight: bold;">Thiếu: 50</span>
                     </div>
-                    
                     <div style="margin-top: 10px;">
                         <button onclick="openHistoryModal()" style="background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 5px 15px; border-radius: 12px; font-size: 0.8rem; cursor: pointer; font-weight: bold; width: 100%;">📊 Xem Lịch Sử Học Các Ngày</button>
                     </div>
                 </div>
-                
             </div>
         </div>
 
@@ -410,7 +282,7 @@
                 <div class="mode-selector">
                     <button class="mode-btn active" id="btn-daily" onclick="startMode('daily')">🔥 ÔN LỘ TRÌNH</button>
                     <button class="mode-btn" id="btn-list" onclick="startMode('list')">📚 DANH SÁCH</button>
-                    <button class="mode-btn" id="btn-level-review" onclick="openReviewLevelModal()">ÔN TẬP LEVEL</button>
+                    <button class="mode-btn" id="btn-level-review" onclick="openAdvancedReviewModal()">ÔN TẬP LEVEL</button>
                 </div>
 
                 <!-- View Trắc nghiệm -->
@@ -426,13 +298,9 @@
                             <button onclick="openDailyListModal()" id="btn-view-daily-list" class="hidden" style="font-size: calc(0.8rem * var(--text-scale, 1)); background: transparent; border: 1px solid var(--color1); color: var(--color1); padding: 5px 12px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 600;">📋 Danh sách hôm nay</button>
                         </div>
 
-                        <!-- Single Quiz Option Grid -->
                         <div id="options" class="option-grid"></div>
-                        
-                        <!-- Match Quiz Option Grid -->
                         <div id="match-grid" class="option-grid match-grid hidden"></div>
                         
-                        <!-- Nút Skip -->
                         <div id="btn-skip-container">
                             <button id="btn-skip-quiz" class="btn-action btn-skip" onclick="skipCurrentQuiz()">⏩ Bỏ qua (Học sau)</button>
                         </div>
@@ -457,7 +325,6 @@
                         </div>
                     </div>
                     
-                    <!-- State Empty / Finished -->
                     <div id="quiz-empty" class="hidden success-state">
                         <div style="font-size: calc(4rem * var(--text-scale, 1));">🎉</div>
                         <h2 style="color: var(--success); font-weight: 700;">Tuyệt vời!</h2>
@@ -472,7 +339,6 @@
                         <div id="daily-list-btn-container" style="margin-bottom: 20px;">
                             <button onclick="openDailyListModal()" style="font-size: calc(0.9rem * var(--text-scale, 1)); background: #fff; border: 2px solid var(--color1); color: var(--color1); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-family: 'Quicksand'; font-weight: 700;">📋 Xem lại danh sách</button>
                         </div>
-                        
                         <button id="btn-force-next-day" class="btn-action btn-next-day hidden" onclick="advanceNextDay()" style="margin-bottom: 10px;">📅 Học trước ngày mai</button>
                         <button class="btn-action btn-theme" onclick="startMode('list')">Quay lại danh sách</button>
                     </div>
@@ -486,7 +352,6 @@
                         <button class="clear-search-btn" id="clear-search-btn" onclick="clearSearch()">✕</button>
                     </div>
                     
-                    <!-- Time Filters -->
                     <div class="time-filters">
                         <button class="time-filter-btn active" onclick="setTimeFilter('all')" id="tf-all">Tất cả (0)</button>
                         <button class="time-filter-btn" onclick="setTimeFilter('due')" id="tf-due">⏰ Đến hạn (0)</button>
@@ -503,7 +368,6 @@
                             <span id="list-toggle-icon" onclick="toggleList()" style="font-size:calc(0.8rem * var(--text-scale, 1)); margin-left:10px; cursor:pointer; padding: 5px 10px; background: var(--color3); border: 1px solid var(--color2); border-radius: 10px; color: var(--color1);">▼</span>
                         </h3>
                         <div style="display:flex; gap:10px; align-items:center;">
-                            <!-- Select All Button (Injected via JS) -->
                             <div id="select-all-container" style="display:flex; gap:5px; flex-wrap:wrap; justify-content: flex-end;"></div>
                             <button onclick="clearAllData(); event.stopPropagation();" style="border:none; color:#ff7675; background:#fff0f0; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Xóa hết</button>
                         </div>
@@ -511,26 +375,6 @@
 
                     <div id="list-collapsible">
                         <div id="list-items" style="max-height: 450px; overflow-y: auto;"></div>
-                    </div>
-                </div>
-
-                <!-- View Card (Learn Mode) -->
-                <div id="view-card" class="hidden">
-                    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
-                        <button onclick="changeIdx(-1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❮</button>
-                        <span id="card-index" style="font-weight: 700; color: var(--color1);">- / -</span>
-                        <button onclick="changeIdx(1)" class="btn-nav" style="border:none; background:var(--color3); color:var(--color1); width:35px; height:35px; border-radius:50%; cursor:pointer;">❯</button>
-                    </div>
-                    
-                    <div class="study-card" onclick="toggleMeaning()">
-                        <div id="display-word" class="word-main">---</div>
-                        <div id="display-reading" class="word-reading">---</div>
-                        <div id="display-meaning" class="word-meaning hidden">---</div>
-                        <div id="expansion-card" class="ai-expansion hidden"></div>
-                    </div>
-
-                    <div id="ctrl-learn" class="hidden">
-                        <button class="btn-action btn-theme" onclick="markAsLearned()">✅ Đã thuộc từ này</button>
                     </div>
                 </div>
                 
@@ -546,9 +390,7 @@
             <span class="close-modal" onclick="closeLevelPicker()">&times;</span>
             <h3 style="color:var(--text); margin-top:0;">Chọn Nhanh Level</h3>
             <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Chạm để đổi cấp độ ngay lập tức:</p>
-            
             <div id="level-grid" class="level-grid"></div>
-            
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button onclick="setLevel(8)" class="btn-action" style="background:var(--lv8); margin-top:0; font-size:0.9rem; flex: 1;">🏆 Đã thuộc</button>
                 <button onclick="setLevel(9)" class="btn-action" style="background:var(--lv9); margin-top:0; font-size:0.9rem; flex: 1;">🚫 Không ôn</button>
@@ -556,52 +398,46 @@
         </div>
     </div>
 
-    <!-- Review Level Picker Modal -->
-    <div id="reviewLevelModal" class="modal" style="z-index: 1001;">
-        <div class="modal-content" style="max-width: 320px;">
-            <span class="close-modal" onclick="closeReviewLevelModal()">&times;</span>
-            <h3 style="color:var(--text); margin-top:0;">Chọn Level để Ôn Tập</h3>
-            <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Chọn một hoặc nhiều Level:</p>
+    <!-- NÂNG CẤP MỚI: Review Advanced Modal (Gộp 2 bước) -->
+    <div id="advancedReviewModal" class="modal" style="z-index: 1001;">
+        <div class="modal-content" style="max-width: 550px;">
+            <span class="close-modal" onclick="closeAdvancedReviewModal()">&times;</span>
             
-            <div id="review-level-grid" class="level-grid"></div>
-            
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button onclick="showReviewOptions('selected')" class="btn-action btn-theme" style="margin-top:0; font-size:0.9rem; flex: 1;">▶️ Ôn Cấp Đã Chọn</button>
-                <button onclick="showReviewOptions('all')" class="btn-action" style="background:var(--color1); margin-top:0; font-size:0.9rem; flex: 1;">📚 Ôn Tất Cả</button>
-            </div>
-        </div>
-    </div>
+            <!-- Bước 1: Chọn Level -->
+            <div id="adv-review-step-1">
+                <h3 style="color:var(--text); margin-top:0; font-size: 1.1rem; color: #34495e;">Vui lòng chọn nhóm cấp độ bạn muốn ôn tập:</h3>
+                
+                <div id="adv-level-grid" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top: 20px;">
+                    <!-- JS sẽ sinh ra các nút ở đây -->
+                </div>
 
-    <!-- Review Options Modal -->
-    <div id="reviewOptionsModal" class="modal" style="z-index: 1002;">
-        <div class="modal-content" style="max-width: 300px;">
-            <span class="close-modal" onclick="closeReviewOptionsModal()">&times;</span>
-            <h3 id="review-opt-title" style="color:var(--text); margin-top:0;">Level X</h3>
-            
-            <div style="margin-top: 15px; text-align: left;">
-                <label style="font-size: 0.85rem; font-weight: bold; color: var(--color1);">Số lượng từ muốn ôn:</label>
-                <div style="display: flex; gap: 5px; margin-top: 5px;">
-                    <select id="review-limit-select" onchange="toggleCustomReviewLimit()" style="flex: 1; padding: 8px; border-radius: 10px; border: 2px solid var(--color2); font-family: 'Quicksand'; outline: none;">
-                        <option value="5">5 từ</option>
-                        <option value="10">10 từ</option>
-                        <option value="15">15 từ</option>
-                        <option value="50" selected>50 từ</option>
-                        <option value="all">Tất cả</option>
-                        <option value="custom">Tùy chỉnh...</option>
-                    </select>
-                    <input type="number" id="review-limit-custom" placeholder="Nhập số..." style="display: none; flex: 1; padding: 8px; border-radius: 10px; border: 2px solid var(--color2); font-family: 'Quicksand'; outline: none; min-width: 50px;">
+                <div style="margin-top: 25px; text-align: center;">
+                    <button class="btn-action btn-theme" style="width: auto; padding: 12px 50px; border-radius: 20px; font-size: 1.1rem;" onclick="goToReviewStep2()">Tiếp Tục ➔</button>
                 </div>
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
-                <button id="btn-review-due" class="btn-action" style="background:var(--warning); margin:0; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;">
-                    <span>⏳ Ôn từ đến hạn</span>
-                    <span id="cnt-due" style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;">0</span>
-                </button>
-                <button id="btn-review-all" class="btn-action" style="background:var(--color1); margin:0; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;">
-                    <span>📚 Ôn tất cả</span>
-                    <span id="cnt-all" style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;">0</span>
-                </button>
+            <!-- Bước 2: Thiết lập Ôn tập -->
+            <div id="adv-review-step-2" class="hidden">
+                <h2 style="color: var(--color1); margin-top:0; font-size: 1.8rem;">Thiết Lập Ôn Tập</h2>
+                <p style="font-size:1rem; color:#555; margin-bottom: 20px;">
+                    Bạn đang chuẩn bị ôn tập cho: <br>
+                    <strong id="adv-review-target-text" style="color: var(--color1); font-size: 1.1rem;">...</strong>
+                </p>
+
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+                    <button id="btn-adv-review-due" class="btn-action" style="background:#ffb8b8; color:white; margin:0; flex: 1; min-width: 150px; padding: 15px; font-size:1.1rem; border-radius:15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        ⏰ Ôn Đến Hạn <br><small id="adv-cnt-due" style="font-size: 0.9rem;">(0)</small>
+                    </button>
+                    <button id="btn-adv-review-all" class="btn-action" style="background:#3498db; color:white; margin:0; flex: 1; min-width: 150px; padding: 15px; font-size:1.1rem; border-radius:15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        📚 Ôn Tất Cả <br><small id="adv-cnt-all" style="font-size: 0.9rem;">(0)</small>
+                    </button>
+                </div>
+
+                <div style="margin-top: 25px;">
+                    <button onclick="backToReviewStep1()" style="background:none; border:none; color:#7f8fa6; text-decoration:underline; font-weight:bold; cursor:pointer; font-family: 'Quicksand'; font-size: 1rem;">
+                        ⬅ Quay lại chọn Level
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -650,7 +486,6 @@
             <span class="close-modal" onclick="closeDailyListModal()">&times;</span>
             <h3 style="color:var(--text); margin-top:0;">Hôm Nay Học Gì?</h3>
             <div id="daily-list-content" style="overflow-y: auto; flex: 1; text-align: left; margin-top: 10px; border: 1px solid #eee; border-radius: 15px; padding: 10px;">
-                <!-- JS Inject -->
             </div>
         </div>
     </div>
@@ -662,7 +497,6 @@
             <h3 style="color:var(--text); margin-top:0; margin-bottom: 5px;">Lịch Sử Ôn Tập</h3>
             <p style="font-size: 0.85rem; color: #666; margin-top: 0; margin-bottom: 15px;">Thống kê số lượng từ đã ôn trong các ngày</p>
             <div id="history-list-content" style="overflow-y: auto; flex: 1; text-align: left; padding-right: 5px;">
-                <!-- JS Inject -->
             </div>
         </div>
     </div>
@@ -674,7 +508,6 @@
             <span style="font-size:0.8rem; color:#888;">Chuyển nhanh sang:</span>
         </div>
         <div class="batch-levels" id="batch-levels-container">
-            <!-- JS injects level buttons -->
         </div>
     </div>
 
@@ -688,7 +521,7 @@
     var dailyTargetIds = []; 
     var lastStudyDate = "";
 
-    // --- BIẾN CHO LỊCH SỬ ÔN TẬP ---
+    // Lịch sử ôn tập
     let reviewHistory = {}; 
     let reviewedTodayIds = []; 
     let reviewedTodayDate = ""; 
@@ -702,7 +535,6 @@
     let isTestMode = false; 
     let currentQuizResult = 'pending'; 
 
-    // Variables for Match Quiz Mode
     let currentQuizFormat = 'single'; 
     let matchBatch = [];
     let matchSelectedBtn = null;
@@ -714,16 +546,13 @@
     let currentEditId = null;
     let selectedIds = new Set();
     
-    let pendingImportData = null; 
     let isSortedAZ = false;
-    let selectedReviewLevels = new Set(); 
+    let selectedReviewLevels = new Set(); // NÂNG CẤP: Lắng nghe chọn nhiều Level
 
-    // --- Hàm này cần thiết lập làm biến toàn cục để script Firebase bên dưới gọi được ---
     function getStorageKey(baseKey) {
         return isTestMode ? baseKey + "_test" : baseKey;
     }
     window.getStorageKey = getStorageKey; 
-    // ---------------------------------------------------------------------------------
 
     function getLocalYYYYMMDD() {
         const now = new Date();
@@ -760,16 +589,30 @@
         localStorage.setItem(historyKey, JSON.stringify(reviewHistory));
     }
 
+    // NÂNG CẤP: Chặn đếm từ Lv2-5 nếu chưa đủ 3 ngày kể từ lần học đầu tiên
     function trackWordReviewed(id) {
         id = String(id);
+        const item = vocabulary.find(v => String(v.id) === id);
+        if (!item) return;
+
+        // Nếu là Lv2,3,4,5, kiểm tra firstLearnedAt
+        if (item.level >= 2 && item.level <= 5) {
+            if (item.firstLearnedAt) {
+                const diffDays = (Date.now() - item.firstLearnedAt) / (1000 * 60 * 60 * 24);
+                if (diffDays <= 3) return; // Nếu <= 3 ngày (72h) thì không tính
+            } else {
+                // Với các từ cũ trước đây chưa có firstLearnedAt, mình tạm gán cho nó và không đếm hôm nay
+                item.firstLearnedAt = Date.now();
+                return;
+            }
+        }
+
         const historyKey = getStorageKey('jlpt_review_history');
         const todayStr = getLocalYYYYMMDD();
 
         if (reviewedTodayDate !== todayStr) {
             reviewedTodayDate = todayStr;
-            if (!reviewHistory[todayStr]) {
-                reviewHistory[todayStr] = [];
-            }
+            if (!reviewHistory[todayStr]) reviewHistory[todayStr] = [];
             reviewedTodayIds = reviewHistory[todayStr];
         }
 
@@ -805,7 +648,6 @@
             
             const dateParts = date.split('-');
             const displayDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-            
             const isToday = date === reviewedTodayDate;
             const badge = isToday ? '<span style="background:var(--color1); color:white; padding:2px 6px; border-radius:6px; font-size:0.7rem; font-weight:bold; margin-left: 8px;">Hôm nay</span>' : '';
 
@@ -821,7 +663,6 @@
                 </div>
             `;
         });
-        
         listDiv.innerHTML = html;
     }
 
@@ -857,62 +698,33 @@
     function importBackup(event) {
         const file = event.target.files[0];
         if (!file) return;
-        
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
                 const data = JSON.parse(e.target.result);
                 if (data.vocabulary) {
-                    
                     if (data.exportTime) {
-                        const now = Date.now();
-                        const elapsedMs = now - data.exportTime;
-                        
-                        if (elapsedMs > 0) {
-                            const d = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
-                            const h = Math.floor((elapsedMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                            const m = Math.floor((elapsedMs % (1000 * 60 * 60)) / (1000 * 60));
-                            
-                            let timeStr = "";
-                            if (d > 0) timeStr += `${d} ngày `;
-                            if (h > 0) timeStr += `${h} giờ `;
-                            if (m > 0) timeStr += `${m} phút`;
-                            if (timeStr === "") timeStr = "vài giây";
-                            
-                            const msg = `Bản sao lưu này được tạo cách đây ${timeStr.trim()}.\n\nBạn có muốn tự động BÙ TRỪ khoảng thời gian này vào lịch ôn tập không?\n(Khuyên dùng để không bị dồn hàng loạt từ quá hạn nếu bạn đã nghỉ học hoặc chuyển thiết bị).`;
-                            
-                            if (confirm(msg)) {
-                                data.vocabulary.forEach(v => {
-                                    if (v.learned && v.nextReview && v.level > 0 && v.level < 9) {
-                                        v.nextReview += elapsedMs;
-                                    }
-                                });
-                            }
+                        const elapsedMs = Date.now() - data.exportTime;
+                        if (elapsedMs > 0 && confirm("Bạn có muốn tự động BÙ TRỪ khoảng thời gian file Backup đã được tạo không?")) {
+                            data.vocabulary.forEach(v => {
+                                if (v.learned && v.nextReview && v.level > 0 && v.level < 9) {
+                                    v.nextReview += elapsedMs;
+                                }
+                            });
                         }
-                    } else {
-                        alert("Bản sao lưu này quá cũ và không chứa thông tin thời gian xuất. Hệ thống sẽ nhập theo thời gian gốc.");
                     }
-
                     vocabulary = data.vocabulary;
                     dailyPointer = data.dailyPointer || 0;
                     dailyQueue = data.dailyQueue || [];
                     dailyTargetIds = data.dailyTargetIds || [];
                     lastStudyDate = data.lastStudyDate || "";
-
-                    if (data.reviewHistory) {
-                        reviewHistory = data.reviewHistory;
-                        localStorage.setItem(getStorageKey('jlpt_review_history'), JSON.stringify(reviewHistory));
-                    }
+                    if (data.reviewHistory) reviewHistory = data.reviewHistory;
                     
                     saveData();
                     alert("Nhập dữ liệu thành công! Trình duyệt sẽ được tải lại.");
                     location.reload(); 
-                } else {
-                    alert("File không chứa dữ liệu hợp lệ!");
-                }
-            } catch(err) {
-                alert("Đã xảy ra lỗi khi đọc file. Vui lòng kiểm tra lại file backup.");
-            }
+                } else alert("File không chứa dữ liệu hợp lệ!");
+            } catch(err) { alert("Lỗi đọc file backup."); }
         }
         reader.readAsText(file);
         event.target.value = ''; 
@@ -922,17 +734,14 @@
         editingWordId = String(id);
         const grid = document.getElementById('level-grid');
         grid.innerHTML = '';
-        
         for(let i=1; i<=8; i++) {
             const btn = document.createElement('button');
-            const color = getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim();
             btn.className = 'level-cell';
-            btn.style.background = color;
+            btn.style.background = getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim();
             btn.innerText = i;
             btn.onclick = () => setLevel(i);
             grid.appendChild(btn);
         }
-        
         document.getElementById('levelPickerModal').style.display = "block";
     }
 
@@ -957,42 +766,27 @@
         document.getElementById('editWordModal').style.display = "block";
     }
 
-    function closeEditModal() {
-        document.getElementById('editWordModal').style.display = "none";
-        currentEditId = null;
-    }
+    function closeEditModal() { document.getElementById('editWordModal').style.display = "none"; currentEditId = null; }
 
     function saveEditWord() {
         if (!currentEditId) return;
-        
         let w = document.getElementById('edit-word').value.trim();
         let r = document.getElementById('edit-reading').value.trim();
         const m = document.getElementById('edit-meaning').value.trim();
 
-        if (!w && !r) {
-            alert("Vui lòng nhập Từ vựng hoặc Cách đọc!");
-            return;
-        }
-
+        if (!w && !r) return alert("Vui lòng nhập Từ vựng hoặc Cách đọc!");
         if (!w && r) w = r;
         if (w && !r) r = w;
 
         const idx = vocabulary.findIndex(v => String(v.id) === currentEditId);
         if (idx !== -1) {
-            if (vocabulary[idx].word.toLowerCase() !== w.toLowerCase()) {
-                 if (vocabulary.some(v => String(v.id) !== currentEditId && v.word.toLowerCase() === w.toLowerCase())) {
-                     alert("Từ này đã tồn tại trong danh sách!");
-                     return;
-                 }
+            if (vocabulary[idx].word.toLowerCase() !== w.toLowerCase() && vocabulary.some(v => String(v.id) !== currentEditId && v.word.toLowerCase() === w.toLowerCase())) {
+                 return alert("Từ này đã tồn tại trong danh sách!");
             }
-
             vocabulary[idx].word = w;
             vocabulary[idx].reading = r;
             vocabulary[idx].meaning = m || "Chưa dịch";
-            
-            saveData();
-            renderList();
-            closeEditModal();
+            saveData(); renderList(); closeEditModal();
         }
     }
 
@@ -1002,24 +796,17 @@
         document.getElementById('range-input').focus();
     }
 
-    function closeSelectRangeModal() {
-        document.getElementById('selectRangeModal').style.display = "none";
-    }
+    function closeSelectRangeModal() { document.getElementById('selectRangeModal').style.display = "none"; }
 
     function applyRangeSelection() {
         const inputStr = document.getElementById('range-input').value.trim();
-        if (!inputStr) {
-            closeSelectRangeModal();
-            return;
-        }
+        if (!inputStr) return closeSelectRangeModal();
 
         const items = getFilteredItems();
         if (items.length === 0) return;
 
         const indicesToSelect = new Set();
-        const parts = inputStr.split(',');
-
-        parts.forEach(part => {
+        inputStr.split(',').forEach(part => {
             part = part.trim();
             if (part.includes('-')) {
                 const bounds = part.split('-');
@@ -1027,165 +814,189 @@
                     const start = parseInt(bounds[0], 10);
                     const end = parseInt(bounds[1], 10);
                     if (!isNaN(start) && !isNaN(end) && start <= end) {
-                        for (let i = start; i <= end; i++) {
-                            indicesToSelect.add(i - 1); 
-                        }
+                        for (let i = start; i <= end; i++) indicesToSelect.add(i - 1); 
                     }
                 }
             } else {
                 const num = parseInt(part, 10);
-                if (!isNaN(num)) {
-                    indicesToSelect.add(num - 1);
-                }
+                if (!isNaN(num)) indicesToSelect.add(num - 1);
             }
         });
 
-        let addedCount = 0;
         indicesToSelect.forEach(idx => {
             if (idx >= 0 && idx < items.length) {
-                const strId = String(items[idx].id);
-                if (!selectedIds.has(strId)) {
-                    selectedIds.add(strId);
-                    addedCount++;
-                }
+                selectedIds.add(String(items[idx].id));
             }
         });
 
-        renderList();
-        renderBatchBar();
-        closeSelectRangeModal();
+        renderList(); renderBatchBar(); closeSelectRangeModal();
     }
 
-    function openReviewLevelModal() {
+    // =========================================================
+    // NÂNG CẤP: MODAL ÔN TẬP GIAO DIỆN MỚI 
+    // =========================================================
+    
+    function openAdvancedReviewModal() {
         selectedReviewLevels.clear();
-        const grid = document.getElementById('review-level-grid');
+        selectedReviewLevels.add('all'); // Mặc định chọn nút "Tất cả"
+
+        document.getElementById('adv-review-step-1').classList.remove('hidden');
+        document.getElementById('adv-review-step-2').classList.add('hidden');
+        
+        renderAdvancedLevelButtons();
+        document.getElementById('advancedReviewModal').style.display = "block";
+    }
+
+    function closeAdvancedReviewModal() {
+        document.getElementById('advancedReviewModal').style.display = "none";
+    }
+
+    function renderAdvancedLevelButtons() {
+        const grid = document.getElementById('adv-level-grid');
         grid.innerHTML = '';
         
-        for(let i=1; i<=8; i++) {
-            const btn = document.createElement('button');
-            const color = getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim();
-            btn.className = 'level-cell';
-            btn.style.background = color;
-            btn.style.opacity = '0.4';
-            btn.style.border = '3px solid transparent';
-            btn.style.boxSizing = 'border-box';
-            btn.innerText = `Lv ${i}`;
-            btn.onclick = () => {
-                if (selectedReviewLevels.has(i)) {
-                    selectedReviewLevels.delete(i);
-                    btn.style.opacity = '0.4';
-                    btn.style.borderColor = 'transparent';
+        const allItemsCount = vocabulary.filter(v => parseInt(v.level) !== 9).length;
+        createAdvLvlBtn('all', 'Tất cả Level 0-8', allItemsCount, '#f5f6fa', '#2f3640', grid);
+
+        const lv0Count = vocabulary.filter(v => !v.learned || v.level == 0).length;
+        createAdvLvlBtn(0, 'Mới', lv0Count, '#f0f0f0', '#7f8c8d', grid);
+
+        for (let i = 1; i <= 8; i++) {
+            const count = vocabulary.filter(v => v.level == i && v.learned).length;
+            const bg = getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim();
+            createAdvLvlBtn(i, `Lv ${i}`, count, bg + '22', bg, grid); // Nền màu trong suốt 15%
+        }
+
+        const lv9Count = vocabulary.filter(v => v.level == 9 && v.learned).length;
+        createAdvLvlBtn(9, 'Không ôn', lv9Count, '#ecf0f1', '#95a5a6', grid);
+    }
+
+    function createAdvLvlBtn(levelValue, text, count, bgColor, borderColor, container) {
+        const btn = document.createElement('button');
+        btn.className = 'adv-lvl-btn';
+        
+        // CSS Style theo thiết kế ảnh
+        btn.style.backgroundColor = bgColor;
+        btn.style.color = borderColor;
+        btn.style.borderColor = borderColor;
+
+        if (selectedReviewLevels.has(levelValue)) {
+            btn.classList.add('active');
+            btn.style.borderWidth = '2px';
+        } else {
+            btn.classList.remove('active');
+            btn.style.borderWidth = '1px';
+            btn.style.opacity = '0.7';
+        }
+
+        btn.innerHTML = `${text} (${count})`;
+        
+        btn.onclick = () => {
+            if (levelValue === 'all') {
+                selectedReviewLevels.clear();
+                selectedReviewLevels.add('all');
+            } else {
+                selectedReviewLevels.delete('all'); // Bỏ chọn Tất cả nếu chọn lẻ
+                if (selectedReviewLevels.has(levelValue)) {
+                    selectedReviewLevels.delete(levelValue);
+                    if (selectedReviewLevels.size === 0) selectedReviewLevels.add('all'); // Nếu bỏ chọn hết thì quay về Tất cả
                 } else {
-                    selectedReviewLevels.add(i);
-                    btn.style.opacity = '1';
-                    btn.style.borderColor = '#333';
+                    selectedReviewLevels.add(levelValue);
                 }
-            };
-            grid.appendChild(btn);
-        }
-        document.getElementById('reviewLevelModal').style.display = "block";
-    }
-
-    function closeReviewLevelModal() {
-        document.getElementById('reviewLevelModal').style.display = "none";
-    }
-
-    function toggleCustomReviewLimit() {
-        const select = document.getElementById('review-limit-select');
-        const customInput = document.getElementById('review-limit-custom');
-        if (select.value === 'custom') {
-            customInput.style.display = 'block';
-            customInput.focus();
-        } else {
-            customInput.style.display = 'none';
-        }
-    }
-
-    let currentReviewSelection = 'all';
-
-    function showReviewOptions(mode) {
-        let allItems = [];
-        const title = document.getElementById('review-opt-title');
-        
-        if (mode === 'all') {
-            currentReviewSelection = 'all';
-            title.innerText = "Tất cả các Level";
-            allItems = [...vocabulary];
-        } else {
-            if (selectedReviewLevels.size === 0) {
-                alert("Vui lòng chọn ít nhất 1 Level để ôn tập!");
-                return;
             }
-            currentReviewSelection = Array.from(selectedReviewLevels).sort((a,b)=>a-b);
-            title.innerText = `Level ${currentReviewSelection.join(', ')}`;
-            allItems = vocabulary.filter(v => currentReviewSelection.includes(parseInt(v.level)));
-        }
+            renderAdvancedLevelButtons();
+        };
 
-        closeReviewLevelModal();
-        const modal = document.getElementById('reviewOptionsModal');
-        const cntDue = document.getElementById('cnt-due');
-        const cntAll = document.getElementById('cnt-all');
-        const btnDue = document.getElementById('btn-review-due');
-        const btnAll = document.getElementById('btn-review-all');
-        
-        const now = Date.now();
-        const dueItems = allItems.filter(v => v.learned && v.nextReview <= now && parseInt(v.level) !== 9);
-        
-        cntDue.innerText = dueItems.length;
-        cntAll.innerText = allItems.length;
-        
-        btnDue.onclick = () => startLevelReview(currentReviewSelection, 'due');
-        btnAll.onclick = () => startLevelReview(currentReviewSelection, 'all');
-        
-        modal.style.display = "block";
+        container.appendChild(btn);
     }
 
-    function closeReviewOptionsModal() {
-        document.getElementById('reviewOptionsModal').style.display = "none";
-    }
+    function goToReviewStep2() {
+        let itemsToReview = [];
+        let titleParts = [];
 
-    function startLevelReview(selection, mode) {
-        closeReviewOptionsModal();
-        let items = [];
-        
-        if (selection === 'all') {
-            items = [...vocabulary];
+        if (selectedReviewLevels.has('all')) {
+            itemsToReview = vocabulary.filter(v => parseInt(v.level) !== 9);
+            titleParts.push("Tất cả Level 0-8");
         } else {
-            items = vocabulary.filter(v => selection.includes(parseInt(v.level)));
+            const selArray = Array.from(selectedReviewLevels).sort((a,b) => a-b);
+            itemsToReview = vocabulary.filter(v => selArray.includes(parseInt(v.level) || 0));
+            selArray.forEach(lvl => {
+                if (lvl === 0) titleParts.push("Mới");
+                else if (lvl === 9) titleParts.push("Không ôn");
+                else titleParts.push(`Lv ${lvl}`);
+            });
         }
 
-        items = items.filter(v => parseInt(v.level) !== 9);
-
-        if (mode === 'due') {
-            const now = Date.now();
-            items = items.filter(v => v.learned && v.nextReview <= now);
-            if (items.length === 0) {
-                alert("Tuyệt vời! Không có từ nào đến hạn ôn tập trong danh sách này.");
-                return;
-            }
-        }
-
-        if (items.length === 0) {
-            alert("Không có từ nào để ôn tập!");
+        if (itemsToReview.length === 0) {
+            alert("Không có từ nào trong nhóm Level bạn vừa chọn!");
             return;
         }
 
-        let limit = 0;
-        const selectVal = document.getElementById('review-limit-select').value;
-        if (selectVal === 'custom') {
-            limit = parseInt(document.getElementById('review-limit-custom').value) || items.length;
-        } else if (selectVal === 'all') {
-            limit = items.length;
+        const now = Date.now();
+        // Đếm số từ đến hạn (không tính lv9 và lv0 chưa học)
+        const dueItems = itemsToReview.filter(v => v.learned && v.nextReview <= now && parseInt(v.level) !== 9);
+
+        document.getElementById('adv-review-target-text').innerText = `${titleParts.join(', ')} (${itemsToReview.length} từ)`;
+        document.getElementById('adv-cnt-due').innerText = `(${dueItems.length} từ)`;
+        document.getElementById('adv-cnt-all').innerText = `(${itemsToReview.length} từ)`;
+
+        // Cài sự kiện cho nút
+        document.getElementById('btn-adv-review-due').onclick = () => startAdvancedReview(itemsToReview, 'due');
+        document.getElementById('btn-adv-review-all').onclick = () => startAdvancedReview(itemsToReview, 'all');
+
+        // Chuyển UI
+        document.getElementById('adv-review-step-1').classList.add('hidden');
+        document.getElementById('adv-review-step-2').classList.remove('hidden');
+    }
+
+    function backToReviewStep1() {
+        document.getElementById('adv-review-step-2').classList.add('hidden');
+        document.getElementById('adv-review-step-1').classList.remove('hidden');
+    }
+
+    // NÂNG CẤP: Logic lọc và Ưu tiên Level 8
+    function startAdvancedReview(baseItems, mode) {
+        closeAdvancedReviewModal();
+        let finalItems = [];
+
+        if (mode === 'due') {
+            const now = Date.now();
+            finalItems = baseItems.filter(v => v.learned && v.nextReview <= now && parseInt(v.level) !== 9);
+            if (finalItems.length === 0) return alert("Tuyệt vời! Không có từ nào đến hạn ôn tập trong danh sách này.");
         } else {
-            limit = parseInt(selectVal) || items.length;
+            finalItems = [...baseItems];
         }
 
-        quizQueue = items.sort(() => Math.random() - 0.5);
+        // Logic sắp xếp: Ưu tiên Lv8 (>=10 ngày)
+        const now = Date.now();
+        let lv8Old = [];
+        let lv8Recent = [];
+        let others = [];
+
+        finalItems.forEach(v => {
+            if (parseInt(v.level) === 8) {
+                const lastRev = v.lastReviewedAt || 0; 
+                const diffDays = (now - lastRev) / (1000 * 60 * 60 * 24);
+                if (diffDays >= 10) {
+                    lv8Old.push(v);
+                } else {
+                    lv8Recent.push(v);
+                }
+            } else {
+                others.push(v);
+            }
+        });
+
+        // Xếp cũ nhất lên đầu
+        lv8Old.sort((a, b) => (a.lastReviewedAt || 0) - (b.lastReviewedAt || 0));
+        // Xếp ngẫu nhiên các nhóm khác
+        lv8Recent.sort(() => Math.random() - 0.5);
+        others.sort(() => Math.random() - 0.5);
+
+        // Gộp lại: Ưu tiên (Lv8 cũ) -> Rồi đến ngẫu nhiên (Các từ khác) -> Cuối cùng là (Lv8 mới ôn)
+        quizQueue = [...lv8Old, ...others, ...lv8Recent];
         
-        if (limit > 0 && limit < quizQueue.length) {
-            quizQueue = quizQueue.slice(0, limit);
-        }
-        
+        // Cập nhật UI
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-level-review').classList.add('active');
         
@@ -1203,27 +1014,15 @@
         
         renderQuizItem();
     }
+    // =========================================================
 
     let dailyFilter = 'all';
-
-    function openDailyListModal() {
-        dailyFilter = 'all';
-        renderDailyListUI();
-        document.getElementById('dailyListModal').style.display = "block";
-    }
-
-    function closeDailyListModal() {
-        document.getElementById('dailyListModal').style.display = "none";
-    }
-    
-    function setDailyFilter(filter) {
-        dailyFilter = filter;
-        renderDailyListUI();
-    }
+    function openDailyListModal() { dailyFilter = 'all'; renderDailyListUI(); document.getElementById('dailyListModal').style.display = "block"; }
+    function closeDailyListModal() { document.getElementById('dailyListModal').style.display = "none"; }
+    function setDailyFilter(filter) { dailyFilter = filter; renderDailyListUI(); }
 
     function renderDailyListUI() {
         const listDiv = document.getElementById('daily-list-content');
-        
         let html = `
             <div style="position: sticky; top: 0; background: white; padding-bottom: 10px; border-bottom: 1px solid #eee; margin-bottom: 10px; z-index: 10;">
                 <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 5px;">
@@ -1238,64 +1037,43 @@
         if (!dailyTargetIds || dailyTargetIds.length === 0) {
             html += '<div style="color:#999; text-align:center; padding: 20px;">Chưa có dữ liệu cho hôm nay.</div>';
         } else {
-            let visibleCount = 0;
-            let doneCount = 0;
-            
-             dailyTargetIds.forEach(id => {
-            const item = vocabulary.find(v => String(v.id) === String(id));
-            if (!item) return;
+            let visibleCount = 0; let doneCount = 0;
+            dailyTargetIds.forEach(id => {
+                const item = vocabulary.find(v => String(v.id) === String(id));
+                if (!item) return;
+                const isPending = dailyQueue.some(q => String(q.id) === String(id));
+                if (dailyFilter === 'pending' && !isPending) return;
+                if (dailyFilter === 'done' && isPending) return;
 
-            const isPending = dailyQueue.some(q => String(q.id) === String(id));
-            
-            if (dailyFilter === 'pending' && !isPending) return;
-            if (dailyFilter === 'done' && isPending) return;
+                visibleCount++;
+                if (!isPending) doneCount++;
 
-            visibleCount++;
-            if (!isPending) doneCount++;
-
-            const statusHtml = isPending 
-                ? `<span class="status-badge status-pending">⚪ Chưa học</span>`
-                : `<span class="status-badge status-done">✅ Đã xong</span>`;
-            
-            html += `
-                <div class="daily-status-item">
-                    <div style="flex: 1; min-width: 0;">
-                        <strong style="font-size:calc(2rem * var(--text-scale, 1));">${item.word}</strong>
-                        <div style="font-size:calc(0.95rem * var(--text-scale, 1)); color:var(--color1); font-weight:600;">${item.reading}</div>
-                        <div style="font-size:calc(0.8rem * var(--text-scale, 1)); color:#666; white-space: pre-wrap; word-break: break-word;">${item.meaning}</div>
+                const statusHtml = isPending ? `<span class="status-badge status-pending">⚪ Chưa học</span>` : `<span class="status-badge status-done">✅ Đã xong</span>`;
+                html += `
+                    <div class="daily-status-item">
+                        <div style="flex: 1; min-width: 0;">
+                            <strong style="font-size:calc(2rem * var(--text-scale, 1));">${item.word}</strong>
+                            <div style="font-size:calc(0.95rem * var(--text-scale, 1)); color:var(--color1); font-weight:600;">${item.reading}</div>
+                            <div style="font-size:calc(0.8rem * var(--text-scale, 1)); color:#666; white-space: pre-wrap; word-break: break-word;">${item.meaning}</div>
+                        </div>
+                        ${statusHtml}
                     </div>
-                    ${statusHtml}
-                </div>
-            `;
-        });
+                `;
+            });
             
-            if (visibleCount === 0) {
-                 html += `<div style="text-align:center; padding:20px; color:#999;">Không có từ nào theo bộ lọc này.</div>`;
-            } else {
-                 html = html.replace('<div style="padding-bottom: 20px;">', `<div style="padding-bottom: 20px;"><div style="text-align:center; font-weight:bold; color:var(--color1); margin-bottom:10px; font-size:calc(0.9rem * var(--text-scale, 1));">Tiến độ: ${doneCount} / ${dailyTargetIds.length}</div>`);
-            }
+            if (visibleCount === 0) html += `<div style="text-align:center; padding:20px; color:#999;">Không có từ nào theo bộ lọc này.</div>`;
+            else html = html.replace('<div style="padding-bottom: 20px;">', `<div style="padding-bottom: 20px;"><div style="text-align:center; font-weight:bold; color:var(--color1); margin-bottom:10px; font-size:calc(0.9rem * var(--text-scale, 1));">Tiến độ: ${doneCount} / ${dailyTargetIds.length}</div>`);
         }
-        
-        html += `</div>`; 
-        listDiv.innerHTML = html;
+        html += `</div>`; listDiv.innerHTML = html;
     }
 
     window.onclick = function(event) {
-        const pickerModal = document.getElementById('levelPickerModal');
-        const reviewModal = document.getElementById('reviewLevelModal');
-        const dailyModal = document.getElementById('dailyListModal');
-        const optionsModal = document.getElementById('reviewOptionsModal');
-        const editModal = document.getElementById('editWordModal');
-        const rangeModal = document.getElementById('selectRangeModal');
-        const historyModal = document.getElementById('historyModal'); 
-        
-        if (event.target == pickerModal) closeLevelPicker();
-        if (event.target == reviewModal) closeReviewLevelModal();
-        if (event.target == dailyModal) closeDailyListModal();
-        if (event.target == optionsModal) closeReviewOptionsModal();
-        if (event.target == editModal) closeEditModal();
-        if (event.target == rangeModal) closeSelectRangeModal();
-        if (event.target == historyModal) closeHistoryModal(); 
+        if (event.target == document.getElementById('levelPickerModal')) closeLevelPicker();
+        if (event.target == document.getElementById('advancedReviewModal')) closeAdvancedReviewModal();
+        if (event.target == document.getElementById('dailyListModal')) closeDailyListModal();
+        if (event.target == document.getElementById('editWordModal')) closeEditModal();
+        if (event.target == document.getElementById('selectRangeModal')) closeSelectRangeModal();
+        if (event.target == document.getElementById('historyModal')) closeHistoryModal(); 
     }
 
     function loadData() {
@@ -1306,7 +1084,6 @@
         const dateKey = getStorageKey('jlpt_last_study_date');
 
         let rawVocab = localStorage.getItem(vocabKey);
-        
         if (isTestMode && !rawVocab) {
             rawVocab = localStorage.getItem('jlpt_vocab_v3') || "[]";
             localStorage.setItem(vocabKey, rawVocab);
@@ -1336,43 +1113,24 @@
         isTestMode = !isTestMode;
         const btn = document.getElementById('btn-test-mode');
         loadData(); 
-        
         if (isTestMode) {
-            btn.classList.add('active');
-            btn.innerText = "⚡ Đang Test";
-            alert("Đã bật Chế độ Test (Dữ liệu riêng biệt).");
+            btn.classList.add('active'); btn.innerText = "⚡ Đang Test"; alert("Đã bật Chế độ Test (Dữ liệu riêng biệt).");
         } else {
-            btn.classList.remove('active');
-            btn.innerText = "🧪 Test";
-            alert("Đã tắt Chế độ Test. Quay về dữ liệu học chính thức.");
+            btn.classList.remove('active'); btn.innerText = "🧪 Test"; alert("Đã tắt Chế độ Test. Quay về dữ liệu học chính thức.");
         }
-        
-        updateDashboard();
-        renderList();
-        startMode('list');
+        updateDashboard(); renderList(); startMode('list');
     }
 
-    function isDuplicate(word) {
-        return vocabulary.some(v => v.word.toLowerCase() === word.toLowerCase());
-    }
+    function isDuplicate(word) { return vocabulary.some(v => v.word.toLowerCase() === word.toLowerCase()); }
 
     function addManual() {
         let w = document.getElementById('manual-word').value.trim();
         let r = document.getElementById('manual-reading').value.trim();
         const m = document.getElementById('manual-meaning').value.trim();
         
-        if(!w && !r) {
-            alert("Vui lòng nhập Từ vựng hoặc Cách đọc!");
-            return;
-        }
-        
-        if (!w && r) w = r; 
-        if (w && !r) r = w; 
-        
-        if(isDuplicate(w)) {
-            alert("Từ này đã tồn tại trong danh sách!");
-            return;
-        }
+        if(!w && !r) return alert("Vui lòng nhập Từ vựng hoặc Cách đọc!");
+        if (!w && r) w = r; if (w && !r) r = w; 
+        if(isDuplicate(w)) return alert("Từ này đã tồn tại trong danh sách!");
 
         vocabulary.push({ id: String(Date.now()) + Math.floor(Math.random() * 10000), word: w, reading: r, meaning: m || "Chưa dịch", level: 0, nextReview: 0, learned: false, extra: null });
         saveData(); renderList(); startMode('list');
@@ -1389,73 +1147,34 @@
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
             
-            let addedCount = 0;
-            let updatedCount = 0;
-            let skippedCount = 0;
+            let addedCount = 0; let updatedCount = 0; let skippedCount = 0;
             let updatedWords = []; 
-            let skippedWords = []; 
 
             rows.forEach((r) => {
-                let w = String(r[0] || '').trim();
-                let reading = String(r[1] || '').trim();
-                let meaning = String(r[2] || '').trim();
-
-                if (!w && reading) w = reading;
-                if (w && !reading) reading = w;
+                let w = String(r[0] || '').trim(); let reading = String(r[1] || '').trim(); let meaning = String(r[2] || '').trim();
+                if (!w && reading) w = reading; if (w && !reading) reading = w;
 
                 if (w) {
                     const existingIdx = vocabulary.findIndex(v => v.word.toLowerCase() === w.toLowerCase());
-                    
                     if (existingIdx === -1) {
-                        vocabulary.push({ 
-                            id: String(Date.now()) + Math.floor(Math.random() * 10000), 
-                            word: w, 
-                            reading: reading, 
-                            meaning: meaning, 
-                            level: 0, 
-                            nextReview: 0,
-                            learned: false,
-                            extra: null
-                        });
+                        vocabulary.push({ id: String(Date.now()) + Math.floor(Math.random() * 10000), word: w, reading: reading, meaning: meaning, level: 0, nextReview: 0, learned: false, extra: null });
                         addedCount++;
                     } else {
                         let changed = false;
-                        if (reading && vocabulary[existingIdx].reading !== reading) {
-                            vocabulary[existingIdx].reading = reading;
-                            changed = true;
-                        }
-                        if (meaning && vocabulary[existingIdx].meaning !== meaning) {
-                            vocabulary[existingIdx].meaning = meaning;
-                            changed = true;
-                        }
-
-                        if (changed) {
-                            updatedCount++;
-                            updatedWords.push(w);
-                        } else {
-                            skippedCount++;
-                            skippedWords.push(w);
-                        }
+                        if (reading && vocabulary[existingIdx].reading !== reading) { vocabulary[existingIdx].reading = reading; changed = true; }
+                        if (meaning && vocabulary[existingIdx].meaning !== meaning) { vocabulary[existingIdx].meaning = meaning; changed = true; }
+                        if (changed) { updatedCount++; updatedWords.push(w); } else skippedCount++;
                     }
                 }
             });
-            saveData(); 
-            renderList(); 
+            saveData(); renderList(); 
             
-            let msg = `Xử lý xong file Excel!\n`;
-            msg += `- Thêm mới: ${addedCount} từ\n`;
-            msg += `- Cập nhật (đổi nghĩa/phiên âm): ${updatedCount} từ\n`;
-            msg += `- Bỏ qua (trùng y hệt): ${skippedCount} từ`;
-            
+            let msg = `Xử lý xong file Excel!\n- Thêm mới: ${addedCount} từ\n- Cập nhật: ${updatedCount} từ\n- Bỏ qua: ${skippedCount} từ`;
             if (updatedCount > 0) {
-                let uniqueUpdates = [...new Set(updatedWords)];
-                let displayUpdates = uniqueUpdates.slice(0, 10).join(', ');
-                if (uniqueUpdates.length > 10) displayUpdates += `... (+${uniqueUpdates.length - 10})`;
-                msg += `\n\n🔄 Đã tự động sửa nội dung:\n${displayUpdates}`;
+                let unique = [...new Set(updatedWords)];
+                msg += `\n\n🔄 Đã tự động sửa nội dung:\n${unique.slice(0, 10).join(', ')}${unique.length > 10 ? `... (+${unique.length - 10})` : ''}`;
             }
-            
-            alert(msg);
-            document.getElementById('file-in').value = '';
+            alert(msg); document.getElementById('file-in').value = '';
         };
         reader.readAsArrayBuffer(file);
     }
@@ -1466,18 +1185,20 @@
         localStorage.setItem(getStorageKey('jlpt_daily_queue'), JSON.stringify(dailyQueue));
         localStorage.setItem(getStorageKey('jlpt_daily_target_ids'), JSON.stringify(dailyTargetIds));
         localStorage.setItem(getStorageKey('jlpt_last_study_date'), lastStudyDate);
-        
         localStorage.setItem(getStorageKey('jlpt_lastUpdated'), Date.now().toString());
 
-        updateDashboard();
-        updateTimeFilterCounts(); 
-        renderFilterTags();
-        
-        if (window.uploadToCloud) {
-            window.uploadToCloud();
-        }
+        updateDashboard(); updateTimeFilterCounts(); renderFilterTags();
+        if (window.uploadToCloud) window.uploadToCloud();
     }
     window.saveData = saveData;
+
+    // NÂNG CẤP: Helper update lại các biến theo dõi thời gian
+    function updateReviewTimestamps(item) {
+        const now = Date.now();
+        // Nếu đây là lần học đầu tiên (Lv0 lên) hoặc dữ liệu cũ chưa có, gán firstLearnedAt
+        if (!item.firstLearnedAt) item.firstLearnedAt = now;
+        item.lastReviewedAt = now;
+    }
 
     function updateDashboard() {
         const total = vocabulary.length;
@@ -1500,23 +1221,17 @@
 
         const missingEl = document.getElementById('stat-today-missing');
         if (missing > 0) {
-            missingEl.innerText = `Thiếu: ${missing}`;
-            missingEl.style.background = 'var(--warning)';
-            missingEl.style.color = 'white';
+            missingEl.innerText = `Thiếu: ${missing}`; missingEl.style.background = 'var(--warning)'; missingEl.style.color = 'white';
         } else {
-            missingEl.innerText = `🎉 Đạt chỉ tiêu!`;
-            missingEl.style.background = 'var(--success)';
-            missingEl.style.color = 'white';
+            missingEl.innerText = `🎉 Đạt chỉ tiêu!`; missingEl.style.background = 'var(--success)'; missingEl.style.color = 'white';
         }
 
-        if (dailyQueue.length > 0 && dailyQueue.length < target) {
-             document.getElementById('daily-warning').classList.remove('hidden');
-        } else {
-             document.getElementById('daily-warning').classList.add('hidden');
-        }
+        if (dailyQueue.length > 0 && dailyQueue.length < target) document.getElementById('daily-warning').classList.remove('hidden');
+        else document.getElementById('daily-warning').classList.add('hidden');
     }
     window.updateDashboard = updateDashboard;
 
+    // NÂNG CẤP: Đổi Level thủ công (Không được tính là đã học hôm nay)
     function changeWordLevel(id, newLevel) {
         id = String(id);
         newLevel = parseInt(newLevel);
@@ -1524,25 +1239,24 @@
         if (idx !== -1) {
             vocabulary[idx].level = newLevel;
             vocabulary[idx].learned = true; 
+            
+            // Không tính vào "Đã ôn" nên không gọi trackWordReviewed
+            // Nhưng vẫn cần gán timestamp nếu chưa có để không bị lỗi sau này
+            if(!vocabulary[idx].firstLearnedAt) vocabulary[idx].firstLearnedAt = Date.now() - (4*24*60*60*1000); 
+
             setNextReview(vocabulary[idx]); 
-            trackWordReviewed(id); 
             
             const inDaily = dailyQueue.findIndex(q => String(q.id) === id);
-            if (inDaily !== -1) {
-                dailyQueue.splice(inDaily, 1);
-            }
+            if (inDaily !== -1) dailyQueue.splice(inDaily, 1);
             
-            saveData();
-            renderList();
-            updateDashboard();
+            saveData(); renderList(); updateDashboard();
         }
     }
     window.changeWordLevel = changeWordLevel;
 
     function toggleSelect(id) {
         id = String(id);
-        if (selectedIds.has(id)) selectedIds.delete(id);
-        else selectedIds.add(id);
+        if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
         renderBatchBar();
     }
     window.toggleSelect = toggleSelect;
@@ -1553,7 +1267,6 @@
         if (selectedIds.size > 0) {
             bar.classList.remove('hidden');
             document.getElementById('selected-count').innerText = selectedIds.size;
-            
             let html = '';
             for(let i=1; i<=8; i++) {
                  const color = getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim();
@@ -1561,11 +1274,10 @@
             }
             html += `<button class="batch-btn" style="background:var(--lv9); border:1px solid white;" onclick="batchChangeLevel(9)">🚫 Bỏ qua</button>`;
             container.innerHTML = html;
-        } else {
-            bar.classList.add('hidden');
-        }
+        } else bar.classList.add('hidden');
     }
 
+    // NÂNG CẤP: Đổi Level hàng loạt (Không tính là đã học hôm nay)
     function batchChangeLevel(newLevel) {
         if(selectedIds.size === 0) return;
         const msg = newLevel === 9 ? `Bạn có chắc muốn CHẶN ${selectedIds.size} từ này (không ôn lại)?` : `Bạn có chắc muốn chuyển ${selectedIds.size} từ sang Level ${newLevel}?`;
@@ -1575,51 +1287,34 @@
             if(selectedIds.has(String(v.id))) {
                 v.level = newLevel;
                 v.learned = true;
+                if(!v.firstLearnedAt) v.firstLearnedAt = Date.now() - (4*24*60*60*1000); 
                 setNextReview(v);
-                trackWordReviewed(v.id); 
+                // Đã xóa trackWordReviewed(v.id);
             }
         });
 
-        selectedIds.clear();
-        saveData();
-        renderList();
-        renderBatchBar();
-        updateDashboard();
+        selectedIds.clear(); saveData(); renderList(); renderBatchBar(); updateDashboard();
     }
     window.batchChangeLevel = batchChangeLevel;
 
     function toggleSelectAll() {
         const items = getFilteredItems();
-        if(selectedIds.size === items.length && items.length > 0) {
-            selectedIds.clear();
-        } else {
-            items.forEach(v => selectedIds.add(String(v.id)));
-        }
-        renderList();
-        renderBatchBar();
+        if(selectedIds.size === items.length && items.length > 0) selectedIds.clear();
+        else items.forEach(v => selectedIds.add(String(v.id)));
+        renderList(); renderBatchBar();
     }
     window.toggleSelectAll = toggleSelectAll;
     
-    function toggleSortAZ() {
-        isSortedAZ = !isSortedAZ;
-        renderFilterTags();
-        renderList();
-    }
+    function toggleSortAZ() { isSortedAZ = !isSortedAZ; renderFilterTags(); renderList(); }
     window.toggleSortAZ = toggleSortAZ;
 
     function selectNext50() {
         const items = getFilteredItems();
         const unselectedItems = items.filter(v => !selectedIds.has(String(v.id)));
         const toSelect = unselectedItems.slice(0, 50);
-        
-        if (toSelect.length === 0) {
-            alert("Đã chọn hết các từ trong danh sách lọc hiện tại!");
-            return;
-        }
-        
+        if (toSelect.length === 0) return alert("Đã chọn hết các từ trong danh sách lọc hiện tại!");
         toSelect.forEach(v => selectedIds.add(String(v.id)));
-        renderList();
-        renderBatchBar();
+        renderList(); renderBatchBar();
     }
 
     function setTimeFilter(filter) {
@@ -1633,22 +1328,12 @@
     function checkSearchInput() {
         const query = document.getElementById('search-input').value;
         const clearBtn = document.getElementById('clear-search-btn');
-        if (query.length > 0) {
-            clearBtn.style.display = 'flex';
-        } else {
-            clearBtn.style.display = 'none';
-        }
-        
+        clearBtn.style.display = query.length > 0 ? 'flex' : 'none';
         if (searchTimeout) clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            renderList();
-        }, 300);
+        searchTimeout = setTimeout(() => { renderList(); }, 300);
     }
 
-    function clearSearch() {
-        document.getElementById('search-input').value = '';
-        checkSearchInput(); 
-    }
+    function clearSearch() { document.getElementById('search-input').value = ''; checkSearchInput(); }
 
     function getFilteredItems() {
         const query = document.getElementById('search-input').value.toLowerCase();
@@ -1657,14 +1342,9 @@
         let filtered = vocabulary.filter(v => {
             const mFilter = currentFilter === 'all' || v.level == currentFilter;
             const mSearch = v.word.toLowerCase().includes(query) || v.reading.toLowerCase().includes(query) || v.meaning.toLowerCase().includes(query);
-            
             let mTime = true;
-            if (currentTimeFilter === 'due') {
-                mTime = v.learned && v.nextReview <= now && v.level !== 9;
-            } else if (currentTimeFilter === 'not_due') {
-                mTime = v.learned && v.nextReview > now;
-            }
-            
+            if (currentTimeFilter === 'due') mTime = v.learned && v.nextReview <= now && v.level !== 9;
+            else if (currentTimeFilter === 'not_due') mTime = v.learned && v.nextReview > now;
             return mFilter && mSearch && mTime;
         });
 
@@ -1675,15 +1355,13 @@
                 return strA.localeCompare(strB, 'ja');
             });
         }
-        
         return filtered;
     }
 
     function startMode(mode) {
         activeMode = mode;
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        const btn = document.getElementById(`btn-${mode}`);
-        if(btn) btn.classList.add('active');
+        const btn = document.getElementById(`btn-${mode}`); if(btn) btn.classList.add('active');
         
         document.getElementById('view-quiz').classList.add('hidden');
         document.getElementById('view-list').classList.add('hidden');
@@ -1691,18 +1369,13 @@
         document.getElementById('btn-view-daily-list').classList.add('hidden');
 
         if (mode === 'daily') {
-            document.getElementById('view-quiz').classList.remove('hidden');
-            document.getElementById('btn-view-daily-list').classList.remove('hidden');
-            setupDailyQuiz();
+            document.getElementById('view-quiz').classList.remove('hidden'); document.getElementById('btn-view-daily-list').classList.remove('hidden'); setupDailyQuiz();
         } else if (mode === 'list') {
-            document.getElementById('view-list').classList.remove('hidden');
-            renderList();
+            document.getElementById('view-list').classList.remove('hidden'); renderList();
         } else if (mode === 'quiz') {
-            document.getElementById('view-quiz').classList.remove('hidden');
-            setupRandomQuiz();
+            document.getElementById('view-quiz').classList.remove('hidden'); setupRandomQuiz();
         } else if (mode === 'learn') {
-            document.getElementById('view-card').classList.remove('hidden');
-            setupLearnMode();
+            document.getElementById('view-card').classList.remove('hidden'); setupLearnMode();
         } else if (mode === 'level_review') { 
              document.getElementById('view-quiz').classList.remove('hidden');
         }
@@ -1710,28 +1383,15 @@
 
     function setupDailyQuiz() {
         if (vocabulary.length === 0) return alert("Vui lòng thêm dữ liệu!");
-        
-        dailyQueue = dailyQueue.filter(item => {
-             const realWord = vocabulary.find(v => String(v.id) === String(item.id));
-             return realWord && !realWord.learned;
-        });
+        dailyQueue = dailyQueue.filter(item => { const realWord = vocabulary.find(v => String(v.id) === String(item.id)); return realWord && !realWord.learned; });
         saveData(); 
         
         const todayStr = new Date().toISOString().split('T')[0]; 
-        
         if (dailyQueue.length === 0) {
-            if (!lastStudyDate || todayStr !== lastStudyDate) {
-                generateDailyBatch();
-            } else {
-                showFinished("Daily");
-            }
+            if (!lastStudyDate || todayStr !== lastStudyDate) generateDailyBatch(); else showFinished("Daily");
         } else {
-            quizQueue = dailyQueue;
-            curQuizIdx = 0;
-            currentQuizResult = 'pending';
-            document.getElementById('quiz-content').classList.remove('hidden');
-            document.getElementById('quiz-finished').classList.add('hidden');
-            document.getElementById('quiz-empty').classList.add('hidden');
+            quizQueue = dailyQueue; curQuizIdx = 0; currentQuizResult = 'pending';
+            document.getElementById('quiz-content').classList.remove('hidden'); document.getElementById('quiz-finished').classList.add('hidden'); document.getElementById('quiz-empty').classList.add('hidden');
             renderQuizItem();
         }
     }
@@ -1739,26 +1399,16 @@
     function generateDailyBatch() {
         const todayStr = new Date().toISOString().split('T')[0];
         lastStudyDate = todayStr;
-        
         const dailyLimit = isTestMode ? 5 : 50;
         
-        let count = 0;
-        let batch = [];
-        let candidatePointer = dailyPointer;
-        
+        let count = 0; let batch = []; let candidatePointer = dailyPointer;
         while (count < dailyLimit && candidatePointer < vocabulary.length) {
-            if (!vocabulary[candidatePointer].learned) {
-                batch.push(vocabulary[candidatePointer]);
-                count++;
-            }
+            if (!vocabulary[candidatePointer].learned) { batch.push(vocabulary[candidatePointer]); count++; }
             candidatePointer++;
         }
         
         if (batch.length === 0 && vocabulary.length > 0) {
-            if(candidatePointer >= vocabulary.length && count === 0) {
-                showFinished("AllDone");
-                return;
-            }
+            if(candidatePointer >= vocabulary.length && count === 0) return showFinished("AllDone");
         }
         
         dailyPointer = candidatePointer;
@@ -1766,120 +1416,81 @@
         dailyQueue = [...batch].sort(() => Math.random() - 0.5);
         saveData();
         
-        quizQueue = dailyQueue; 
-        curQuizIdx = 0;
-        currentQuizResult = 'pending';
-        
-        document.getElementById('quiz-content').classList.remove('hidden');
-        document.getElementById('quiz-finished').classList.add('hidden');
-        document.getElementById('quiz-empty').classList.add('hidden');
-        
+        quizQueue = dailyQueue; curQuizIdx = 0; currentQuizResult = 'pending';
+        document.getElementById('quiz-content').classList.remove('hidden'); document.getElementById('quiz-finished').classList.add('hidden'); document.getElementById('quiz-empty').classList.add('hidden');
         renderQuizItem();
     }
     
     function advanceNextDay() {
         const dailyLimit = isTestMode ? 5 : 50;
-        if(confirm(`Bạn có chắc muốn chuyển sang ngày tiếp theo không?\nHành động này sẽ tải ${dailyLimit} từ mới.`)) {
-            generateDailyBatch();
-        }
+        if(confirm(`Bạn có chắc muốn chuyển sang ngày tiếp theo không?\nHành động này sẽ tải ${dailyLimit} từ mới.`)) generateDailyBatch();
     }
 
     function setupRandomQuiz() {
          if (vocabulary.length === 0) return alert("Vui lòng thêm dữ liệu!");
          quizQueue = [...vocabulary].sort(() => Math.random() - 0.5).slice(0, 10);
-         curQuizIdx = 0;
-         currentQuizResult = 'pending';
-         document.getElementById('quiz-content').classList.remove('hidden');
-         document.getElementById('quiz-finished').classList.add('hidden');
-         document.getElementById('quiz-empty').classList.add('hidden');
+         curQuizIdx = 0; currentQuizResult = 'pending';
+         document.getElementById('quiz-content').classList.remove('hidden'); document.getElementById('quiz-finished').classList.add('hidden'); document.getElementById('quiz-empty').classList.add('hidden');
          renderQuizItem();
     }
 
     function setupLearnMode() {
         quizQueue = vocabulary.filter(v => !v.learned);
-        if (quizQueue.length === 0) {
-            alert("Đã học hết từ mới!");
-            startMode('list');
-            return;
-        }
-        curQuizIdx = 0;
-        document.getElementById('ctrl-learn').classList.remove('hidden');
-        renderCard();
+        if (quizQueue.length === 0) { alert("Đã học hết từ mới!"); return startMode('list'); }
+        curQuizIdx = 0; document.getElementById('ctrl-learn').classList.remove('hidden'); renderCard();
     }
 
     function renderQuizItem() {
         const item = quizQueue[curQuizIdx];
         if (!item) return;
 
-        document.getElementById('options').classList.add('hidden');
-        document.getElementById('match-grid').classList.add('hidden');
-        document.getElementById('quiz-next-container').classList.add('hidden');
-        document.getElementById('quiz-explanation').classList.add('hidden');
-        document.getElementById('expl-single').classList.add('hidden');
-        document.getElementById('expl-batch').classList.add('hidden');
+        document.getElementById('options').classList.add('hidden'); document.getElementById('match-grid').classList.add('hidden');
+        document.getElementById('quiz-next-container').classList.add('hidden'); document.getElementById('quiz-explanation').classList.add('hidden');
+        document.getElementById('expl-single').classList.add('hidden'); document.getElementById('expl-batch').classList.add('hidden');
         
-        const skipBtnCont = document.getElementById('btn-skip-container');
-        const skipBtn = document.getElementById('btn-skip-quiz');
+        const skipBtnCont = document.getElementById('btn-skip-container'); const skipBtn = document.getElementById('btn-skip-quiz');
         skipBtnCont.classList.remove('hidden'); 
-        
         isAnimatingMatch = false;
 
-        if (activeMode === 'daily') {
-            skipBtn.innerText = "⏩ Bỏ qua (Học sau)";
-        } else if (activeMode === 'level_review') {
-             skipBtn.innerText = "⏩ Bỏ qua";
-        } else {
-            skipBtnCont.classList.add('hidden');
-        }
+        if (activeMode === 'daily') skipBtn.innerText = "⏩ Bỏ qua (Học sau)";
+        else if (activeMode === 'level_review') skipBtn.innerText = "⏩ Bỏ qua";
+        else skipBtnCont.classList.add('hidden');
 
         if (activeMode === 'level_review') {
             const remaining = quizQueue.length - curQuizIdx;
-            const possibleSizes = [10, 7, 5];
-            const validSizes = possibleSizes.filter(s => remaining >= s);
-            
+            const validSizes = [10, 7, 5].filter(s => remaining >= s);
             if (validSizes.length > 0 && Math.random() > 0.4) {
-                const randomSize = validSizes[Math.floor(Math.random() * validSizes.length)];
                 currentQuizFormat = 'match';
-                renderMatchFormat(randomSize);
-                return;
+                return renderMatchFormat(validSizes[Math.floor(Math.random() * validSizes.length)]);
             }
         }
         
-        currentQuizFormat = 'single';
-        renderSingleFormat(item);
+        currentQuizFormat = 'single'; renderSingleFormat(item);
     }
     
     function renderSingleFormat(item) {
-        document.getElementById('options').classList.remove('hidden');
-        document.getElementById('options').innerHTML = '';
+        document.getElementById('options').classList.remove('hidden'); document.getElementById('options').innerHTML = '';
         
-        if (activeMode === 'daily') {
-             document.getElementById('quiz-meta').innerText = `CÒN LẠI: ${dailyQueue.length} TỪ`;
-        } else {
-             document.getElementById('quiz-meta').innerText = `CÂU HỎI ${curQuizIdx + 1}/${quizQueue.length}`;
-        }
+        if (activeMode === 'daily') document.getElementById('quiz-meta').innerText = `CÒN LẠI: ${dailyQueue.length} TỪ`;
+        else document.getElementById('quiz-meta').innerText = `CÂU HỎI ${curQuizIdx + 1}/${quizQueue.length}`;
 
         const isKanaOnly = (item.word === item.reading);
         let type = Math.random() > 0.5 ? 0 : 1;
         
         if (isKanaOnly) {
             if (type === 0) {
-                document.getElementById('quiz-q').innerText = item.word;
-                document.getElementById('quiz-hint').innerText = "Chọn ý nghĩa đúng:";
+                document.getElementById('quiz-q').innerText = item.word; document.getElementById('quiz-hint').innerText = "Chọn ý nghĩa đúng:";
                 generateDistractors(item, 'meaning').forEach((opt, i) => createOptionBtn(opt, item.meaning, i));
             } else {
-                document.getElementById('quiz-q').innerText = item.meaning;
-                document.getElementById('quiz-hint').innerText = "Chọn từ vựng đúng:";
+                document.getElementById('quiz-q').innerText = item.meaning; document.getElementById('quiz-hint').innerText = "Chọn từ vựng đúng:";
                 generateDistractors(item, 'word').forEach((opt, i) => createOptionBtn(opt, item.word, i));
             }
         } else {
             if (type === 0) {
-                document.getElementById('quiz-q').innerText = item.word;
-                document.getElementById('quiz-hint').innerText = "Chọn cách đọc đúng:";
+                document.getElementById('quiz-q').innerText = item.word; document.getElementById('quiz-hint').innerText = "Chọn cách đọc đúng:";
                 generateDistractors(item, 'reading').forEach((opt, i) => createOptionBtn(opt, item.reading, i));
             } else {
-                document.getElementById('quiz-q').innerText = item.reading || item.meaning;
-                document.getElementById('quiz-hint').innerText = "Chọn từ vựng đúng:";
+                document.getElementById('quiz-q').innerText = item.reading || item.meaning; document.getElementById('quiz-hint').innerText = "Chọn từ vựng đúng:";
                 generateDistractors(item, 'word').forEach((opt, i) => createOptionBtn(opt, item.word, i));
             }
         }
@@ -1887,98 +1498,64 @@
 
     function renderMatchFormat(matchSize = 5) {
         document.getElementById('match-grid').classList.remove('hidden');
-        document.getElementById('quiz-q').innerText = "NỐI TỪ VỰNG";
-        document.getElementById('quiz-hint').innerText = "Chọn cặp tương ứng";
+        document.getElementById('quiz-q').innerText = "NỐI TỪ VỰNG"; document.getElementById('quiz-hint').innerText = "Chọn cặp tương ứng";
         document.getElementById('quiz-meta').innerText = `CÂU HỎI ${curQuizIdx + 1}-${Math.min(curQuizIdx + matchSize, quizQueue.length)}/${quizQueue.length}`;
         
         matchBatch = quizQueue.slice(curQuizIdx, curQuizIdx + matchSize);
-        matchResults = {}; 
-        matchBatch.forEach(item => matchResults[String(item.id)] = 'pending');
+        matchResults = {}; matchBatch.forEach(item => matchResults[String(item.id)] = 'pending');
         
-        matchSelectedBtn = null;
-        matchedPairsCount = 0;
+        matchSelectedBtn = null; matchedPairsCount = 0;
+        const grid = document.getElementById('match-grid'); grid.innerHTML = '';
         
-        const grid = document.getElementById('match-grid');
-        grid.innerHTML = '';
-        
-        let leftSide = [];
-        let rightSide = [];
+        let leftSide = []; let rightSide = [];
 
         matchBatch.forEach(item => {
             if (item.word === item.reading) {
-                 leftSide.push({ id: String(item.id), text: item.word, type: 'word', side: 'left' });
-                 rightSide.push({ id: String(item.id), text: item.meaning, type: 'meaning', side: 'right' });
+                 leftSide.push({ id: String(item.id), text: item.word, type: 'word', side: 'left' }); rightSide.push({ id: String(item.id), text: item.meaning, type: 'meaning', side: 'right' });
             } else {
-                 leftSide.push({ id: String(item.id), text: item.word, type: 'word', side: 'left' });
-                 rightSide.push({ id: String(item.id), text: item.reading, type: 'reading', side: 'right' });
+                 leftSide.push({ id: String(item.id), text: item.word, type: 'word', side: 'left' }); rightSide.push({ id: String(item.id), text: item.reading, type: 'reading', side: 'right' });
             }
         });
 
-        leftSide.sort(() => Math.random() - 0.5);
-        rightSide.sort(() => Math.random() - 0.5);
+        leftSide.sort(() => Math.random() - 0.5); rightSide.sort(() => Math.random() - 0.5);
 
         for (let i = 0; i < matchBatch.length; i++) {
-             if(leftSide[i]) createMatchBtn(grid, leftSide[i]);
-             if(rightSide[i]) createMatchBtn(grid, rightSide[i]);
+             if(leftSide[i]) createMatchBtn(grid, leftSide[i]); if(rightSide[i]) createMatchBtn(grid, rightSide[i]);
         }
     }
 
     function createMatchBtn(grid, data) {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn match-btn';
-        btn.innerText = data.text;
-        btn.dataset.id = data.id; 
-        btn.dataset.type = data.type;
-        btn.dataset.side = data.side; 
-        btn.onclick = () => handleMatchClick(btn);
-        grid.appendChild(btn);
+        const btn = document.createElement('button'); btn.className = 'option-btn match-btn'; btn.innerText = data.text;
+        btn.dataset.id = data.id; btn.dataset.type = data.type; btn.dataset.side = data.side; 
+        btn.onclick = () => handleMatchClick(btn); grid.appendChild(btn);
     }
 
     function handleMatchClick(btn) {
         if (isAnimatingMatch || btn.classList.contains('disabled') || btn.classList.contains('correct')) return;
 
-        if (!matchSelectedBtn) {
-            matchSelectedBtn = btn;
-            btn.classList.add('selected');
-        } else {
-            if (matchSelectedBtn === btn) {
-                btn.classList.remove('selected');
-                matchSelectedBtn = null;
-                return;
-            }
-
+        if (!matchSelectedBtn) { matchSelectedBtn = btn; btn.classList.add('selected'); } 
+        else {
+            if (matchSelectedBtn === btn) { btn.classList.remove('selected'); matchSelectedBtn = null; return; }
             if (matchSelectedBtn.dataset.side === btn.dataset.side) {
-                matchSelectedBtn.classList.remove('selected');
-                matchSelectedBtn = btn;
-                btn.classList.add('selected');
-                return;
+                matchSelectedBtn.classList.remove('selected'); matchSelectedBtn = btn; btn.classList.add('selected'); return;
             }
 
             let isCorrect = false;
-            const id1 = String(btn.dataset.id);
-            const id2 = String(matchSelectedBtn.dataset.id);
+            const id1 = String(btn.dataset.id); const id2 = String(matchSelectedBtn.dataset.id);
 
-            if (id1 === id2) {
-                isCorrect = true;
-            } else {
-                const item1 = vocabulary.find(v => String(v.id) === id1);
-                const item2 = vocabulary.find(v => String(v.id) === id2);
-                
+            if (id1 === id2) isCorrect = true;
+            else {
+                const item1 = vocabulary.find(v => String(v.id) === id1); const item2 = vocabulary.find(v => String(v.id) === id2);
                 if (item1 && item2) {
-                    const leftBtn = btn.dataset.side === 'left' ? btn : matchSelectedBtn;
                     const rightBtn = btn.dataset.side === 'right' ? btn : matchSelectedBtn;
-                    
+                    const leftBtn = btn.dataset.side === 'left' ? btn : matchSelectedBtn;
                     const leftItem = String(leftBtn.dataset.id) === String(item1.id) ? item1 : item2;
                     const rightItem = String(rightBtn.dataset.id) === String(item1.id) ? item1 : item2;
                     
                     const rightType = rightBtn.dataset.type; 
-                    
-                    const lRead = String(leftItem.reading || "").trim().toLowerCase();
-                    const rRead = String(rightItem.reading || "").trim().toLowerCase();
-                    const lMean = String(leftItem.meaning || "").trim().toLowerCase();
-                    const rMean = String(rightItem.meaning || "").trim().toLowerCase();
-                    const lWord = String(leftItem.word || "").trim().toLowerCase();
-                    const rWord = String(rightItem.word || "").trim().toLowerCase();
+                    const lRead = String(leftItem.reading || "").trim().toLowerCase(); const rRead = String(rightItem.reading || "").trim().toLowerCase();
+                    const lMean = String(leftItem.meaning || "").trim().toLowerCase(); const rMean = String(rightItem.meaning || "").trim().toLowerCase();
+                    const lWord = String(leftItem.word || "").trim().toLowerCase(); const rWord = String(rightItem.word || "").trim().toLowerCase();
 
                     if (rightType === 'reading' && lRead && rRead && lRead === rRead) isCorrect = true;
                     else if (rightType === 'meaning' && lMean && rMean && lMean === rMean) isCorrect = true;
@@ -1987,93 +1564,49 @@
             }
 
             if (isCorrect) {
-                btn.classList.add('correct', 'disabled');
-                btn.classList.remove('selected');
-                matchSelectedBtn.classList.add('correct', 'disabled');
-                matchSelectedBtn.classList.remove('selected');
-
+                btn.classList.add('correct', 'disabled', 'selected' && false ? '' : ''); btn.classList.remove('selected');
+                matchSelectedBtn.classList.add('correct', 'disabled'); matchSelectedBtn.classList.remove('selected');
                 if (matchResults[id1] === 'pending') matchResults[id1] = 'correct';
                 if (matchResults[id2] === 'pending') matchResults[id2] = 'correct';
-
-                matchSelectedBtn = null;
-                matchedPairsCount++;
-
-                if (matchedPairsCount >= matchBatch.length) {
-                    setTimeout(() => finishMatchBatch(false), 300);
-                }
+                matchSelectedBtn = null; matchedPairsCount++;
+                if (matchedPairsCount >= matchBatch.length) setTimeout(() => finishMatchBatch(false), 300);
             } else {
-                isAnimatingMatch = true;
-                btn.classList.add('wrong');
-                matchSelectedBtn.classList.add('wrong');
-                
-                matchResults[id1] = 'wrong';
-                matchResults[id2] = 'wrong';
-
-                const temp1 = btn;
-                const temp2 = matchSelectedBtn;
-                matchSelectedBtn = null;
-
-                setTimeout(() => {
-                    temp1.classList.remove('wrong', 'selected');
-                    temp2.classList.remove('wrong', 'selected');
-                    isAnimatingMatch = false;
-                }, 500);
+                isAnimatingMatch = true; btn.classList.add('wrong'); matchSelectedBtn.classList.add('wrong');
+                matchResults[id1] = 'wrong'; matchResults[id2] = 'wrong';
+                const temp1 = btn; const temp2 = matchSelectedBtn; matchSelectedBtn = null;
+                setTimeout(() => { temp1.classList.remove('wrong', 'selected'); temp2.classList.remove('wrong', 'selected'); isAnimatingMatch = false; }, 500);
             }
         }
     }
 
     function generateDistractors(correctItem, field) {
         let correctValue = String(correctItem[field] || "").trim();
-        
         let pool = vocabulary.filter(v => {
             if (String(v.id) === String(correctItem.id)) return false;
-            
-            const vRead = String(v.reading || "").trim().toLowerCase();
-            const cRead = String(correctItem.reading || "").trim().toLowerCase();
-            const vWord = String(v.word || "").trim().toLowerCase();
-            const cWord = String(correctItem.word || "").trim().toLowerCase();
-            const vMean = String(v.meaning || "").trim().toLowerCase();
-            const cMean = String(correctItem.meaning || "").trim().toLowerCase();
-
+            const vRead = String(v.reading || "").trim().toLowerCase(); const cRead = String(correctItem.reading || "").trim().toLowerCase();
+            const vWord = String(v.word || "").trim().toLowerCase(); const cWord = String(correctItem.word || "").trim().toLowerCase();
+            const vMean = String(v.meaning || "").trim().toLowerCase(); const cMean = String(correctItem.meaning || "").trim().toLowerCase();
             if (vRead && cRead && vRead === cRead) return false;
             if (vWord && cWord && vWord === cWord) return false;
             if (vMean && cMean && vMean === cMean) return false;
             return true;
         }).sort(() => Math.random() - 0.5);
         
-        let distractors = [correctValue];
-        let usedValues = new Set([correctValue.toLowerCase()]);
-        
+        let distractors = [correctValue]; let usedValues = new Set([correctValue.toLowerCase()]);
         for (let i = 0; i < pool.length && distractors.length < 4; i++) {
             let val = String(pool[i][field] || "").trim();
-            if (val && !usedValues.has(val.toLowerCase())) {
-                usedValues.add(val.toLowerCase());
-                distractors.push(val);
-            }
+            if (val && !usedValues.has(val.toLowerCase())) { usedValues.add(val.toLowerCase()); distractors.push(val); }
         }
-        
         let fallbackCounter = 1;
-        while (distractors.length < 4) {
-            distractors.push("--- " + fallbackCounter++);
-        }
-        
+        while (distractors.length < 4) distractors.push("--- " + fallbackCounter++);
         return distractors.sort(() => Math.random() - 0.5);
     }
 
     function createOptionBtn(text, correctValue, index) {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
+        const btn = document.createElement('button'); btn.className = 'option-btn';
         btn.innerHTML = `<span class="opt-prefix">${String.fromCharCode(65 + index)}</span> <span>${text}</span>`;
         btn.onclick = () => checkAnswer(text, btn, correctValue);
         document.getElementById('options').appendChild(btn);
-    }
-
-    function processWrongAnswer(mainIdx) {
-        if (mainIdx !== -1) {
-            vocabulary[mainIdx].level = 1;
-            vocabulary[mainIdx].learned = true; 
-            setNextReview(vocabulary[mainIdx]);
-        }
     }
 
     function checkAnswer(selectedText, btn, correctValue) {
@@ -2081,24 +1614,16 @@
         const item = quizQueue[curQuizIdx];
         const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
 
+        // NÂNG CẤP: Gọi hàm tính điểm, bên trong đã có logic chặn Lv2-5 <= 3 ngày
         trackWordReviewed(item.id);
 
         let isCorrect = false;
-        const selTrimmed = String(selectedText).trim().toLowerCase();
-        const corrTrimmed = String(correctValue).trim().toLowerCase();
+        const selTrimmed = String(selectedText).trim().toLowerCase(); const corrTrimmed = String(correctValue).trim().toLowerCase();
 
-        if (selTrimmed === corrTrimmed) {
-            isCorrect = true;
-        } else {
-            const qText = String(document.getElementById('quiz-q').innerText).trim().toLowerCase();
-            const hint = document.getElementById('quiz-hint').innerText;
-
-            const matchingVocab = vocabulary.filter(v => 
-                String(v.word).trim().toLowerCase() === selTrimmed ||
-                String(v.reading).trim().toLowerCase() === selTrimmed ||
-                String(v.meaning).trim().toLowerCase() === selTrimmed
-            );
-
+        if (selTrimmed === corrTrimmed) isCorrect = true;
+        else {
+            const qText = String(document.getElementById('quiz-q').innerText).trim().toLowerCase(); const hint = document.getElementById('quiz-hint').innerText;
+            const matchingVocab = vocabulary.filter(v => String(v.word).trim().toLowerCase() === selTrimmed || String(v.reading).trim().toLowerCase() === selTrimmed || String(v.meaning).trim().toLowerCase() === selTrimmed );
             for (let v of matchingVocab) {
                 if (hint.includes("cách đọc") && String(v.word).trim().toLowerCase() === qText) { isCorrect = true; break; }
                 if (hint.includes("ý nghĩa") && (String(v.word).trim().toLowerCase() === qText || String(v.reading).trim().toLowerCase() === qText)) { isCorrect = true; break; }
@@ -2106,34 +1631,27 @@
             }
         }
 
-        if (isCorrect) {
-            btn.classList.add('correct');
-            currentQuizResult = 'correct';
-            
-            if (mainIdx !== -1) {
-                vocabulary[mainIdx].wrongCount = 0; 
-                vocabulary[mainIdx].needsRelearn = false; 
+        if (mainIdx !== -1) {
+            updateReviewTimestamps(vocabulary[mainIdx]); // Cập nhật thời gian
+            if (isCorrect) {
+                btn.classList.add('correct'); currentQuizResult = 'correct';
                 vocabulary[mainIdx].level = Math.min(8, parseInt(vocabulary[mainIdx].level || 0) + 1);
                 setNextReview(vocabulary[mainIdx]);
+            } else {
+                btn.classList.add('wrong'); currentQuizResult = 'wrong';
+                document.querySelectorAll('.option-btn').forEach(b => { if (String(b.innerText).trim().toLowerCase().includes(corrTrimmed)) b.classList.add('correct'); });
+                vocabulary[mainIdx].level = 1; vocabulary[mainIdx].learned = true; 
+                setNextReview(vocabulary[mainIdx]);
             }
-        } else {
-            btn.classList.add('wrong');
-            currentQuizResult = 'wrong';
-            
-            document.querySelectorAll('.option-btn').forEach(b => {
-                if (String(b.innerText).trim().toLowerCase().includes(corrTrimmed)) b.classList.add('correct');
-            });
-            
-            processWrongAnswer(mainIdx);
+            saveData(); 
         }
-        
-        saveData(); 
+
         showSingleDetail(item);
-        
         document.getElementById('btn-skip-container').classList.add('hidden');
         document.getElementById('quiz-next-container').classList.remove('hidden');
     }
 
+    // NÂNG CẤP: Bấm bỏ qua thì KHÔNG ĐƯỢC TÍNH là đã học
     function skipCurrentQuiz() {
         if (currentQuizFormat === 'match') {
             document.querySelectorAll('.match-btn').forEach(b => b.classList.add('disabled'));
@@ -2145,20 +1663,19 @@
         const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
         currentQuizResult = 'skip';
 
-        trackWordReviewed(item.id);
+        // ĐÃ XÓA LỆNH trackWordReviewed(item.id) Ở ĐÂY
 
         if (mainIdx !== -1) {
             vocabulary[mainIdx].level = 1;
             vocabulary[mainIdx].learned = true; 
+            updateReviewTimestamps(vocabulary[mainIdx]); // Bỏ qua vẫn lưu timestamp để không lỗi mảng
             setNextReview(vocabulary[mainIdx]);
             saveData();
         }
 
         document.querySelectorAll('#options .option-btn').forEach(b => {
             b.classList.add('disabled');
-            if (b.innerText.includes(item.reading) || b.innerText.includes(item.word)) {
-                b.classList.add('correct');
-            }
+            if (b.innerText.includes(item.reading) || b.innerText.includes(item.word)) b.classList.add('correct');
         });
 
         showSingleDetail(item);
@@ -2168,11 +1685,14 @@
 
     function finishMatchBatch(isSkip = false) {
         matchBatch.forEach(item => {
-             trackWordReviewed(item.id);
-
              const res = matchResults[String(item.id)];
              const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
              if (mainIdx === -1) return;
+
+             // CHỈ CỘNG ĐIỂM NẾU KHÔNG PHẢI SKIP
+             if(!isSkip) trackWordReviewed(item.id);
+
+             updateReviewTimestamps(vocabulary[mainIdx]); // Cập nhật thời gian
 
              if (res === 'correct') {
                   vocabulary[mainIdx].level = Math.min(8, parseInt(vocabulary[mainIdx].level || 0) + 1);
@@ -2183,60 +1703,41 @@
                   setNextReview(vocabulary[mainIdx]);
              }
         });
-        saveData();
-        showBatchDetail();
-        document.getElementById('btn-skip-container').classList.add('hidden');
-        document.getElementById('quiz-next-container').classList.remove('hidden');
+        saveData(); showBatchDetail();
+        document.getElementById('btn-skip-container').classList.add('hidden'); document.getElementById('quiz-next-container').classList.remove('hidden');
     }
 
     function setNextReview(item) {
-        if (parseInt(item.level) === 9) {
-            item.nextReview = 4102444800000; 
-            item.learned = true;
-            return;
-        }
-
+        if (parseInt(item.level) === 9) { item.nextReview = 4102444800000; item.learned = true; return; }
         const currentLevel = parseInt(item.level) || 1;
         const intervals = [5, 30, 240, 720, 1440, 4320, 8640, 14400]; 
         const levelIdx = Math.max(0, Math.min(currentLevel - 1, intervals.length - 1));
-        const intervalValue = intervals[levelIdx]; 
-        
         const multiplier = isTestMode ? 1000 : 60000;
-        item.nextReview = Date.now() + (intervalValue * multiplier);
+        item.nextReview = Date.now() + (intervals[levelIdx] * multiplier);
         item.learned = true;
     }
 
     function showSingleDetail(item) {
-        document.getElementById('expl-single').classList.remove('hidden');
-        document.getElementById('expl-batch').classList.add('hidden');
-        
-        document.getElementById('expl-word').innerText = item.word;
-        document.getElementById('expl-reading').innerText = item.reading;
-        document.getElementById('expl-meaning').innerText = item.meaning;
-        document.getElementById('expl-extra').innerHTML = item.extra ? renderExtraHtml(item.extra) : "";
+        document.getElementById('expl-single').classList.remove('hidden'); document.getElementById('expl-batch').classList.add('hidden');
+        document.getElementById('expl-word').innerText = item.word; document.getElementById('expl-reading').innerText = item.reading;
+        document.getElementById('expl-meaning').innerText = item.meaning; document.getElementById('expl-extra').innerHTML = item.extra ? renderExtraHtml(item.extra) : "";
         document.getElementById('quiz-explanation').classList.remove('hidden');
     }
 
     function showBatchDetail() {
         document.getElementById('expl-single').classList.add('hidden');
-        const batchContainer = document.getElementById('expl-batch');
-        const listDiv = document.getElementById('expl-batch-list');
-        listDiv.innerHTML = '';
-        
+        const batchContainer = document.getElementById('expl-batch'); const listDiv = document.getElementById('expl-batch-list'); listDiv.innerHTML = '';
         matchBatch.forEach(item => {
             const isCorrect = matchResults[String(item.id)] === 'correct';
             const icon = isCorrect ? '<span style="color:var(--success)">✅</span>' : '<span style="color:var(--danger)">❌</span>';
-            const html = `
+            listDiv.innerHTML += `
                 <div style="background:#fff; padding:12px; border-radius:12px; border:1px solid ${isCorrect ? '#eafaf1' : '#fdeded'};">
                     <div style="font-size:calc(1.1rem * var(--text-scale, 1)); font-weight:bold;">${icon} <span style="font-size:calc(2.2rem * var(--text-scale, 1));">${item.word}</span> <span style="color:var(--color1); font-size:calc(0.95rem * var(--text-scale, 1));">【${item.reading}】</span></div>
                     <div style="color:#555; font-size:calc(0.95rem * var(--text-scale, 1)); margin-top:4px; white-space: pre-wrap; word-break: break-word;">Ý nghĩa: <strong>${item.meaning}</strong></div>
                 </div>
             `;
-            listDiv.innerHTML += html;
         });
-
-        batchContainer.classList.remove('hidden');
-        document.getElementById('quiz-explanation').classList.remove('hidden');
+        batchContainer.classList.remove('hidden'); document.getElementById('quiz-explanation').classList.remove('hidden');
     }
 
     function renderExtraHtml(extra) {
@@ -2252,206 +1753,108 @@
 
     function renderNextQuiz() {
         if (activeMode === 'daily') {
-            if (currentQuizResult === 'correct') {
-                dailyQueue.shift();
-            } else {
-                const wrongItem = dailyQueue.shift();
-                dailyQueue.push(wrongItem);
-            }
-            
+            if (currentQuizResult === 'correct') dailyQueue.shift();
+            else { const wrongItem = dailyQueue.shift(); dailyQueue.push(wrongItem); }
             saveData();
-            
-            if (dailyQueue.length > 0) {
-                curQuizIdx = 0; 
-                currentQuizResult = 'pending';
-                renderQuizItem();
-            } else {
-                showFinished("Daily");
-            }
+            if (dailyQueue.length > 0) { curQuizIdx = 0; currentQuizResult = 'pending'; renderQuizItem(); } else showFinished("Daily");
         } else {
-            if (currentQuizFormat === 'match') {
-                 curQuizIdx += matchBatch.length;
-            } else {
-                 curQuizIdx++;
-            }
-
-            if (curQuizIdx < quizQueue.length) {
-                currentQuizResult = 'pending';
-                renderQuizItem();
-            } else {
-                showFinished("Quiz");
-            }
+            if (currentQuizFormat === 'match') curQuizIdx += matchBatch.length; else curQuizIdx++;
+            if (curQuizIdx < quizQueue.length) { currentQuizResult = 'pending'; renderQuizItem(); } else showFinished("Quiz");
         }
     }
 
     function showFinished(type) {
-        document.getElementById('quiz-content').classList.add('hidden');
-        document.getElementById('quiz-finished').classList.remove('hidden');
-        
+        document.getElementById('quiz-content').classList.add('hidden'); document.getElementById('quiz-finished').classList.remove('hidden');
         const target = isTestMode ? 5 : 50;
-        const btnForceNext = document.getElementById('btn-force-next-day');
-        const dailyListBtn = document.getElementById('daily-list-btn-container');
-        
-        if (btnForceNext) btnForceNext.classList.add('hidden');
-        if (dailyListBtn) dailyListBtn.classList.add('hidden');
+        const btnForceNext = document.getElementById('btn-force-next-day'); const dailyListBtn = document.getElementById('daily-list-btn-container');
+        if (btnForceNext) btnForceNext.classList.add('hidden'); if (dailyListBtn) dailyListBtn.classList.add('hidden');
 
         if (type === "Daily") {
-            document.getElementById('finish-title').innerText = "Hoàn thành lộ trình!";
-            document.getElementById('finish-msg').innerText = `Tuyệt vời! Bạn đã hoàn thành ${target} từ của ngày hôm nay.`;
-            if (btnForceNext) btnForceNext.classList.remove('hidden');
-            if (dailyListBtn) dailyListBtn.classList.remove('hidden');
+            document.getElementById('finish-title').innerText = "Hoàn thành lộ trình!"; document.getElementById('finish-msg').innerText = `Tuyệt vời! Bạn đã hoàn thành ${target} từ của ngày hôm nay.`;
+            if (btnForceNext) btnForceNext.classList.remove('hidden'); if (dailyListBtn) dailyListBtn.classList.remove('hidden');
         } else if (type === "AllDone") {
-            document.getElementById('finish-title').innerText = "Đã hết từ mới!";
-            document.getElementById('finish-msg').innerText = "Tuyệt vời! Bạn đã học hết toàn bộ từ vựng mới trong danh sách.";
+            document.getElementById('finish-title').innerText = "Đã hết từ mới!"; document.getElementById('finish-msg').innerText = "Tuyệt vời! Bạn đã học hết toàn bộ từ vựng mới trong danh sách.";
         } else {
-            document.getElementById('finish-title').innerText = "Kết thúc bài ôn!";
-            document.getElementById('finish-msg').innerText = "Bạn đã hoàn thành lượt ôn tập này.";
+            document.getElementById('finish-title').innerText = "Kết thúc bài ôn!"; document.getElementById('finish-msg').innerText = "Bạn đã hoàn thành lượt ôn tập này.";
         }
     }
 
     function renderCard() {
         const item = quizQueue[curQuizIdx];
-        const rEl = document.getElementById('display-reading');
-        const mEl = document.getElementById('display-meaning');
-        const exEl = document.getElementById('expansion-card');
+        const rEl = document.getElementById('display-reading'); const mEl = document.getElementById('display-meaning'); const exEl = document.getElementById('expansion-card');
+        rEl.classList.remove('visible'); mEl.classList.add('hidden'); exEl.classList.add('hidden');
         
-        rEl.classList.remove('visible'); 
-        mEl.classList.add('hidden');
-        exEl.classList.add('hidden');
-        
-        if(!item) {
-            document.getElementById('display-word').innerText = "Hết từ!";
-            return;
-        }
-
-        document.getElementById('display-word').innerText = item.word;
-        rEl.innerText = item.reading;
-        mEl.innerText = item.meaning;
+        if(!item) return document.getElementById('display-word').innerText = "Hết từ!";
+        document.getElementById('display-word').innerText = item.word; rEl.innerText = item.reading; mEl.innerText = item.meaning;
         document.getElementById('card-index').innerText = `${curQuizIdx + 1} / ${quizQueue.length}`;
-        
-        if(item.extra) {
-            exEl.innerHTML = renderExtraHtml(item.extra);
-            exEl.classList.remove('hidden');
-        }
+        if(item.extra) { exEl.innerHTML = renderExtraHtml(item.extra); exEl.classList.remove('hidden'); }
         updateDashboard();
     }
 
-    function toggleMeaning() { 
-        document.getElementById('display-meaning').classList.toggle('hidden');
-        document.getElementById('display-reading').classList.toggle('visible'); 
-    }
-
-    function changeIdx(s) { 
-        if(quizQueue.length > 0) { 
-            curQuizIdx = (curQuizIdx + s + quizQueue.length) % quizQueue.length; 
-            renderCard(); 
-        } 
-    }
+    function toggleMeaning() { document.getElementById('display-meaning').classList.toggle('hidden'); document.getElementById('display-reading').classList.toggle('visible'); }
+    function changeIdx(s) { if(quizQueue.length > 0) { curQuizIdx = (curQuizIdx + s + quizQueue.length) % quizQueue.length; renderCard(); } }
     
     function markAsLearned() {
-        const item = quizQueue[curQuizIdx];
-        const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
+        const item = quizQueue[curQuizIdx]; const mainIdx = vocabulary.findIndex(v => String(v.id) === String(item.id));
         if (mainIdx !== -1) {
-            vocabulary[mainIdx].learned = true;
-            vocabulary[mainIdx].level = 1; 
+            vocabulary[mainIdx].learned = true; vocabulary[mainIdx].level = 1; 
+            updateReviewTimestamps(vocabulary[mainIdx]);
             setNextReview(vocabulary[mainIdx]);
-            
             trackWordReviewed(item.id);
-
-            saveData();
-            quizQueue.splice(curQuizIdx, 1);
+            saveData(); quizQueue.splice(curQuizIdx, 1);
             if (curQuizIdx >= quizQueue.length) curQuizIdx = 0;
-            if (quizQueue.length === 0) {
-                alert("Chúc mừng! Bạn đã học hết từ mới.");
-                startMode('list');
-            } else {
-                renderCard();
-            }
+            if (quizQueue.length === 0) { alert("Chúc mừng! Bạn đã học hết từ mới."); startMode('list'); } else renderCard();
         }
     }
 
-    // FIX: Tích hợp thiết kế nút Lọc trong suốt mới vào hàm render
     function renderFilterTags() {
         const container = document.getElementById('level-filter-btns');
-        const levels = [1, 2, 3, 4, 5, 6, 7, 8];
-        
-        const col1 = getComputedStyle(document.documentElement).getPropertyValue('--color1').trim();
-        const isAllActive = currentFilter === 'all';
-        let html = `<span class="lvl-tag ${isAllActive ? 'active' : ''}" 
-            style="background: ${isAllActive ? col1 : col1 + '33'}; color: ${isAllActive ? '#fff' : col1}; border: 1px solid ${col1};" 
-            onclick="setFilter('all')">Tất cả (${vocabulary.length})</span>`;
+        let html = `<span class="lvl-tag ${currentFilter === 'all' ? 'active' : ''}" style="background: ${currentFilter === 'all' ? '#f5f6fa' : '#f5f6fa33'}; color: #2f3640; border: 1px solid #dcdde1;" onclick="setFilter('all')">Tất cả (${vocabulary.length})</span>`;
         
         const lv0Count = vocabulary.filter(v => !v.learned || v.level === 0).length;
         const is0Active = currentFilter == 0;
         const col0 = getComputedStyle(document.documentElement).getPropertyValue('--lv0').trim();
-        html += `<span class="lvl-tag ${is0Active ? 'active' : ''}" 
-            style="background: ${is0Active ? col0 : col0 + '33'}; color: ${is0Active ? '#fff' : col0}; border: 1px solid ${col0};" 
-            onclick="setFilter(0)">Mới (${lv0Count})</span>`;
+        html += `<span class="lvl-tag ${is0Active ? 'active' : ''}" style="background: ${is0Active ? col0 : col0 + '33'}; color: ${is0Active ? '#fff' : col0}; border: 1px solid ${col0};" onclick="setFilter(0)">Mới (${lv0Count})</span>`;
 
-        levels.forEach(lvl => {
-            const count = vocabulary.filter(v => v.level === lvl && v.learned).length;
-            const color = getComputedStyle(document.documentElement).getPropertyValue(`--lv${lvl}`).trim();
-            const isActive = currentFilter == lvl;
-            
-            html += `<span class="lvl-tag ${isActive ? 'active' : ''}" 
-                style="background: ${isActive ? color : color + '33'}; color: ${isActive ? '#fff' : color}; border: 1px solid ${color};" 
-                onclick="setFilter(${lvl})">Lv ${lvl} (${count})</span>`;
-        });
+        for (let i = 1; i <= 8; i++) {
+            const count = vocabulary.filter(v => v.level == i && v.learned).length;
+            const color = getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim();
+            const isActive = currentFilter == i;
+            html += `<span class="lvl-tag ${isActive ? 'active' : ''}" style="background: ${isActive ? color : color + '33'}; color: ${isActive ? '#fff' : color}; border: 1px solid ${color};" onclick="setFilter(${i})">Lv ${i} (${count})</span>`;
+        }
 
-        const lv9Count = vocabulary.filter(v => v.level === 9 && v.learned).length;
-        const is9Active = currentFilter == 9;
+        const lv9Count = vocabulary.filter(v => v.level == 9 && v.learned).length;
         const col9 = getComputedStyle(document.documentElement).getPropertyValue('--lv9').trim();
-        html += `<span class="lvl-tag ${is9Active ? 'active' : ''}" 
-            style="background: ${is9Active ? col9 : col9 + '33'}; color: ${is9Active ? '#fff' : col9}; border: 1px solid ${col9};" 
-            onclick="setFilter(9)">Không ôn (${lv9Count})</span>`;
+        html += `<span class="lvl-tag ${currentFilter == 9 ? 'active' : ''}" style="background: ${currentFilter == 9 ? col9 : col9 + '33'}; color: ${currentFilter == 9 ? '#fff' : col9}; border: 1px solid ${col9};" onclick="setFilter(9)">Không ôn (${lv9Count})</span>`;
 
         container.innerHTML = html;
         
         const saContainer = document.getElementById('select-all-container');
         const items = getFilteredItems();
         const allSelected = items.length > 0 && items.every(v => selectedIds.has(String(v.id)));
-        
-        let btnHtml = `<button onclick="toggleSelectAll()" style="border:1px solid #ddd; background:${allSelected ? 'var(--color1)' : 'white'}; color:${allSelected ? 'white' : '#666'}; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${allSelected ? 'Bỏ chọn' : 'Chọn tất cả'}</button>`;
-        btnHtml += `<button onclick="selectNext50()" style="border:1px solid var(--color1); background:white; color:var(--color1); padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Chọn 50</button>`;
-        btnHtml += `<button onclick="openSelectRangeModal()" style="border:1px solid var(--color1); background:white; color:var(--color1); padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Chọn theo số...</button>`;
-        btnHtml += `<button onclick="toggleSortAZ()" style="border:1px solid var(--color1); background:${isSortedAZ ? 'var(--color1)' : 'white'}; color:${isSortedAZ ? 'white' : 'var(--color1)'}; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${isSortedAZ ? '🔤 Đang xếp あ-ん' : '🔤 Xếp あ-ん'}</button>`;
-        
-        saContainer.innerHTML = btnHtml;
+        saContainer.innerHTML = `
+            <button onclick="toggleSelectAll()" style="border:1px solid #ddd; background:${allSelected ? 'var(--color1)' : 'white'}; color:${allSelected ? 'white' : '#666'}; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${allSelected ? 'Bỏ chọn' : 'Chọn tất cả'}</button>
+            <button onclick="selectNext50()" style="border:1px solid var(--color1); background:white; color:var(--color1); padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Chọn 50</button>
+            <button onclick="openSelectRangeModal()" style="border:1px solid var(--color1); background:white; color:var(--color1); padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Chọn theo số...</button>
+            <button onclick="toggleSortAZ()" style="border:1px solid var(--color1); background:${isSortedAZ ? 'var(--color1)' : 'white'}; color:${isSortedAZ ? 'white' : 'var(--color1)'}; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${isSortedAZ ? '🔤 Đang xếp あ-ん' : '🔤 Xếp あ-ん'}</button>
+        `;
     }
 
-    function setFilter(lvl) {
-        currentFilter = lvl;
-        selectedIds.clear(); 
-        renderBatchBar();
-        renderFilterTags();
-        renderList();
-        updateTimeFilterCounts(); 
-    }
+    function setFilter(lvl) { currentFilter = lvl; selectedIds.clear(); renderBatchBar(); renderFilterTags(); renderList(); updateTimeFilterCounts(); }
 
     function renderList() {
-        const items = getFilteredItems();
-        const listDiv = document.getElementById('list-items');
-        
-        if (items.length === 0) {
-            listDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">Không có dữ liệu phù hợp.</div>';
-            return;
-        }
+        const items = getFilteredItems(); const listDiv = document.getElementById('list-items');
+        if (items.length === 0) return listDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">Không có dữ liệu phù hợp.</div>';
 
         let htmlStr = ""; 
-        
         items.forEach((v, index) => { 
             let displayLevel = v.learned ? v.level : 0;
             let lvColor = displayLevel === 0 ? 'var(--lv0)' : getComputedStyle(document.documentElement).getPropertyValue(`--lv${displayLevel}`).trim();
-            
             let timerHtml = '';
             if (v.learned && v.level >= 1) {
-                if (v.level === 9) {
-                    timerHtml = `<div class="review-timer" style="font-size:calc(0.75rem * var(--text-scale, 1)); color:#888; margin-top:4px; font-weight:600; text-align:right;">🚫 Đã bỏ qua</div>`;
-                } else {
-                    timerHtml = `<div class="review-timer" data-next="${v.nextReview}" style="font-size:calc(0.75rem * var(--text-scale, 1)); color:#888; margin-top:4px; font-weight:600; text-align:right;">⏳ ...</div>`;
-                }
+                if (v.level === 9) timerHtml = `<div class="review-timer" style="font-size:calc(0.75rem * var(--text-scale, 1)); color:#888; margin-top:4px; font-weight:600; text-align:right;">🚫 Đã bỏ qua</div>`;
+                else timerHtml = `<div class="review-timer" data-next="${v.nextReview}" style="font-size:calc(0.75rem * var(--text-scale, 1)); color:#888; margin-top:4px; font-weight:600; text-align:right;">⏳ ...</div>`;
             }
-
             const isSelected = selectedIds.has(String(v.id));
 
             htmlStr += `
@@ -2473,62 +1876,39 @@
                     </div>
                 </div>`;
         });
-        
-        listDiv.innerHTML = htmlStr;
-        updateTimers(); 
+        listDiv.innerHTML = htmlStr; updateTimers(); 
     }
     window.renderList = renderList;
 
     function updateTimers() {
         const now = Date.now();
         document.querySelectorAll('.review-timer').forEach(el => {
-            const nextAttr = el.getAttribute('data-next');
-            if(!nextAttr) return; 
-            
-            const next = parseInt(nextAttr);
-            const diff = next - now;
-
-            if (diff <= 0) {
-                el.innerHTML = "<span style='color:var(--success)'>Đến hạn!</span>";
-            } else {
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
-                
+            const nextAttr = el.getAttribute('data-next'); if(!nextAttr) return; 
+            const diff = parseInt(nextAttr) - now;
+            if (diff <= 0) el.innerHTML = "<span style='color:var(--success)'>Đến hạn!</span>";
+            else {
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24)); const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); const s = Math.floor((diff % (1000 * 60)) / 1000);
                 let timeStr = "";
-                if (d > 0) timeStr += `${d}d `;
-                if (h > 0 || d > 0) timeStr += `${h}h `;
-                if (m > 0 || h > 0 || d > 0) timeStr += `${m}m `;
-                timeStr += `${s}s`;
-                
+                if (d > 0) timeStr += `${d}d `; if (h > 0 || d > 0) timeStr += `${h}h `; if (m > 0 || h > 0 || d > 0) timeStr += `${m}m `; timeStr += `${s}s`;
                 el.innerText = `⏳ ${timeStr}`;
             }
         });
     }
-
     setInterval(updateTimers, 1000);
 
     function deleteWord(id) { 
-        id = String(id);
         if(confirm("Xóa từ này?")) { 
-            vocabulary = vocabulary.filter(v => String(v.id) !== id); 
+            vocabulary = vocabulary.filter(v => String(v.id) !== String(id)); 
             if(selectedIds.has(id)) selectedIds.delete(id);
             if(dailyPointer > vocabulary.length) dailyPointer = Math.max(0, vocabulary.length);
             saveData(); renderList(); renderBatchBar();
         }
     }
     
-    function clearAllData() { 
-        if(confirm("Xóa toàn bộ dữ liệu? Mọi dữ liệu trên máy này sẽ bị mất!")) { 
-            localStorage.clear(); 
-            location.reload(); 
-        } 
-    }
-
+    function clearAllData() { if(confirm("Xóa toàn bộ dữ liệu? Mọi dữ liệu trên máy này sẽ bị mất!")) { localStorage.clear(); location.reload(); } }
     function toggleList() {
-        const content = document.getElementById('list-collapsible');
-        content.classList.toggle('hidden');
+        const content = document.getElementById('list-collapsible'); content.classList.toggle('hidden');
         document.getElementById('list-toggle-icon').innerText = content.classList.contains('hidden') ? '▼' : '▲';
     }
 
@@ -2536,28 +1916,17 @@
         const now = Date.now();
         const items = vocabulary.filter(v => {
             if (currentFilter === 'all') return true;
-            if (currentFilter === 'relearn') return v.needsRelearn === true;
-            if (currentFilter == 0) return (!v.learned || v.level === 0) && !v.needsRelearn;
-            return v.level == currentFilter && v.learned && !v.needsRelearn;
+            if (currentFilter == 0) return !v.learned || v.level == 0;
+            return v.level == currentFilter && v.learned;
         });
-
-        const total = items.length;
-        const due = items.filter(v => v.learned && v.nextReview <= now && !v.needsRelearn && v.level !== 9).length;
-        const notDue = items.filter(v => v.learned && v.nextReview > now && !v.needsRelearn && v.level !== 9).length;
-
-        document.getElementById('tf-all').innerText = `Tất cả (${total})`;
+        const due = items.filter(v => v.learned && v.nextReview <= now && v.level !== 9).length;
+        const notDue = items.filter(v => v.learned && v.nextReview > now && v.level !== 9).length;
+        document.getElementById('tf-all').innerText = `Tất cả (${items.length})`;
         document.getElementById('tf-due').innerText = `⏰ Đến hạn (${due})`;
         document.getElementById('tf-not_due').innerText = `zzz Chưa đến hạn (${notDue})`;
     }
 
-    window.onload = () => { 
-        loadData(); 
-        updateDashboard(); 
-        renderFilterTags(); 
-        updateTimeFilterCounts(); 
-        renderList(); 
-        startMode('list'); 
-    };
+    window.onload = () => { loadData(); updateDashboard(); renderFilterTags(); updateTimeFilterCounts(); renderList(); startMode('list'); };
 </script>
 
 <!-- ========================================== -->
@@ -2574,66 +1943,34 @@
         projectId: "tuvungjlpt",
         storageBucket: "tuvungjlpt.firebasestorage.app",
         messagingSenderId: "135699703434",
-        appId: "1:135699703434:web:3ccba4e775056ee25a6f73",
-        measurementId: "G-4ZTW5T05YY"
+        appId: "1:135699703434:web:3ccba4e775056ee25a6f73"
     };
     
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
+    const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app); const provider = new GoogleAuthProvider();
+    let currentUser = null; let isDownloading = false;
 
-    let currentUser = null;
-    let isDownloading = false;
-
-    const btnLogin = document.getElementById('btn-google-login');
-    const btnLogout = document.getElementById('btn-google-logout');
-    const btnForceSync = document.getElementById('btn-force-sync');
-    const loggedInUI = document.getElementById('logged-in-ui');
-    const userEmailEl = document.getElementById('user-email');
-    const syncStatusEl = document.getElementById('sync-status');
+    const btnLogin = document.getElementById('btn-google-login'); const btnLogout = document.getElementById('btn-google-logout');
+    const btnForceSync = document.getElementById('btn-force-sync'); const loggedInUI = document.getElementById('logged-in-ui');
+    const userEmailEl = document.getElementById('user-email'); const syncStatusEl = document.getElementById('sync-status');
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            currentUser = user;
-            btnLogin.classList.add('hidden');
-            loggedInUI.classList.remove('hidden');
-            userEmailEl.innerText = `👤 ${user.email}`;
-            syncStatusEl.innerText = "🟢 Đã kết nối đám mây";
-            syncStatusEl.style.color = "var(--success)";
-            
+            currentUser = user; btnLogin.classList.add('hidden'); loggedInUI.classList.remove('hidden');
+            userEmailEl.innerText = `👤 ${user.email}`; syncStatusEl.innerText = "🟢 Đã kết nối đám mây"; syncStatusEl.style.color = "var(--success)";
             downloadFromCloud(false);
         } else {
-            currentUser = null;
-            btnLogin.classList.remove('hidden'); 
-            loggedInUI.classList.add('hidden');
-            syncStatusEl.innerText = "Chưa đăng nhập";
-            syncStatusEl.style.color = "#666";
+            currentUser = null; btnLogin.classList.remove('hidden'); loggedInUI.classList.add('hidden');
+            syncStatusEl.innerText = "Chưa đăng nhập"; syncStatusEl.style.color = "#666";
         }
     });
 
-    btnLogin.addEventListener('click', () => {
-        syncStatusEl.innerText = "⏳ Đang kết nối...";
-        signInWithPopup(auth, provider).catch((error) => {
-            alert("Đăng nhập thất bại: " + error.message);
-            syncStatusEl.innerText = "Chưa đăng nhập";
-        });
-    });
-
-    btnLogout.addEventListener('click', () => {
-        if(confirm("Bạn muốn đăng xuất? Dữ liệu trên máy này vẫn được giữ lại nhưng sẽ không đồng bộ nữa.")) {
-            signOut(auth);
-        }
-    });
-
-    btnForceSync.addEventListener('click', () => {
-        downloadFromCloud(true);
-    });
+    btnLogin.addEventListener('click', () => { syncStatusEl.innerText = "⏳ Đang kết nối..."; signInWithPopup(auth, provider).catch(e => { alert("Lỗi: " + e.message); syncStatusEl.innerText = "Chưa đăng nhập"; }); });
+    btnLogout.addEventListener('click', () => { if(confirm("Đăng xuất?")) signOut(auth); });
+    btnForceSync.addEventListener('click', () => { downloadFromCloud(true); });
 
     window.uploadToCloud = async function() {
         if (!currentUser || !db || isDownloading) return;
         syncStatusEl.innerText = "⏳ Đang lưu lên mây...";
-        
         try {
             const dataToSave = {
                 vocabulary: localStorage.getItem(window.getStorageKey('jlpt_vocab_v3')) || "[]",
@@ -2644,31 +1981,20 @@
                 reviewHistory: localStorage.getItem(window.getStorageKey('jlpt_review_history')) || "{}",
                 lastUpdated: parseInt(localStorage.getItem(window.getStorageKey('jlpt_lastUpdated')) || "0")
             };
-
             await setDoc(doc(db, "jlpt_users", currentUser.uid), dataToSave);
-            
-            const time = new Date().toLocaleTimeString('vi-VN', { hour12: false });
-            syncStatusEl.innerText = "🟢 Đã đồng bộ lúc " + time;
+            syncStatusEl.innerText = "🟢 Đã đồng bộ lúc " + new Date().toLocaleTimeString('vi-VN', { hour12: false });
         } catch (error) {
-            console.error("Lỗi khi lưu lên mây:", error);
-            syncStatusEl.innerText = "🔴 Lỗi đồng bộ! Có thể do bạn chưa cấp quyền ghi trên Firestore.";
-            syncStatusEl.style.color = "var(--danger)";
+            syncStatusEl.innerText = "🔴 Lỗi đồng bộ!"; syncStatusEl.style.color = "var(--danger)";
         }
     };
 
     async function downloadFromCloud(needReload = false) {
         if (!currentUser || !db) return;
-        
-        isDownloading = true;
-        syncStatusEl.innerText = "⏳ Đang tải dữ liệu về...";
-        
+        isDownloading = true; syncStatusEl.innerText = "⏳ Đang tải dữ liệu...";
         try {
-            const docRef = doc(db, "jlpt_users", currentUser.uid);
-            const docSnap = await getDoc(docRef);
-
+            const docSnap = await getDoc(doc(db, "jlpt_users", currentUser.uid));
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                
                 const cloudUpdated = data.lastUpdated || 0;
                 const localUpdated = parseInt(localStorage.getItem(window.getStorageKey('jlpt_lastUpdated')) || "0");
                 
@@ -2682,28 +2008,18 @@
                     localStorage.setItem(window.getStorageKey('jlpt_lastUpdated'), cloudUpdated.toString());
 
                     syncStatusEl.innerText = "✅ Tải thành công!";
-                    
-                    if (needReload) {
-                        setTimeout(() => { location.reload(); }, 500);
-                    } else {
+                    if (needReload) setTimeout(() => { location.reload(); }, 500);
+                    else {
                         if (typeof window.loadData === 'function') window.loadData();
                         if (typeof window.updateDashboard === 'function') window.updateDashboard();
                         if (typeof window.renderList === 'function') window.renderList();
                     }
-                } else {
-                    syncStatusEl.innerText = "🟢 Dữ liệu đã đồng bộ";
-                }
+                } else syncStatusEl.innerText = "🟢 Dữ liệu đã đồng bộ";
                 isDownloading = false;
             } else {
-                syncStatusEl.innerText = "Tài khoản mới, đang đưa dữ liệu lên mây...";
-                isDownloading = false;
-                window.uploadToCloud();
+                syncStatusEl.innerText = "Tài khoản mới, đang đẩy dữ liệu..."; isDownloading = false; window.uploadToCloud();
             }
-        } catch (error) {
-            console.error("Lỗi khi tải từ mây:", error);
-            syncStatusEl.innerText = "🔴 Lỗi tải dữ liệu!";
-            isDownloading = false;
-        }
+        } catch (error) { syncStatusEl.innerText = "🔴 Lỗi tải!"; isDownloading = false; }
     }
 </script>
 </body>
