@@ -23,7 +23,6 @@
     />
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <style>
-      /* TOÀN BỘ CSS ĐƯỢC GIỮ NGUYÊN NHƯ FILE GỐC */
       *,
       *::before,
       *::after {
@@ -479,6 +478,8 @@
         padding: 0 5px;
         min-width: max-content;
       }
+
+      /* ĐÃ SỬA: Border của lvl-tag mượt mà, thanh thoát giống nút Lịch Sử */
       .lvl-tag {
         padding: 6px 15px;
         border-radius: 12px;
@@ -487,13 +488,14 @@
         cursor: pointer;
         transition: all 0.2s;
         white-space: nowrap;
-        border: none;
+        border: 1px solid transparent;
       }
       .lvl-tag.active {
         transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        border: 2px solid #333;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        border: 1px solid var(--color1);
       }
+
       .list-header {
         display: flex;
         justify-content: space-between;
@@ -2109,9 +2111,8 @@
       </div>
     </div>
 
-    <!-- SCRIPT ĐÃ ĐƯỢC CHỈNH SỬA TOÀN BỘ -->
+    <!-- SCRIPT CHÍNH -->
     <script>
-      // Core Variables
       var vocabulary = [];
       var dailyPointer = 0;
       var dailyQueue = [];
@@ -2327,7 +2328,7 @@
           btn.style.background = getComputedStyle(document.documentElement)
             .getPropertyValue(`--lv${i}`)
             .trim();
-          btn.textContent = i; // XSS Safe
+          btn.textContent = i;
           btn.onclick = () => setLevel(i);
           grid.appendChild(btn);
         }
@@ -2338,6 +2339,7 @@
         document.getElementById("levelPickerModal").style.display = "none";
         editingWordId = null;
       }
+
       function setLevel(newLevel) {
         if (editingWordId !== null)
           window.changeWordLevel(editingWordId, newLevel);
@@ -2353,6 +2355,7 @@
         document.getElementById("edit-meaning").value = word.meaning ?? "";
         document.getElementById("editWordModal").style.display = "block";
       }
+
       function closeEditModal() {
         document.getElementById("editWordModal").style.display = "none";
         currentEditId = null;
@@ -2395,6 +2398,7 @@
         document.getElementById("selectRangeModal").style.display = "block";
         document.getElementById("range-input").focus();
       }
+
       function closeSelectRangeModal() {
         document.getElementById("selectRangeModal").style.display = "none";
       }
@@ -2791,7 +2795,6 @@
               ? `<span class="status-badge status-pending">⚪ Chưa học</span>`
               : `<span class="status-badge status-done">✅ Đã xong</span>`;
 
-            // XSS mitigation for innerHTML - ideally use DOM structure but escaping via String is quick
             const wTxt = (item?.word ?? "").replace(/</g, "&lt;");
             const rTxt = (item?.reading ?? "").replace(/</g, "&lt;");
             const mTxt = (item?.meaning ?? "").replace(/</g, "&lt;");
@@ -2827,7 +2830,6 @@
         }
       }
 
-      // ĐÃ SỬA: Thêm bước Data Hydration bằng Nullish Coalescing
       function loadData() {
         const vocabKey = getStorageKey("jlpt_vocab_v3");
         let rawVocab = localStorage.getItem(vocabKey) || "[]";
@@ -2835,7 +2837,6 @@
           rawVocab = localStorage.getItem("jlpt_vocab_v3") || "[]";
 
         vocabulary = safeParse(rawVocab, []);
-        // Lọc bỏ mọi phần tử rỗng và thiết lập giá trị an toàn (Hydration)
         vocabulary = vocabulary
           .filter(
             (v) => v !== null && typeof v === "object" && v.id !== undefined,
@@ -2959,7 +2960,6 @@
           let updatedWords = [];
 
           rows.forEach((r) => {
-            // ĐÃ SỬA: Bảo vệ an toàn bằng Nullish Coalescing khi tải Excel
             let w = String(r[0] ?? "").trim();
             let reading = String(r[1] ?? "").trim();
             let meaning = String(r[2] ?? "").trim();
@@ -3212,7 +3212,6 @@
         checkSearchInput();
       }
 
-      // ĐÃ SỬA: Áp dụng Optional Chaining vào bộ lọc
       function getFilteredItems() {
         const input = document.getElementById("search-input");
         const query = input ? input.value.toLowerCase() : "";
@@ -3224,7 +3223,8 @@
           if (!v) return false;
 
           const mFilter =
-            currentFilter === "all" || (v?.level ?? 0) == currentFilter;
+            currentFilter === "all" ||
+            parseInt(v?.level ?? 0) === parseInt(currentFilter);
           const wordStr = String(v?.word ?? "").toLowerCase();
           const readingStr = String(v?.reading ?? "").toLowerCase();
           const meaningStr = String(v?.meaning ?? "").toLowerCase();
@@ -3434,7 +3434,6 @@
         document.getElementById("options").classList.remove("hidden");
         document.getElementById("options").innerHTML = "";
 
-        // ĐÃ SỬA: Đổi .innerText thành .textContent cho an toàn XSS
         if (activeMode === "daily")
           document.getElementById("quiz-meta").textContent =
             `CÒN LẠI: ${dailyQueue.length} TỪ`;
@@ -3544,7 +3543,7 @@
       function createMatchBtn(grid, data) {
         const btn = document.createElement("button");
         btn.className = "option-btn match-btn";
-        btn.textContent = data.text; // An toàn XSS
+        btn.textContent = data.text;
         btn.dataset.id = data.id;
         btn.dataset.type = data.type;
         btn.dataset.side = data.side;
@@ -3663,7 +3662,6 @@
         }
       }
 
-      // ĐÃ SỬA: Bảo vệ toán tử Optional Chaining vào hàm tìm kiếm đáp án
       function generateDistractors(correctItem, field) {
         let correctValue = String(correctItem?.[field] ?? "").trim();
         let pool = vocabulary
@@ -3713,7 +3711,6 @@
         const btn = document.createElement("button");
         btn.className = "option-btn";
 
-        // Tránh chèn innerHTML với dữ liệu rác, bảo vệ bằng textContent cho span
         const spanPrefix = document.createElement("span");
         spanPrefix.className = "opt-prefix";
         spanPrefix.textContent = String.fromCharCode(65 + index);
@@ -3926,7 +3923,6 @@
       function showSingleDetail(item) {
         document.getElementById("expl-single").classList.remove("hidden");
         document.getElementById("expl-batch").classList.add("hidden");
-        // An toàn XSS bằng textContent
         document.getElementById("expl-word").textContent = item?.word ?? "";
         document.getElementById("expl-reading").textContent =
           item?.reading ?? "";
@@ -3949,7 +3945,6 @@
             ? '<span style="color:var(--success)">✅</span>'
             : '<span style="color:var(--danger)">❌</span>';
 
-          // Loại trừ XSS
           const wTxt = (item?.word ?? "").replace(/</g, "&lt;");
           const rTxt = (item?.reading ?? "").replace(/</g, "&lt;");
           const mTxt = (item?.meaning ?? "").replace(/</g, "&lt;");
@@ -3966,7 +3961,6 @@
 
       function renderExtraHtml(extra) {
         if (!extra) return "";
-        // Giả sử extra là tĩnh, cần bảo mật nếu nhập từ người dùng, làm sạch nhẹ
         const syn = (extra.synonyms || "---").replace(/</g, "&lt;");
         const ant = (extra.antonyms || "---").replace(/</g, "&lt;");
         const gra = (extra.grammar || "---").replace(/</g, "&lt;");
@@ -4046,7 +4040,6 @@
           return (document.getElementById("display-word").textContent =
             "Hết từ!");
 
-        // ĐÃ SỬA: Bảo vệ bằng textContent
         document.getElementById("display-word").textContent = item?.word ?? "";
         rEl.textContent = item?.reading ?? "";
         mEl.textContent = item?.meaning ?? "";
@@ -4063,6 +4056,7 @@
         document.getElementById("display-meaning").classList.toggle("hidden");
         document.getElementById("display-reading").classList.toggle("visible");
       }
+
       function changeIdx(s) {
         if (quizQueue.length > 0) {
           curQuizIdx = (curQuizIdx + s + quizQueue.length) % quizQueue.length;
@@ -4091,7 +4085,7 @@
         }
       }
 
-      // ĐÃ THÊM: Các hàm render ảo bị vắng mặt (renderList, renderFilterTags, clearAllData, toggleList)
+      // ĐÃ SỬA: Thay tên text và chèn updateTimeFilterCounts()
       function renderFilterTags() {
         const container = document.getElementById("level-filter-btns");
         if (!container) return;
@@ -4106,8 +4100,8 @@
           { id: 5, text: "Lv5" },
           { id: 6, text: "Lv6" },
           { id: 7, text: "Lv7" },
-          { id: 8, text: "Thuộc (8)" },
-          { id: 9, text: "Bỏ qua (9)" },
+          { id: 8, text: "Lv8" }, // Sửa: Thuộc (8) -> Lv8
+          { id: 9, text: "Bỏ qua" }, // Sửa: Bỏ qua (9) -> Bỏ qua
         ];
 
         levels.forEach((lvl) => {
@@ -4126,12 +4120,14 @@
           btn.onclick = () => {
             currentFilter = lvl.id;
             renderFilterTags();
+            updateTimeFilterCounts(); // Sửa: Lọc theo level được chọn
             renderList();
           };
           container.appendChild(btn);
         });
       }
 
+      // ĐÃ SỬA: Hàm renderList với logic Tính Font Size qua --text-scale và Bộ Đếm Thời Gian
       function renderList() {
         const listDiv = document.getElementById("list-items");
         if (!listDiv) return;
@@ -4168,7 +4164,7 @@
           textDiv.className = "list-item-text";
 
           const wordStrong = document.createElement("strong");
-          wordStrong.style.fontSize = "1.2rem";
+          wordStrong.style.fontSize = "calc(1.2rem * var(--text-scale, 1))"; // Sửa Font Size
           wordStrong.style.color = "var(--text)";
           wordStrong.textContent = item?.word ?? "";
 
@@ -4176,16 +4172,58 @@
           readingSpan.style.color = "var(--color1)";
           readingSpan.style.marginLeft = "10px";
           readingSpan.style.fontWeight = "bold";
+          readingSpan.style.fontSize = "calc(1rem * var(--text-scale, 1))"; // Sửa Font Size
           readingSpan.textContent = item?.reading ?? "";
 
           const meaningDiv = document.createElement("div");
-          meaningDiv.style.fontSize = "0.85rem";
+          meaningDiv.style.fontSize = "calc(0.85rem * var(--text-scale, 1))"; // Sửa Font Size
           meaningDiv.style.color = "#666";
           meaningDiv.textContent = item?.meaning ?? "";
 
           textDiv.appendChild(wordStrong);
           textDiv.appendChild(readingSpan);
           textDiv.appendChild(meaningDiv);
+
+          // ĐÃ SỬA: Lập trình Bộ Đếm Thời Gian Đến Hạn
+          let timeText = "";
+          let timeColor = "#888";
+          if (!item?.learned) {
+            timeText = "⚪ Chưa học";
+          } else if (parseInt(item?.level ?? 0) === 9) {
+            timeText = "🚫 Bỏ qua";
+          } else {
+            const diff = (item?.nextReview ?? 0) - Date.now();
+            if (diff <= 0) {
+              timeText = "⏰ Đã đến hạn";
+              timeColor = "var(--danger)";
+            } else {
+              const mins = Math.floor(diff / 60000);
+              if (mins < 60) {
+                timeText = `⏳ ${mins} phút nữa`;
+                timeColor = "var(--warning)";
+              } else {
+                const hrs = Math.floor(mins / 60);
+                if (hrs < 24) {
+                  timeText = `⏳ ${hrs} giờ nữa`;
+                  timeColor = "var(--warning)";
+                } else {
+                  const days = Math.floor(hrs / 24);
+                  timeText = `⏳ ${days} ngày nữa`;
+                  timeColor = "var(--success)";
+                }
+              }
+            }
+          }
+
+          const timerDiv = document.createElement("div");
+          timerDiv.style.fontSize = "calc(0.75rem * var(--text-scale, 1))";
+          timerDiv.style.color = timeColor;
+          timerDiv.style.marginTop = "4px";
+          timerDiv.style.fontWeight = "bold";
+          timerDiv.textContent = timeText;
+
+          textDiv.appendChild(timerDiv);
+
           contentDiv.appendChild(textDiv);
 
           const btnLvl = document.createElement("button");
@@ -4211,9 +4249,9 @@
         const selAllCont = document.getElementById("select-all-container");
         if (selAllCont) {
           selAllCont.innerHTML = `
-                  <button onclick="toggleSortAZ()" style="border:1px solid var(--color2); background:white; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${isSortedAZ ? "A-Z ↓" : "Mới nhất ↓"}</button>
-                  <button onclick="selectNext50()" style="border:1px solid var(--color2); background:white; padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">Chọn 50</button>
-                  <button onclick="toggleSelectAll()" style="border:1px solid var(--color1); background:var(--color3); color:var(--color1); padding:6px 12px; border-radius:12px; font-size:0.75rem; font-weight:700;">${selectedIds.size > 0 && selectedIds.size === items.length ? "Bỏ chọn" : "Chọn tất cả"}</button>
+                  <button onclick="toggleSortAZ()" style="border:1px solid var(--color2); background:white; padding:6px 12px; border-radius:12px; font-size:calc(0.75rem * var(--text-scale, 1)); font-weight:700; transition: 0.2s; cursor:pointer;">${isSortedAZ ? "A-Z ↓" : "Mới nhất ↓"}</button>
+                  <button onclick="selectNext50()" style="border:1px solid var(--color2); background:white; padding:6px 12px; border-radius:12px; font-size:calc(0.75rem * var(--text-scale, 1)); font-weight:700; transition: 0.2s; cursor:pointer;">Chọn 50</button>
+                  <button onclick="toggleSelectAll()" style="border:1px solid var(--color1); background:var(--color3); color:var(--color1); padding:6px 12px; border-radius:12px; font-size:calc(0.75rem * var(--text-scale, 1)); font-weight:700; transition: 0.2s; cursor:pointer;">${selectedIds.size > 0 && selectedIds.size === items.length ? "Bỏ chọn" : "Chọn tất cả"}</button>
               `;
         }
       }
@@ -4244,16 +4282,25 @@
         }
       }
 
+      // ĐÃ SỬA: Lọc biến đếm Thời gian theo điều kiện của currentFilter
       function updateTimeFilterCounts() {
         const now = Date.now();
-        const all = vocabulary.length;
-        const due = vocabulary.filter(
+
+        const baseFiltered = vocabulary.filter(
+          (v) =>
+            v &&
+            (currentFilter === "all" ||
+              parseInt(v?.level ?? 0) === parseInt(currentFilter)),
+        );
+
+        const all = baseFiltered.length;
+        const due = baseFiltered.filter(
           (v) =>
             v?.learned &&
             (v?.nextReview ?? 0) <= now &&
             parseInt(v?.level ?? 0) !== 9,
         ).length;
-        const notDue = vocabulary.filter(
+        const notDue = baseFiltered.filter(
           (v) =>
             v?.learned &&
             (v?.nextReview ?? 0) > now &&
