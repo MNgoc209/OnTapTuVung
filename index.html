@@ -393,7 +393,8 @@
         padding-top: 20px;
         margin-top: 20px;
         font-weight: 600;
-        white-space: pre-wrap;
+        /* Cho phép text-wrap tự động nếu có thẻ <br> bên trong */
+        white-space: normal;
         word-break: break-word;
       }
       .search-container {
@@ -479,7 +480,6 @@
         min-width: max-content;
       }
 
-      /* ĐÃ SỬA: Border của lvl-tag mượt mà, thanh thoát giống nút Lịch Sử */
       .lvl-tag {
         padding: 6px 15px;
         border-radius: 12px;
@@ -1392,7 +1392,8 @@
                           font-weight: 600;
                           border-top: 1px solid #ddd;
                           padding-top: 8px;
-                          white-space: pre-wrap;
+                          /* Cho phép tự động wrap theo thẻ <br> */
+                          white-space: normal;
                         "
                         id="expl-meaning"
                       ></div>
@@ -1662,7 +1663,7 @@
         </div>
       </div>
 
-      <!-- CÁC MODAL GIỮ NGUYÊN HTML -->
+      <!-- CÁC MODAL -->
       <div id="levelPickerModal" class="modal" style="z-index: 1001">
         <div class="modal-content" style="max-width: 320px">
           <span class="close-modal" onclick="closeLevelPicker()">&times;</span>
@@ -2113,6 +2114,15 @@
 
     <!-- SCRIPT CHÍNH -->
     <script>
+      // HÀM TIỆN ÍCH MỚI: Tự động phát hiện \n và đổi thành thẻ <br>
+      function escapeAndBreak(str) {
+        return String(str || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\n/g, "<br>");
+      }
+
       var vocabulary = [];
       var dailyPointer = 0;
       var dailyQueue = [];
@@ -2795,16 +2805,17 @@
               ? `<span class="status-badge status-pending">⚪ Chưa học</span>`
               : `<span class="status-badge status-done">✅ Đã xong</span>`;
 
-            const wTxt = (item?.word ?? "").replace(/</g, "&lt;");
-            const rTxt = (item?.reading ?? "").replace(/</g, "&lt;");
-            const mTxt = (item?.meaning ?? "").replace(/</g, "&lt;");
+            // ÁP DỤNG HÀM NGẮT DÒNG MỚI
+            const wTxt = escapeAndBreak(item?.word);
+            const rTxt = escapeAndBreak(item?.reading);
+            const mTxt = escapeAndBreak(item?.meaning);
 
             html += `
                     <div class="daily-status-item">
                         <div style="flex: 1; min-width: 0;">
                             <strong style="font-size:calc(2rem * var(--text-scale, 1));">${wTxt}</strong>
                             <div style="font-size:calc(0.95rem * var(--text-scale, 1)); color:var(--color1); font-weight:600;">${rTxt}</div>
-                            <div style="font-size:calc(0.8rem * var(--text-scale, 1)); color:#666; white-space: pre-wrap; word-break: break-word;">${mTxt}</div>
+                            <div style="font-size:calc(0.8rem * var(--text-scale, 1)); color:#666; white-space: normal; word-break: break-word;">${mTxt}</div>
                         </div>${statusHtml}
                     </div>`;
           });
@@ -3734,8 +3745,6 @@
           (v) => String(v?.id) === String(item?.id),
         );
 
-        trackWordReviewed(item?.id);
-
         let isCorrect = false;
         const selTrimmed = String(selectedText).trim().toLowerCase();
         const corrTrimmed = String(correctValue).trim().toLowerCase();
@@ -3798,6 +3807,7 @@
 
         if (mainIdx !== -1) {
           updateReviewTimestamps(vocabulary[mainIdx]);
+          // LOGIC MỚI: CHỈ LƯU VÀO "ĐÃ ÔN" NẾU TRẢ LỜI ĐÚNG
           if (isCorrect) {
             btn.classList.add("correct");
             currentQuizResult = "correct";
@@ -3805,6 +3815,7 @@
               8,
               parseInt(vocabulary[mainIdx].level ?? 0) + 1,
             );
+            trackWordReviewed(item?.id);
           } else {
             btn.classList.add("wrong");
             currentQuizResult = "wrong";
@@ -3881,10 +3892,11 @@
           );
           if (mainIdx === -1) return;
 
-          if (!isSkip) trackWordReviewed(item?.id);
           updateReviewTimestamps(vocabulary[mainIdx]);
 
           if (res === "correct") {
+            // LOGIC MỚI: CHỈ LƯU VÀO "ĐÃ ÔN" NẾU ĐÚNG VÀ KHÔNG SKIP
+            if (!isSkip) trackWordReviewed(item?.id);
             vocabulary[mainIdx].level = Math.min(
               8,
               parseInt(vocabulary[mainIdx].level ?? 0) + 1,
@@ -3926,8 +3938,12 @@
         document.getElementById("expl-word").textContent = item?.word ?? "";
         document.getElementById("expl-reading").textContent =
           item?.reading ?? "";
-        document.getElementById("expl-meaning").textContent =
-          item?.meaning ?? "";
+
+        // ÁP DỤNG HÀM NGẮT DÒNG
+        document.getElementById("expl-meaning").innerHTML = escapeAndBreak(
+          item?.meaning,
+        );
+
         document.getElementById("expl-extra").innerHTML = item?.extra
           ? renderExtraHtml(item.extra)
           : "";
@@ -3945,14 +3961,15 @@
             ? '<span style="color:var(--success)">✅</span>'
             : '<span style="color:var(--danger)">❌</span>';
 
-          const wTxt = (item?.word ?? "").replace(/</g, "&lt;");
-          const rTxt = (item?.reading ?? "").replace(/</g, "&lt;");
-          const mTxt = (item?.meaning ?? "").replace(/</g, "&lt;");
+          // ÁP DỤNG HÀM NGẮT DÒNG
+          const wTxt = escapeAndBreak(item?.word);
+          const rTxt = escapeAndBreak(item?.reading);
+          const mTxt = escapeAndBreak(item?.meaning);
 
           listDiv.innerHTML += `
                 <div style="background:#fff; padding:12px; border-radius:12px; border:1px solid ${isCorrect ? "#eafaf1" : "#fdeded"};">
                     <div style="font-size:calc(1.1rem * var(--text-scale, 1)); font-weight:bold;">${icon} <span style="font-size:calc(2.2rem * var(--text-scale, 1));">${wTxt}</span> <span style="color:var(--color1); font-size:calc(0.95rem * var(--text-scale, 1));">【${rTxt}】</span></div>
-                    <div style="color:#555; font-size:calc(0.95rem * var(--text-scale, 1)); margin-top:4px; white-space: pre-wrap; word-break: break-word;">Ý nghĩa: <strong>${mTxt}</strong></div>
+                    <div style="color:#555; font-size:calc(0.95rem * var(--text-scale, 1)); margin-top:4px; white-space: normal; word-break: break-word;">Ý nghĩa: <br><strong>${mTxt}</strong></div>
                 </div>`;
         });
         batchContainer.classList.remove("hidden");
@@ -3961,10 +3978,11 @@
 
       function renderExtraHtml(extra) {
         if (!extra) return "";
-        const syn = (extra.synonyms || "---").replace(/</g, "&lt;");
-        const ant = (extra.antonyms || "---").replace(/</g, "&lt;");
-        const gra = (extra.grammar || "---").replace(/</g, "&lt;");
-        const exa = (extra.example || "---").replace(/</g, "&lt;");
+        // ÁP DỤNG HÀM NGẮT DÒNG
+        const syn = escapeAndBreak(extra.synonyms || "---");
+        const ant = escapeAndBreak(extra.antonyms || "---");
+        const gra = escapeAndBreak(extra.grammar || "---");
+        const exa = escapeAndBreak(extra.example || "---");
         return `<div class="expansion-grid">
                 <div class="expansion-item"><span class="expansion-title">Đồng nghĩa</span><div class="expansion-content">${syn}</div></div>
                 <div class="expansion-item"><span class="expansion-title">Trái nghĩa</span><div class="expansion-content">${ant}</div></div>
@@ -4042,7 +4060,10 @@
 
         document.getElementById("display-word").textContent = item?.word ?? "";
         rEl.textContent = item?.reading ?? "";
-        mEl.textContent = item?.meaning ?? "";
+
+        // ÁP DỤNG HÀM NGẮT DÒNG
+        mEl.innerHTML = escapeAndBreak(item?.meaning);
+
         document.getElementById("card-index").textContent =
           `${curQuizIdx + 1} / ${quizQueue.length}`;
         if (item.extra) {
@@ -4085,7 +4106,6 @@
         }
       }
 
-      // ĐÃ SỬA: Thay tên text và chèn updateTimeFilterCounts()
       function renderFilterTags() {
         const container = document.getElementById("level-filter-btns");
         if (!container) return;
@@ -4100,8 +4120,8 @@
           { id: 5, text: "Lv5" },
           { id: 6, text: "Lv6" },
           { id: 7, text: "Lv7" },
-          { id: 8, text: "Lv8" }, // Sửa: Thuộc (8) -> Lv8
-          { id: 9, text: "Bỏ qua" }, // Sửa: Bỏ qua (9) -> Bỏ qua
+          { id: 8, text: "Lv8" },
+          { id: 9, text: "Bỏ qua" },
         ];
 
         levels.forEach((lvl) => {
@@ -4120,14 +4140,13 @@
           btn.onclick = () => {
             currentFilter = lvl.id;
             renderFilterTags();
-            updateTimeFilterCounts(); // Sửa: Lọc theo level được chọn
+            updateTimeFilterCounts();
             renderList();
           };
           container.appendChild(btn);
         });
       }
 
-      // ĐÃ SỬA: Hàm renderList với logic Tính Font Size qua --text-scale và Bộ Đếm Thời Gian
       function renderList() {
         const listDiv = document.getElementById("list-items");
         if (!listDiv) return;
@@ -4164,7 +4183,7 @@
           textDiv.className = "list-item-text";
 
           const wordStrong = document.createElement("strong");
-          wordStrong.style.fontSize = "calc(1.2rem * var(--text-scale, 1))"; // Sửa Font Size
+          wordStrong.style.fontSize = "calc(1.2rem * var(--text-scale, 1))";
           wordStrong.style.color = "var(--text)";
           wordStrong.textContent = item?.word ?? "";
 
@@ -4172,19 +4191,19 @@
           readingSpan.style.color = "var(--color1)";
           readingSpan.style.marginLeft = "10px";
           readingSpan.style.fontWeight = "bold";
-          readingSpan.style.fontSize = "calc(1rem * var(--text-scale, 1))"; // Sửa Font Size
+          readingSpan.style.fontSize = "calc(1rem * var(--text-scale, 1))";
           readingSpan.textContent = item?.reading ?? "";
 
           const meaningDiv = document.createElement("div");
-          meaningDiv.style.fontSize = "calc(0.85rem * var(--text-scale, 1))"; // Sửa Font Size
+          meaningDiv.style.fontSize = "calc(0.85rem * var(--text-scale, 1))";
           meaningDiv.style.color = "#666";
-          meaningDiv.textContent = item?.meaning ?? "";
+          // ÁP DỤNG HÀM NGẮT DÒNG
+          meaningDiv.innerHTML = escapeAndBreak(item?.meaning);
 
           textDiv.appendChild(wordStrong);
           textDiv.appendChild(readingSpan);
           textDiv.appendChild(meaningDiv);
 
-          // ĐÃ SỬA: Lập trình Bộ Đếm Thời Gian Đến Hạn
           let timeText = "";
           let timeColor = "#888";
           if (!item?.learned) {
@@ -4282,7 +4301,6 @@
         }
       }
 
-      // ĐÃ SỬA: Lọc biến đếm Thời gian theo điều kiện của currentFilter
       function updateTimeFilterCounts() {
         const now = Date.now();
 
