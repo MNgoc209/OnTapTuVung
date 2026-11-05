@@ -1919,6 +1919,7 @@
         </div>
       </div>
 
+      <!-- MODAL CHỈNH SỬA TỪ VỰNG -->
       <div id="editWordModal" class="modal" style="z-index: 1002">
         <div class="modal-content" style="max-width: 400px; text-align: left">
           <span class="close-modal" onclick="closeEditModal()">&times;</span>
@@ -1996,6 +1997,52 @@
         </div>
       </div>
 
+      <!-- MODAL VIEW TỪ VỰNG (MỚI THÊM) -->
+      <div id="viewWordModal" class="modal" style="z-index: 1002">
+        <div class="modal-content" style="max-width: 400px; text-align: left">
+          <span class="close-modal" onclick="closeViewModal()">&times;</span>
+          <h3 style="color: var(--text); margin-top: 0; text-align: center">
+            Chi Tiết Từ Vựng
+          </h3>
+          <div style="margin-top: 15px; text-align: center">
+            <div
+              id="view-word"
+              style="font-size: 2.5rem; font-weight: bold; color: var(--text)"
+            ></div>
+            <div
+              id="view-reading"
+              style="
+                font-size: 1.2rem;
+                color: var(--color1);
+                margin-bottom: 15px;
+                font-weight: 600;
+              "
+            ></div>
+            <div
+              id="view-meaning"
+              style="
+                font-size: 1rem;
+                color: #555;
+                text-align: left;
+                padding: 15px;
+                background: #f9f9f9;
+                border-radius: 10px;
+                min-height: 60px;
+                line-height: 1.6;
+                word-break: break-word;
+              "
+            ></div>
+            <button
+              class="btn-action btn-theme"
+              onclick="switchToEdit()"
+              style="margin-top: 20px"
+            >
+              ✏️ Sửa từ này
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div id="selectRangeModal" class="modal" style="z-index: 1002">
         <div class="modal-content" style="max-width: 350px; text-align: left">
           <span class="close-modal" onclick="closeSelectRangeModal()"
@@ -2062,15 +2109,11 @@
         </div>
       </div>
 
+      <!-- MODAL LỊCH SỬ DẠNG CALENDAR -->
       <div id="historyModal" class="modal" style="z-index: 1003">
         <div
           class="modal-content"
-          style="
-            max-width: 400px;
-            max-height: 70vh;
-            display: flex;
-            flex-direction: column;
-          "
+          style="max-width: 400px; display: flex; flex-direction: column"
         >
           <span class="close-modal" onclick="closeHistoryModal()">&times;</span>
           <h3 style="color: var(--text); margin-top: 0; margin-bottom: 5px">
@@ -2084,17 +2127,9 @@
               margin-bottom: 15px;
             "
           >
-            Thống kê số lượng từ đã ôn trong các ngày
+            Thống kê số lượng từ đã ôn theo ngày
           </p>
-          <div
-            id="history-list-content"
-            style="
-              overflow-y: auto;
-              flex: 1;
-              text-align: left;
-              padding-right: 5px;
-            "
-          ></div>
+          <div id="history-list-content" style="text-align: left"></div>
         </div>
       </div>
 
@@ -2104,9 +2139,7 @@
             >Đã chọn
             <span id="selected-count" style="color: var(--lv1)">0</span>
             từ</span
-          ><span style="font-size: 0.8rem; color: #888"
-            >Chuyển nhanh sang:</span
-          >
+          ><span style="font-size: 0.8rem; color: #888">Thao tác nhanh:</span>
         </div>
         <div class="batch-levels" id="batch-levels-container"></div>
       </div>
@@ -2114,7 +2147,6 @@
 
     <!-- SCRIPT CHÍNH -->
     <script>
-      // HÀM TIỆN ÍCH MỚI: Tự động phát hiện \n và đổi thành thẻ <br>
       function escapeAndBreak(str) {
         return String(str || "")
           .replace(/&/g, "&amp;")
@@ -2132,6 +2164,9 @@
       let reviewHistory = {};
       let reviewedTodayIds = [];
       let reviewedTodayDate = "";
+
+      // Biến lưu trạng thái tháng lịch sử đang xem
+      let currentHistDate = new Date();
 
       let quizQueue = [];
       let curQuizIdx = 0;
@@ -2151,6 +2186,7 @@
 
       let editingWordId = null;
       let currentEditId = null;
+      let currentViewId = null; // Trạng thái xem từ
       let selectedIds = new Set();
       let isSortedAZ = false;
       let selectedReviewLevels = new Set();
@@ -2212,6 +2248,7 @@
       }
 
       function openHistoryModal() {
+        currentHistDate = new Date(); // Reset về tháng hiện tại
         renderHistoryUI();
         document.getElementById("historyModal").style.display = "block";
       }
@@ -2219,33 +2256,81 @@
         document.getElementById("historyModal").style.display = "none";
       }
 
+      // HÀM CHUYỂN THÁNG LỊCH SỬ
+      function changeHistMonth(delta) {
+        currentHistDate.setMonth(currentHistDate.getMonth() + delta);
+        renderHistoryUI();
+      }
+
+      // VẼ LẠI LỊCH SỬ THÀNH CALENDAR
       function renderHistoryUI() {
         const listDiv = document.getElementById("history-list-content");
-        const dates = Object.keys(reviewHistory).sort(
-          (a, b) => new Date(b) - new Date(a),
-        );
-        if (dates.length === 0) {
-          listDiv.innerHTML =
-            '<div style="text-align:center; padding: 20px; color:#999;">Chưa có dữ liệu ôn tập. Hãy bắt đầu học ngay nhé!</div>';
-          return;
+
+        const year = currentHistDate.getFullYear();
+        const month = currentHistDate.getMonth();
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const startDay = firstDay === 0 ? 6 : firstDay - 1;
+
+        const monthStr = `Tháng ${month + 1} / ${year}`;
+
+        let html = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <button onclick="changeHistMonth(-1)" style="border:none; background:var(--color3); color:var(--color1); padding:8px 15px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:1.1rem;">❮</button>
+            <span style="background:var(--color1); color:white; padding:6px 15px; border-radius:8px; font-size:0.95rem; font-weight:bold; box-shadow: 0 4px 10px rgba(245,175,175, 0.4);">${monthStr}</span>
+            <button onclick="changeHistMonth(1)" style="border:none; background:var(--color3); color:var(--color1); padding:8px 15px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:1.1rem;">❯</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; margin-bottom: 10px;">
+            <div style="font-size:0.8rem; font-weight:bold; color:#888;">T2</div>
+            <div style="font-size:0.8rem; font-weight:bold; color:#888;">T3</div>
+            <div style="font-size:0.8rem; font-weight:bold; color:#888;">T4</div>
+            <div style="font-size:0.8rem; font-weight:bold; color:#888;">T5</div>
+            <div style="font-size:0.8rem; font-weight:bold; color:#888;">T6</div>
+            <div style="font-size:0.8rem; font-weight:bold; color:#888;">T7</div>
+            <div style="font-size:0.8rem; font-weight:bold; color:#e74c3c;">CN</div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center;">
+        `;
+
+        for (let i = 0; i < startDay; i++) {
+          html += `<div></div>`;
         }
 
-        let html = "";
-        dates.forEach((date) => {
-          const count = reviewHistory[date].length;
-          if (count === 0 && date !== reviewedTodayDate) return;
-          const dateParts = date.split("-");
-          const displayDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-          const isToday = date === reviewedTodayDate;
-          const badge = isToday
-            ? '<span style="background:var(--color1); color:white; padding:2px 6px; border-radius:6px; font-size:0.7rem; font-weight:bold; margin-left: 8px;">Hôm nay</span>'
-            : "";
+        const todayStr = getLocalYYYYMMDD();
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+          const isToday = dateStr === todayStr;
+          const count = reviewHistory[dateStr]
+            ? reviewHistory[dateStr].length
+            : 0;
+
+          let dayStyle = `padding: 12px 0; border-radius: 10px; background: #fafafa; border: 1px solid #f0f0f0; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; min-height:55px;`;
+          if (isToday) {
+            dayStyle += ` border-bottom: 3px solid var(--color1); background: #fffcfc;`;
+          }
+          if (count > 0) {
+            dayStyle += ` border-color: var(--color2); background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.02);`;
+          }
+
+          let countBadge = "";
+          if (count > 0) {
+            countBadge = `<div style="font-size: 0.75rem; font-weight: 700; color: var(--color1); margin-top: 2px;">${count} <span style="font-size:0.6rem; font-weight:normal;">từ</span></div>`;
+          } else {
+            countBadge = `<div style="height: 0.75rem; margin-top: 2px;"></div>`;
+          }
+
           html += `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: ${isToday ? "rgba(245,175,175,0.1)" : "white"}; border-radius: 8px; margin-bottom: 5px;">
-                    <div style="display: flex; align-items: center;"><strong style="color:var(--text); font-size: 1rem;">${displayDate}</strong>${badge}</div>
-                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--color1);">${count} <span style="font-size: 0.8rem; font-weight: normal; color: #666;">từ</span></div>
-                </div>`;
-        });
+            <div style="${dayStyle}">
+                <div style="font-size:0.95rem; font-weight:${isToday || count > 0 ? "700" : "500"}; color:${isToday ? "var(--text)" : count > 0 ? "var(--text)" : "#bbb"};">${d}</div>
+                ${countBadge}
+            </div>
+            `;
+        }
+
+        html += `</div>`;
         listDiv.innerHTML = html;
       }
 
@@ -2286,6 +2371,17 @@
       function importBackup(event) {
         const file = event.target.files[0];
         if (!file) return;
+
+        // CẬP NHẬT: Thêm confirm ngay lúc đầu
+        if (
+          !confirm(
+            `CẢNH BÁO: Bạn có chắc chắn muốn KHÔI PHỤC dữ liệu từ file "${file.name}" không?\nToàn bộ dữ liệu hiện tại có thể sẽ bị ghi đè! Hãy chắc chắn đây là file đúng.`,
+          )
+        ) {
+          event.target.value = "";
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = function (e) {
           try {
@@ -2356,6 +2452,33 @@
         closeLevelPicker();
       }
 
+      // HÀM CHO MODAL VIEW (CHỈ XEM)
+      function openViewModal(id) {
+        const word = vocabulary.find((v) => String(v.id) === String(id));
+        if (!word) return;
+        currentViewId = String(id);
+        document.getElementById("view-word").textContent = word.word || "";
+        document.getElementById("view-reading").textContent =
+          word.reading || "";
+        document.getElementById("view-meaning").innerHTML = escapeAndBreak(
+          word.meaning,
+        );
+        document.getElementById("viewWordModal").style.display = "block";
+      }
+
+      function closeViewModal() {
+        document.getElementById("viewWordModal").style.display = "none";
+        currentViewId = null;
+      }
+
+      function switchToEdit() {
+        if (currentViewId) {
+          const idToEdit = currentViewId;
+          closeViewModal();
+          openEditModal(idToEdit);
+        }
+      }
+
       function openEditModal(id) {
         const word = vocabulary.find((v) => String(v?.id) === String(id));
         if (!word) return;
@@ -2401,6 +2524,45 @@
           renderList();
           closeEditModal();
         }
+      }
+
+      // CẬP NHẬT: HÀM XÓA ĐƠN
+      function deleteWord(id) {
+        if (
+          !confirm(`Bạn có CHẮC CHẮN muốn xóa từ vựng này khỏi hệ thống không?`)
+        )
+          return;
+        vocabulary = vocabulary.filter((v) => String(v.id) !== String(id));
+        dailyQueue = dailyQueue.filter((q) => String(q.id) !== String(id));
+        dailyTargetIds = dailyTargetIds.filter(
+          (tid) => String(tid) !== String(id),
+        );
+        selectedIds.delete(String(id));
+        saveData();
+        renderList();
+        renderBatchBar();
+        updateDashboard();
+      }
+
+      // CẬP NHẬT: HÀM XÓA BATCH
+      function batchDelete() {
+        if (selectedIds.size === 0) return;
+        if (
+          !confirm(
+            `Bạn có CHẮC CHẮN muốn xóa vĩnh viễn ${selectedIds.size} từ đã chọn? Hành động này không thể hoàn tác!`,
+          )
+        )
+          return;
+        vocabulary = vocabulary.filter((v) => !selectedIds.has(String(v.id)));
+        dailyQueue = dailyQueue.filter((q) => !selectedIds.has(String(q.id)));
+        dailyTargetIds = dailyTargetIds.filter(
+          (id) => !selectedIds.has(String(id)),
+        );
+        selectedIds.clear();
+        saveData();
+        renderList();
+        renderBatchBar();
+        updateDashboard();
       }
 
       function openSelectRangeModal() {
@@ -2483,6 +2645,7 @@
         if (e.target.classList.contains("modal")) {
           e.target.style.display = "none";
           if (e.target.id === "levelPickerModal") editingWordId = null;
+          if (e.target.id === "viewWordModal") currentViewId = null;
         }
       });
 
@@ -2805,7 +2968,6 @@
               ? `<span class="status-badge status-pending">⚪ Chưa học</span>`
               : `<span class="status-badge status-done">✅ Đã xong</span>`;
 
-            // ÁP DỤNG HÀM NGẮT DÒNG MỚI
             const wTxt = escapeAndBreak(item?.word);
             const rTxt = escapeAndBreak(item?.reading);
             const mTxt = escapeAndBreak(item?.meaning);
@@ -2955,6 +3117,17 @@
       function handleExcel() {
         const file = document.getElementById("file-in").files[0];
         if (!file) return;
+
+        // CẬP NHẬT: Thêm xác nhận trước khi nhập Excel
+        if (
+          !confirm(
+            `Bạn có chắc chắn muốn nhập dữ liệu từ file "${file.name}" không?\nHệ thống sẽ tự động thêm mới hoặc cập nhật các từ bị trùng.`,
+          )
+        ) {
+          document.getElementById("file-in").value = "";
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = (e) => {
           const workbook = XLSX.read(new Uint8Array(e.target.result), {
@@ -3136,39 +3309,14 @@
           let html = "";
           for (let i = 1; i <= 8; i++)
             html += `<button class="batch-btn" style="background:${getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim()}" onclick="batchChangeLevel(${i})">Lv${i}</button>`;
+
+          // NÚT XÓA BATCH BỔ SUNG Ở ĐÂY
           container.innerHTML =
             html +
-            `<button class="batch-btn" style="background:var(--lv9); border:1px solid white;" onclick="batchChangeLevel(9)">🚫 Bỏ qua</button>`;
+            `<button class="batch-btn" style="background:var(--lv9); border:1px solid white; margin-right: 5px;" onclick="batchChangeLevel(9)">🚫 Bỏ qua</button>` +
+            `<button class="batch-btn" style="background:var(--danger); border:1px solid white;" onclick="batchDelete()">🗑️ Xóa</button>`;
         } else bar.classList.add("hidden");
       }
-
-      function batchChangeLevel(newLevel) {
-        if (selectedIds.size === 0) return;
-        if (
-          !confirm(
-            newLevel === 9
-              ? `Bạn có chắc muốn CHẶN ${selectedIds.size} từ này (không ôn lại)?`
-              : `Bạn có chắc muốn chuyển ${selectedIds.size} từ sang Level ${newLevel}?`,
-          )
-        )
-          return;
-
-        vocabulary.forEach((v) => {
-          if (v && selectedIds.has(String(v.id))) {
-            v.level = newLevel;
-            v.learned = true;
-            if (!v.firstLearnedAt)
-              v.firstLearnedAt = Date.now() - 4 * 24 * 60 * 60 * 1000;
-            setNextReview(v);
-          }
-        });
-        selectedIds.clear();
-        saveData();
-        renderList();
-        renderBatchBar();
-        updateDashboard();
-      }
-      window.batchChangeLevel = batchChangeLevel;
 
       function toggleSelectAll() {
         const items = getFilteredItems();
@@ -3807,7 +3955,6 @@
 
         if (mainIdx !== -1) {
           updateReviewTimestamps(vocabulary[mainIdx]);
-          // LOGIC MỚI: CHỈ LƯU VÀO "ĐÃ ÔN" NẾU TRẢ LỜI ĐÚNG
           if (isCorrect) {
             btn.classList.add("correct");
             currentQuizResult = "correct";
@@ -3895,7 +4042,6 @@
           updateReviewTimestamps(vocabulary[mainIdx]);
 
           if (res === "correct") {
-            // LOGIC MỚI: CHỈ LƯU VÀO "ĐÃ ÔN" NẾU ĐÚNG VÀ KHÔNG SKIP
             if (!isSkip) trackWordReviewed(item?.id);
             vocabulary[mainIdx].level = Math.min(
               8,
@@ -3939,7 +4085,6 @@
         document.getElementById("expl-reading").textContent =
           item?.reading ?? "";
 
-        // ÁP DỤNG HÀM NGẮT DÒNG
         document.getElementById("expl-meaning").innerHTML = escapeAndBreak(
           item?.meaning,
         );
@@ -3961,7 +4106,6 @@
             ? '<span style="color:var(--success)">✅</span>'
             : '<span style="color:var(--danger)">❌</span>';
 
-          // ÁP DỤNG HÀM NGẮT DÒNG
           const wTxt = escapeAndBreak(item?.word);
           const rTxt = escapeAndBreak(item?.reading);
           const mTxt = escapeAndBreak(item?.meaning);
@@ -3978,7 +4122,6 @@
 
       function renderExtraHtml(extra) {
         if (!extra) return "";
-        // ÁP DỤNG HÀM NGẮT DÒNG
         const syn = escapeAndBreak(extra.synonyms || "---");
         const ant = escapeAndBreak(extra.antonyms || "---");
         const gra = escapeAndBreak(extra.grammar || "---");
@@ -4061,7 +4204,6 @@
         document.getElementById("display-word").textContent = item?.word ?? "";
         rEl.textContent = item?.reading ?? "";
 
-        // ÁP DỤNG HÀM NGẮT DÒNG
         mEl.innerHTML = escapeAndBreak(item?.meaning);
 
         document.getElementById("card-index").textContent =
@@ -4176,7 +4318,8 @@
 
           const contentDiv = document.createElement("div");
           contentDiv.className = "list-item-content";
-          contentDiv.onclick = () => openEditModal(item.id);
+          // CẬP NHẬT: Thay openEditModal thành openViewModal
+          contentDiv.onclick = () => openViewModal(item.id);
           contentDiv.style.cursor = "pointer";
 
           const textDiv = document.createElement("div");
@@ -4197,7 +4340,6 @@
           const meaningDiv = document.createElement("div");
           meaningDiv.style.fontSize = "calc(0.85rem * var(--text-scale, 1))";
           meaningDiv.style.color = "#666";
-          // ÁP DỤNG HÀM NGẮT DÒNG
           meaningDiv.innerHTML = escapeAndBreak(item?.meaning);
 
           textDiv.appendChild(wordStrong);
@@ -4242,8 +4384,13 @@
           timerDiv.textContent = timeText;
 
           textDiv.appendChild(timerDiv);
-
           contentDiv.appendChild(textDiv);
+
+          // NHÓM CHỨA BADGE LEVEL VÀ NÚT XÓA ĐƠN
+          const actionsDiv = document.createElement("div");
+          actionsDiv.style.display = "flex";
+          actionsDiv.style.alignItems = "center";
+          actionsDiv.style.gap = "8px";
 
           const btnLvl = document.createElement("button");
           btnLvl.className = "lvl-badge";
@@ -4257,9 +4404,25 @@
             openLevelPicker(item.id);
           };
 
+          // CẬP NHẬT: Nút xóa đơn lẻ
+          const btnDel = document.createElement("button");
+          btnDel.innerHTML = "🗑️";
+          btnDel.style.background = "transparent";
+          btnDel.style.border = "none";
+          btnDel.style.cursor = "pointer";
+          btnDel.style.fontSize = "1.2rem";
+          btnDel.style.padding = "0";
+          btnDel.onclick = (e) => {
+            e.stopPropagation();
+            deleteWord(item.id);
+          };
+
+          actionsDiv.appendChild(btnLvl);
+          actionsDiv.appendChild(btnDel);
+
           div.appendChild(chk);
           div.appendChild(contentDiv);
-          div.appendChild(btnLvl);
+          div.appendChild(actionsDiv);
           fragment.appendChild(div);
         });
 
