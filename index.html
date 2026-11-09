@@ -393,7 +393,6 @@
         padding-top: 20px;
         margin-top: 20px;
         font-weight: 600;
-        /* Cho phép text-wrap tự động nếu có thẻ <br> bên trong */
         white-space: normal;
         word-break: break-word;
       }
@@ -834,6 +833,66 @@
         color: var(--color1);
         font-weight: 700;
       }
+
+      /* CẬP NHẬT CSS: Style cho Switch Button */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 24px;
+        margin-right: 5px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 24px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      input:checked + .slider {
+        background-color: var(--color1);
+      }
+      input:checked + .slider:before {
+        transform: translateX(20px);
+      }
+
+      .synonym-tag {
+        background: var(--color3);
+        color: var(--color1);
+        border: 1px solid var(--color1);
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .synonym-tag:hover {
+        background: var(--color1);
+        color: white;
+      }
+
       @media (max-width: 850px) {
         .layout-wrapper {
           flex-direction: column;
@@ -1392,7 +1451,6 @@
                           font-weight: 600;
                           border-top: 1px solid #ddd;
                           padding-top: 8px;
-                          /* Cho phép tự động wrap theo thẻ <br> */
                           white-space: normal;
                         "
                         id="expl-meaning"
@@ -1701,7 +1759,6 @@
         </div>
       </div>
 
-      <!-- Review Advanced Modal -->
       <div id="advancedReviewModal" class="modal" style="z-index: 1001">
         <div class="modal-content" style="max-width: 550px">
           <span class="close-modal" onclick="closeAdvancedReviewModal()"
@@ -1919,7 +1976,7 @@
         </div>
       </div>
 
-      <!-- MODAL CHỈNH SỬA TỪ VỰNG -->
+      <!-- MODAL CHỈNH SỬA TỪ VỰNG (ĐÃ CẬP NHẬT GIAO DIỆN SYNONYMS) -->
       <div id="editWordModal" class="modal" style="z-index: 1002">
         <div class="modal-content" style="max-width: 400px; text-align: left">
           <span class="close-modal" onclick="closeEditModal()">&times;</span>
@@ -1942,7 +1999,8 @@
                   color: var(--color1);
                 "
                 >Từ vựng (Kanji/Kana):</label
-              ><input
+              >
+              <input
                 type="text"
                 id="edit-word"
                 style="width: 100%; box-sizing: border-box; margin-top: 5px"
@@ -1956,7 +2014,8 @@
                   color: var(--color1);
                 "
                 >Cách đọc (Hiragana):</label
-              ><input
+              >
+              <input
                 type="text"
                 id="edit-reading"
                 style="width: 100%; box-sizing: border-box; margin-top: 5px"
@@ -1970,7 +2029,8 @@
                   color: var(--color1);
                 "
                 >Ý nghĩa:</label
-              ><textarea
+              >
+              <textarea
                 id="edit-meaning"
                 rows="3"
                 style="
@@ -1986,6 +2046,74 @@
                 "
               ></textarea>
             </div>
+
+            <!-- KHU VỰC TỪ ĐỒNG NGHĨA -->
+            <div style="margin-top: 5px">
+              <label
+                style="
+                  font-size: 0.85rem;
+                  font-weight: bold;
+                  color: var(--color1);
+                "
+                >Từ đồng nghĩa (Tùy chọn):</label
+              >
+              <div
+                style="
+                  display: flex;
+                  gap: 10px;
+                  align-items: center;
+                  margin-top: 5px;
+                "
+              >
+                <button
+                  onclick="openSynonymPicker()"
+                  style="
+                    padding: 8px 15px;
+                    border-radius: 10px;
+                    background: var(--color3);
+                    color: var(--color1);
+                    border: 1px solid var(--color2);
+                    cursor: pointer;
+                    font-weight: bold;
+                    font-family: &quot;Quicksand&quot;;
+                  "
+                >
+                  🔍 Chọn từ...
+                </button>
+                <!-- SWITCH BUTTON 1-CHIỀU / 2-CHIỀU -->
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-size: 0.85rem;
+                    font-weight: bold;
+                    color: #666;
+                    background: #f8f9fa;
+                    padding: 4px 10px;
+                    border-radius: 10px;
+                    border: 1px solid #eee;
+                  "
+                >
+                  <label class="switch">
+                    <input type="checkbox" id="sync-2-way" checked />
+                    <span class="slider"></span>
+                  </label>
+                  <span>2 chiều</span>
+                </div>
+              </div>
+              <!-- VÙNG HIỂN THỊ CÁC TỪ ĐỒNG NGHĨA ĐÃ CHỌN -->
+              <div
+                id="edit-synonym-list"
+                style="
+                  margin-top: 10px;
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 5px;
+                "
+              ></div>
+            </div>
+
             <button
               class="btn-action btn-theme"
               onclick="saveEditWord()"
@@ -1997,7 +2125,58 @@
         </div>
       </div>
 
-      <!-- MODAL VIEW TỪ VỰNG (MỚI THÊM) -->
+      <!-- MODAL CHỌN TỪ ĐỒNG NGHĨA -->
+      <div id="synonymPickerModal" class="modal" style="z-index: 1004">
+        <div
+          class="modal-content"
+          style="
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+          "
+        >
+          <span class="close-modal" onclick="closeSynonymPicker()"
+            >&times;</span
+          >
+          <h3 style="color: var(--text); margin-top: 0; margin-bottom: 10px">
+            Chọn Từ Đồng Nghĩa
+          </h3>
+          <input
+            type="text"
+            id="synonym-search"
+            placeholder="Gõ để tìm kiếm từ vựng..."
+            oninput="filterSynonymPicker()"
+            style="
+              margin-bottom: 10px;
+              box-sizing: border-box;
+              width: 100%;
+              border: 2px solid var(--color2);
+            "
+          />
+          <div
+            id="synonym-picker-list"
+            style="
+              overflow-y: auto;
+              flex: 1;
+              text-align: left;
+              border: 1px solid #eee;
+              border-radius: 10px;
+              padding: 10px;
+              margin-bottom: 15px;
+            "
+          ></div>
+          <button
+            class="btn-action btn-theme"
+            onclick="saveSynonymSelection()"
+            style="margin-top: 0"
+          >
+            ✅ Xong
+          </button>
+        </div>
+      </div>
+
+      <!-- MODAL VIEW TỪ VỰNG (ĐÃ CẬP NHẬT GIAO DIỆN SYNONYMS) -->
       <div id="viewWordModal" class="modal" style="z-index: 1002">
         <div class="modal-content" style="max-width: 400px; text-align: left">
           <span class="close-modal" onclick="closeViewModal()">&times;</span>
@@ -2032,6 +2211,36 @@
                 word-break: break-word;
               "
             ></div>
+
+            <!-- KHU VỰC HIỂN THỊ TỪ ĐỒNG NGHĨA TRONG BẢNG VIEW -->
+            <div
+              id="view-synonyms-container"
+              style="
+                margin-top: 15px;
+                display: none;
+                text-align: left;
+                background: var(--color4);
+                padding: 10px;
+                border-radius: 10px;
+                border: 1px dashed var(--color2);
+              "
+            >
+              <div
+                style="
+                  font-size: 0.85rem;
+                  font-weight: bold;
+                  color: var(--color1);
+                  margin-bottom: 8px;
+                "
+              >
+                🔗 Từ đồng nghĩa:
+              </div>
+              <div
+                id="view-synonyms-list"
+                style="display: flex; flex-wrap: wrap; gap: 8px"
+              ></div>
+            </div>
+
             <button
               class="btn-action btn-theme"
               onclick="switchToEdit()"
@@ -2109,7 +2318,6 @@
         </div>
       </div>
 
-      <!-- MODAL LỊCH SỬ DẠNG CALENDAR -->
       <div id="historyModal" class="modal" style="z-index: 1003">
         <div
           class="modal-content"
@@ -2165,7 +2373,6 @@
       let reviewedTodayIds = [];
       let reviewedTodayDate = "";
 
-      // Biến lưu trạng thái tháng lịch sử đang xem
       let currentHistDate = new Date();
 
       let quizQueue = [];
@@ -2186,10 +2393,13 @@
 
       let editingWordId = null;
       let currentEditId = null;
-      let currentViewId = null; // Trạng thái xem từ
+      let currentViewId = null;
       let selectedIds = new Set();
       let isSortedAZ = false;
       let selectedReviewLevels = new Set();
+
+      // Biến lưu tạm danh sách từ đồng nghĩa đang được tick trong lúc Edit
+      let tempSynonymIds = [];
 
       function getStorageKey(baseKey) {
         return isTestMode ? baseKey + "_test" : baseKey;
@@ -2248,7 +2458,7 @@
       }
 
       function openHistoryModal() {
-        currentHistDate = new Date(); // Reset về tháng hiện tại
+        currentHistDate = new Date();
         renderHistoryUI();
         document.getElementById("historyModal").style.display = "block";
       }
@@ -2256,13 +2466,11 @@
         document.getElementById("historyModal").style.display = "none";
       }
 
-      // HÀM CHUYỂN THÁNG LỊCH SỬ
       function changeHistMonth(delta) {
         currentHistDate.setMonth(currentHistDate.getMonth() + delta);
         renderHistoryUI();
       }
 
-      // VẼ LẠI LỊCH SỬ THÀNH CALENDAR
       function renderHistoryUI() {
         const listDiv = document.getElementById("history-list-content");
 
@@ -2372,7 +2580,6 @@
         const file = event.target.files[0];
         if (!file) return;
 
-        // CẬP NHẬT: Thêm confirm ngay lúc đầu
         if (
           !confirm(
             `CẢNH BÁO: Bạn có chắc chắn muốn KHÔI PHỤC dữ liệu từ file "${file.name}" không?\nToàn bộ dữ liệu hiện tại có thể sẽ bị ghi đè! Hãy chắc chắn đây là file đúng.`,
@@ -2452,7 +2659,7 @@
         closeLevelPicker();
       }
 
-      // HÀM CHO MODAL VIEW (CHỈ XEM)
+      // XỬ LÝ GIAO DIỆN VIEW TỪ VỰNG
       function openViewModal(id) {
         const word = vocabulary.find((v) => String(v.id) === String(id));
         if (!word) return;
@@ -2463,6 +2670,33 @@
         document.getElementById("view-meaning").innerHTML = escapeAndBreak(
           word.meaning,
         );
+
+        // Render Synonym Tags
+        const synContainer = document.getElementById("view-synonyms-container");
+        const synList = document.getElementById("view-synonyms-list");
+        synList.innerHTML = "";
+
+        if (word.synonymIds && word.synonymIds.length > 0) {
+          let hasValidSynonym = false;
+          word.synonymIds.forEach((synId) => {
+            const synWord = vocabulary.find(
+              (v) => String(v.id) === String(synId),
+            );
+            if (synWord) {
+              hasValidSynonym = true;
+              const tag = document.createElement("button");
+              tag.className = "synonym-tag";
+              tag.textContent = synWord.word || synWord.reading;
+              tag.onclick = () => openViewModal(synWord.id);
+              synList.appendChild(tag);
+            }
+          });
+          if (hasValidSynonym) synContainer.style.display = "block";
+          else synContainer.style.display = "none";
+        } else {
+          synContainer.style.display = "none";
+        }
+
         document.getElementById("viewWordModal").style.display = "block";
       }
 
@@ -2479,6 +2713,30 @@
         }
       }
 
+      // XỬ LÝ GIAO DIỆN EDIT TỪ VỰNG VÀ SYNONYMS
+      function renderEditSynonymList() {
+        const container = document.getElementById("edit-synonym-list");
+        container.innerHTML = "";
+        if (tempSynonymIds.length === 0) {
+          container.innerHTML = `<span style="font-size: 0.8rem; color: #999; font-style: italic;">Chưa có từ đồng nghĩa nào.</span>`;
+          return;
+        }
+        tempSynonymIds.forEach((synId) => {
+          const synWord = vocabulary.find(
+            (v) => String(v.id) === String(synId),
+          );
+          if (synWord) {
+            const tag = document.createElement("span");
+            tag.className = "synonym-tag";
+            tag.style.background = "var(--color1)";
+            tag.style.color = "white";
+            tag.style.cursor = "default";
+            tag.textContent = synWord.word || synWord.reading;
+            container.appendChild(tag);
+          }
+        });
+      }
+
       function openEditModal(id) {
         const word = vocabulary.find((v) => String(v?.id) === String(id));
         if (!word) return;
@@ -2486,14 +2744,101 @@
         document.getElementById("edit-word").value = word.word ?? "";
         document.getElementById("edit-reading").value = word.reading ?? "";
         document.getElementById("edit-meaning").value = word.meaning ?? "";
+
+        // Load danh sách từ đồng nghĩa vào temp
+        tempSynonymIds = word.synonymIds ? [...word.synonymIds] : [];
+        renderEditSynonymList();
+
         document.getElementById("editWordModal").style.display = "block";
       }
 
       function closeEditModal() {
         document.getElementById("editWordModal").style.display = "none";
         currentEditId = null;
+        tempSynonymIds = [];
       }
 
+      // XỬ LÝ POPUP CHỌN TỪ ĐỒNG NGHĨA
+      function openSynonymPicker() {
+        document.getElementById("synonym-search").value = "";
+        filterSynonymPicker();
+        document.getElementById("synonymPickerModal").style.display = "block";
+      }
+
+      function closeSynonymPicker() {
+        document.getElementById("synonymPickerModal").style.display = "none";
+      }
+
+      function filterSynonymPicker() {
+        const query = document
+          .getElementById("synonym-search")
+          .value.toLowerCase();
+        const listDiv = document.getElementById("synonym-picker-list");
+        listDiv.innerHTML = "";
+
+        // Lọc ra các từ khác với từ đang edit
+        let pool = vocabulary.filter((v) => String(v.id) !== currentEditId);
+
+        if (query) {
+          pool = pool.filter(
+            (v) =>
+              (v.word || "").toLowerCase().includes(query) ||
+              (v.reading || "").toLowerCase().includes(query) ||
+              (v.meaning || "").toLowerCase().includes(query),
+          );
+        }
+
+        if (pool.length === 0) {
+          listDiv.innerHTML = `<div style="text-align: center; color: #999; padding: 10px;">Không tìm thấy từ nào.</div>`;
+          return;
+        }
+
+        pool.forEach((item) => {
+          const div = document.createElement("div");
+          div.style.display = "flex";
+          div.style.alignItems = "center";
+          div.style.padding = "8px 0";
+          div.style.borderBottom = "1px solid #f0f0f0";
+          div.style.cursor = "pointer";
+
+          const chk = document.createElement("input");
+          chk.type = "checkbox";
+          chk.className = "synonym-checkbox";
+          chk.value = item.id;
+          // Nếu từ này đã có trong tempSynonymIds, tự động tick
+          if (tempSynonymIds.includes(String(item.id))) {
+            chk.checked = true;
+          }
+
+          const text = document.createElement("span");
+          text.style.marginLeft = "10px";
+          text.style.fontSize = "0.9rem";
+          text.style.color = "var(--text)";
+          text.innerHTML = `<strong>${item.word || ""}</strong> <span style="color:var(--color1)">${item.reading || ""}</span>`;
+
+          div.onclick = (e) => {
+            if (e.target !== chk) chk.checked = !chk.checked;
+          };
+
+          div.appendChild(chk);
+          div.appendChild(text);
+          listDiv.appendChild(div);
+        });
+      }
+
+      function saveSynonymSelection() {
+        const checkboxes = document.querySelectorAll(".synonym-checkbox");
+        tempSynonymIds = [];
+        checkboxes.forEach((chk) => {
+          if (chk.checked) {
+            tempSynonymIds.push(chk.value);
+          }
+        });
+        renderEditSynonymList();
+        closeSynonymPicker();
+      }
+
+      // XỬ LÝ LƯU (CÓ TÍNH TOÁN 2 CHIỀU)
       function saveEditWord() {
         if (!currentEditId) return;
         let w = document.getElementById("edit-word").value.trim();
@@ -2520,13 +2865,43 @@
           vocabulary[idx].word = w;
           vocabulary[idx].reading = r;
           vocabulary[idx].meaning = m || "Chưa dịch";
+
+          // LƯU TỪ ĐỒNG NGHĨA
+          vocabulary[idx].synonymIds = [...tempSynonymIds];
+
+          // KIỂM TRA NÚT GẠT 2 CHIỀU
+          const is2Way = document.getElementById("sync-2-way").checked;
+          if (is2Way) {
+            tempSynonymIds.forEach((synId) => {
+              const synWord = vocabulary.find(
+                (v) => String(v.id) === String(synId),
+              );
+              if (synWord) {
+                if (!synWord.synonymIds) synWord.synonymIds = [];
+                if (!synWord.synonymIds.includes(currentEditId)) {
+                  synWord.synonymIds.push(currentEditId);
+                }
+              }
+            });
+          }
+
           saveData();
           renderList();
           closeEditModal();
         }
       }
 
-      // CẬP NHẬT: HÀM XÓA ĐƠN
+      // HÀM TIỆN ÍCH DỌN DẸP SYNONYMS KHI XÓA TỪ
+      function cleanUpSynonyms(deletedId) {
+        vocabulary.forEach((v) => {
+          if (v.synonymIds && v.synonymIds.includes(String(deletedId))) {
+            v.synonymIds = v.synonymIds.filter(
+              (id) => id !== String(deletedId),
+            );
+          }
+        });
+      }
+
       function deleteWord(id) {
         if (
           !confirm(`Bạn có CHẮC CHẮN muốn xóa từ vựng này khỏi hệ thống không?`)
@@ -2538,13 +2913,13 @@
           (tid) => String(tid) !== String(id),
         );
         selectedIds.delete(String(id));
+        cleanUpSynonyms(id); // Dọn dẹp liên kết
         saveData();
         renderList();
         renderBatchBar();
         updateDashboard();
       }
 
-      // CẬP NHẬT: HÀM XÓA BATCH
       function batchDelete() {
         if (selectedIds.size === 0) return;
         if (
@@ -2553,6 +2928,9 @@
           )
         )
           return;
+
+        selectedIds.forEach((id) => cleanUpSynonyms(id)); // Dọn dẹp liên kết cho từng từ
+
         vocabulary = vocabulary.filter((v) => !selectedIds.has(String(v.id)));
         dailyQueue = dailyQueue.filter((q) => !selectedIds.has(String(q.id)));
         dailyTargetIds = dailyTargetIds.filter(
@@ -2646,6 +3024,7 @@
           e.target.style.display = "none";
           if (e.target.id === "levelPickerModal") editingWordId = null;
           if (e.target.id === "viewWordModal") currentViewId = null;
+          if (e.target.id === "synonymPickerModal") closeSynonymPicker();
         }
       });
 
@@ -3022,6 +3401,8 @@
             level: v?.level ?? 0,
             learned: v?.learned ?? false,
             nextReview: v?.nextReview ?? 0,
+            // THÊM: Khởi tạo mảng synonymIds nếu chưa có
+            synonymIds: v?.synonymIds || [],
           }));
 
         dailyPointer =
@@ -3105,6 +3486,7 @@
           nextReview: 0,
           learned: false,
           extra: null,
+          synonymIds: [], // Mặc định rỗng
         });
         saveData();
         renderList();
@@ -3118,7 +3500,6 @@
         const file = document.getElementById("file-in").files[0];
         if (!file) return;
 
-        // CẬP NHẬT: Thêm xác nhận trước khi nhập Excel
         if (
           !confirm(
             `Bạn có chắc chắn muốn nhập dữ liệu từ file "${file.name}" không?\nHệ thống sẽ tự động thêm mới hoặc cập nhật các từ bị trùng.`,
@@ -3164,6 +3545,7 @@
                   nextReview: 0,
                   learned: false,
                   extra: null,
+                  synonymIds: [],
                 });
                 addedCount++;
               } else {
@@ -3310,7 +3692,6 @@
           for (let i = 1; i <= 8; i++)
             html += `<button class="batch-btn" style="background:${getComputedStyle(document.documentElement).getPropertyValue(`--lv${i}`).trim()}" onclick="batchChangeLevel(${i})">Lv${i}</button>`;
 
-          // NÚT XÓA BATCH BỔ SUNG Ở ĐÂY
           container.innerHTML =
             html +
             `<button class="batch-btn" style="background:var(--lv9); border:1px solid white; margin-right: 5px;" onclick="batchChangeLevel(9)">🚫 Bỏ qua</button>` +
@@ -4318,7 +4699,6 @@
 
           const contentDiv = document.createElement("div");
           contentDiv.className = "list-item-content";
-          // CẬP NHẬT: Thay openEditModal thành openViewModal
           contentDiv.onclick = () => openViewModal(item.id);
           contentDiv.style.cursor = "pointer";
 
@@ -4386,7 +4766,6 @@
           textDiv.appendChild(timerDiv);
           contentDiv.appendChild(textDiv);
 
-          // NHÓM CHỨA BADGE LEVEL VÀ NÚT XÓA ĐƠN
           const actionsDiv = document.createElement("div");
           actionsDiv.style.display = "flex";
           actionsDiv.style.alignItems = "center";
@@ -4404,7 +4783,6 @@
             openLevelPicker(item.id);
           };
 
-          // CẬP NHẬT: Nút xóa đơn lẻ
           const btnDel = document.createElement("button");
           btnDel.innerHTML = "🗑️";
           btnDel.style.background = "transparent";
